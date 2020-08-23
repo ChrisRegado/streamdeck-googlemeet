@@ -1,0 +1,142 @@
+{
+  "Actions": [
+    {
+      "Icon": "images/actions/mic_muted",
+      "Name": "Mic Toggle",
+      "States": [
+        {
+          "Image": "images/keys/muted_mic",
+          "Title": "Disconnected",
+          "TitleAlignment": "top",
+          "FontSize": "7"
+        },
+        {
+          "Image": "images/keys/muted_mic",
+          "Title": "Mic Off",
+          "TitleAlignment": "top",
+          "FontSize": "13"
+        },
+        {
+          "Image": "images/keys/unmuted_mic",
+          "TitleAlignment": "top",
+          "Title": "Mic On",
+          "FontSize": "13"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Toggle your microphone mute.",
+      "UUID": "com.chrisregado.googlemeet.togglemic"
+    },
+    {
+      "Icon": "images/actions/camera_off",
+      "Name": "Camera Toggle",
+      "States": [
+        {
+          "Image": "images/keys/camera_off",
+          "Title": "Disconnected",
+          "TitleAlignment": "top",
+          "FontSize": "7"
+        },
+        {
+          "Image": "images/keys/camera_off",
+          "Title": "Cam Off",
+          "TitleAlignment": "top",
+          "FontSize": "13"
+        },
+        {
+          "Image": "images/keys/camera_on",
+          "TitleAlignment": "top",
+          "Title": "Cam On",
+          "FontSize": "13"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Toggle your camera on/off.",
+      "UUID": "com.chrisregado.googlemeet.togglecamera"
+    },
+    {
+      "Icon": "images/actions/mic_unmuted",
+      "Name": "Unmute Mic",
+      "States": [
+        {
+          "Image": "images/keys/unmuted_mic",
+          "TitleAlignment": "top",
+          "Title": "Unmute Mic",
+          "FontSize": "9"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Unmute your microphone.",
+      "UUID": "com.chrisregado.googlemeet.unmutemic"
+    },
+    {
+      "Icon": "images/actions/mic_muted",
+      "Name": "Mute Mic",
+      "States": [
+        {
+          "Image": "images/keys/muted_mic",
+          "TitleAlignment": "top",
+          "Title": "Mute Mic",
+          "FontSize": "10"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Mute your microphone.",
+      "UUID": "com.chrisregado.googlemeet.mutemic"
+    },
+    {
+      "Icon": "images/actions/camera_on",
+      "Name": "Enable Camera",
+      "States": [
+        {
+          "Image": "images/keys/camera_on",
+          "Title": "Start Cam",
+          "TitleAlignment": "top",
+          "FontSize": "9"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Turn on your camera.",
+      "UUID": "com.chrisregado.googlemeet.enablecamera"
+    },
+    {
+      "Icon": "images/actions/camera_off",
+      "Name": "Disable Camera",
+      "States": [
+        {
+          "Image": "images/keys/camera_off",
+          "Title": "Stop Cam",
+          "TitleAlignment": "top",
+          "FontSize": "10"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Turn off your camera.",
+      "UUID": "com.chrisregado.googlemeet.disablecamera"
+    }
+  ],
+  "SDKVersion": 2,
+  "Author": "Chris Regado",
+  "CodePathMac": "dist/macos/main/main",
+  "CodePathWin": "dist/windows/main/main.exe",
+  "Description": "A Stream Deck plugin to manage your Google Meet calls.",
+  "Name": "Google Meet",
+  "Icon": "images/plugin_icon",
+  "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
+  "Version": "1.0",
+  "Category": "Google Meet",
+  "CategoryIcon": "images/category_icon",
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "4.1"
+  }
+}
