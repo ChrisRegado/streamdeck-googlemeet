@@ -32,11 +32,15 @@ function initializeWebsocket() {
     socket.close();
   };
 
-  socket.onclose = function (event) {
+  socket.onclose = function () {
     // Note: This Event fires on disconnection and failure to connect.
     setTimeout(function () {
       initializeWebsocket();
     }, RECONNECTION_INTERVAL_SECS * 1000);
+  };
+
+  socket.onopen = function () {
+    attemptStateTransmission();
   };
 
   socket.onmessage = function (event) {
@@ -54,9 +58,15 @@ function initializeWebsocket() {
     } else if (jsonMessage.event === "toggleCamera") {
       toggleMute(InputDevice.CAMERA);
     } else if (jsonMessage.event === "getMicState") {
-      sendMicState(isElementMuted(getMuteElement("microphone")));
+      sendMuteState(
+        InputDevice.MIC,
+        isElementMuted(getMuteElement("microphone"))
+      );
     } else if (jsonMessage.event === "getCameraState") {
-      sendCameraState(isElementMuted(getMuteElement("camera")));
+      sendMuteState(
+        InputDevice.CAMERA,
+        isElementMuted(getMuteElement("camera"))
+      );
     } else {
       console.warn(
         "Received unknown event from Stream Deck plugin: ",
@@ -64,6 +74,36 @@ function initializeWebsocket() {
       );
     }
   };
+}
+
+/**
+ * When our extension loads, if the Chrome call buttons are already visible,
+ * this will send their current states to the Stream Deck plugin. It also works
+ * on reconnection. However, if the buttons have not finished loading, this
+ * will fail and we'll rely on our `observeMuteStateChanges` function to
+ * handle sending initial states when the controls (asynchronously) appear.
+ */
+function attemptStateTransmission() {
+  try {
+    sendMuteState(
+      InputDevice.MIC,
+      isElementMuted(getMuteElement("microphone"))
+    );
+    sendMuteState(InputDevice.CAMERA, isElementMuted(getMuteElement("camera")));
+  } catch (e) {
+    if (e instanceof ControlsNotFoundError) {
+      // These are expected at startup.
+    } else {
+      throw e;
+    }
+  }
+}
+
+class ControlsNotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
 }
 
 /**
@@ -83,7 +123,9 @@ function getMuteElement(inputDevice /* An InputDevice */) {
      * We expect these elements to always be present in any active meeting, and
      * there's not much our extension can do if the mute buttons are missing.
      */
-    throw Error("No mute/unmute button found for " + inputDevice);
+    throw new ControlsNotFoundError(
+      "No mute/unmute button found for " + inputDevice
+    );
   }
 
   return found;
@@ -167,5 +209,4 @@ function sendMuteState(inputDevice, isMuted) {
  */
 initializeWebsocket();
 
-// Also fires when the meeting starts, to send our initial state to the plugin.
 observeMuteStateChanges(handleMuteStateChange);
