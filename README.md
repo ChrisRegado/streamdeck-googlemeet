@@ -17,6 +17,12 @@ Developed and tested primarily on macOS 10.15, Python 3.8.5, Chrome 84, and Stre
 5. You can turn Developer mode back off now if you want.
 6. Add the buttons to your Stream Deck, and start a Google Meet call to try them out!
 
+## Updating
+
+To update the Stream Deck plugin, download and open the plugin package just like when you initially installed it. If you experience any glitches after updating (such as on/off icons not changing on the toggle buttons), please try deleting your Meet buttons and re-adding them to your Stream Deck in the Stream Deck desktop app.
+
+To update the Chrome extension, uninstall your existing version by clicking Remove in the Chrome Extension Settings page, and then follow the installation instructions again to install the new version.
+
 ## How It Works
 
 The Stream Deck plugin launches a localhost-only Websocket server on port 2394, which our browser extension connects to. The plugin and browser extension send messages back and forth over that websocket to notify the Stream Deck when Meet changes its device on/off status, and simulates Meet mute button clicks in your browser when you press a key on your Stream Deck.
