@@ -77,9 +77,9 @@ function initializeWebsocket() {
 }
 
 /**
- * When our extension loads, if the Chrome call buttons are already visible,
+ * When our extension loads, if the Meet call buttons are already visible,
  * this will send their current states to the Stream Deck plugin. It also works
- * on reconnection. However, if the buttons have not finished loading, this
+ * on reconnections. However, if the buttons have not finished loading, this
  * will fail and we'll rely on our `observeMuteStateChanges` function to
  * handle sending initial states when the controls (asynchronously) appear.
  */

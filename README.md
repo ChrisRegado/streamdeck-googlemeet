@@ -15,13 +15,14 @@ Developed and tested primarily on macOS 10.15, Python 3.8.5, Chrome 84, and Stre
 3. From Chrome's Extension settings (`chrome://extensions/`), turn on "Developer mode" using the toggle in the top-right corner.
 4. Click the "Load unpacked" button in the top-left corner, and select the `browser-extension` folder from the zip you extracted earlier.
 5. You can turn Developer mode back off now if you want.
-6. Add the buttons to your Stream Deck, and start a Google Meet call to try them out!
+6. If you use an ad blocker (such as uBlock Origin with the EasyPrivacy filter list), you may have to add meet.google.com as a trusted site in your blocker's settings to allow the Chrome Extension to work. (Some filters block websockets to 127.0.0.1, which this extension needs to communicate with the Stream Deck.)
+7. Add the buttons to your Stream Deck, and start a Google Meet call to try them out!
 
 ## Updating
 
 To update the Stream Deck plugin, download and open the plugin package just like when you initially installed it. If you experience any glitches after updating (such as on/off icons not changing on the toggle buttons), please try deleting your Meet buttons and re-adding them to your Stream Deck in the Stream Deck desktop app.
 
-To update the Chrome extension, uninstall your existing version by clicking Remove in the Chrome Extension Settings page, and then follow the installation instructions again to install the new version.
+To update the Chrome extension, uninstall your existing version by clicking Remove on the Chrome Extension Settings page, and then follow the installation instructions again to install the new version.
 
 ## How It Works
 
