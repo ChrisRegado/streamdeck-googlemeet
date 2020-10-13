@@ -1,26 +1,29 @@
 {
   "Actions": [
     {
-      "Icon": "images/actions/mic_muted",
+      "Icon": "images/actions/mic_off",
       "Name": "Mic Toggle",
       "States": [
         {
-          "Image": "images/keys/muted_mic",
+          "Image": "images/keys/mic_disconnected",
           "Title": "Disconnected",
           "TitleAlignment": "top",
-          "FontSize": "7"
+          "FontSize": "7",
+          "ShowTitle": false
         },
         {
-          "Image": "images/keys/muted_mic",
+          "Image": "images/keys/mic_off",
           "Title": "Mic Off",
           "TitleAlignment": "top",
-          "FontSize": "13"
+          "FontSize": "13",
+          "ShowTitle": false
         },
         {
-          "Image": "images/keys/unmuted_mic",
-          "TitleAlignment": "top",
+          "Image": "images/keys/mic_on",
           "Title": "Mic On",
-          "FontSize": "13"
+          "TitleAlignment": "top",
+          "FontSize": "13",
+          "ShowTitle": false
         }
       ],
       "SupportedInMultiActions": false,
@@ -32,22 +35,25 @@
       "Name": "Camera Toggle",
       "States": [
         {
-          "Image": "images/keys/camera_off",
+          "Image": "images/keys/camera_disconnected",
           "Title": "Disconnected",
           "TitleAlignment": "top",
-          "FontSize": "7"
+          "FontSize": "7",
+          "ShowTitle": false
         },
         {
           "Image": "images/keys/camera_off",
           "Title": "Cam Off",
           "TitleAlignment": "top",
-          "FontSize": "13"
+          "FontSize": "13",
+          "ShowTitle": false
         },
         {
           "Image": "images/keys/camera_on",
-          "TitleAlignment": "top",
           "Title": "Cam On",
-          "FontSize": "13"
+          "TitleAlignment": "top",
+          "FontSize": "13",
+          "ShowTitle": false
         }
       ],
       "SupportedInMultiActions": false,
@@ -55,32 +61,30 @@
       "UUID": "com.chrisregado.googlemeet.togglecamera"
     },
     {
-      "Icon": "images/actions/mic_unmuted",
+      "Icon": "images/actions/mic_on",
       "Name": "Unmute Mic",
       "States": [
         {
-          "Image": "images/keys/unmuted_mic",
+          "Image": "images/keys/mic_on",
           "TitleAlignment": "top",
           "Title": "Unmute Mic",
           "FontSize": "9"
         }
       ],
-      "SupportedInMultiActions": false,
       "Tooltip": "Unmute your microphone.",
       "UUID": "com.chrisregado.googlemeet.unmutemic"
     },
     {
-      "Icon": "images/actions/mic_muted",
+      "Icon": "images/actions/mic_off",
       "Name": "Mute Mic",
       "States": [
         {
-          "Image": "images/keys/muted_mic",
+          "Image": "images/keys/mic_off",
           "TitleAlignment": "top",
           "Title": "Mute Mic",
           "FontSize": "10"
         }
       ],
-      "SupportedInMultiActions": false,
       "Tooltip": "Mute your microphone.",
       "UUID": "com.chrisregado.googlemeet.mutemic"
     },
@@ -95,7 +99,6 @@
           "FontSize": "9"
         }
       ],
-      "SupportedInMultiActions": false,
       "Tooltip": "Turn on your camera.",
       "UUID": "com.chrisregado.googlemeet.enablecamera"
     },
@@ -110,7 +113,6 @@
           "FontSize": "10"
         }
       ],
-      "SupportedInMultiActions": false,
       "Tooltip": "Turn off your camera.",
       "UUID": "com.chrisregado.googlemeet.disablecamera"
     }
