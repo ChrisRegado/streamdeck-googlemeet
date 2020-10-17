@@ -115,6 +115,21 @@
       ],
       "Tooltip": "Turn off your camera.",
       "UUID": "com.chrisregado.googlemeet.disablecamera"
+    },
+    {
+      "Icon": "images/actions/leave_call",
+      "Name": "Leave Call",
+      "States": [
+        {
+          "Image": "images/keys/leave_call",
+          "Title": "Leave\nCall",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Tooltip": "Leave call.",
+      "UUID": "com.chrisregado.googlemeet.leavecall"
     }
   ],
   "SDKVersion": 2,

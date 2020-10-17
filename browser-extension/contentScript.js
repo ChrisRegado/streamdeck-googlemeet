@@ -57,6 +57,8 @@ function initializeWebsocket() {
       toggleMute(InputDevice.MIC);
     } else if (jsonMessage.event === "toggleCamera") {
       toggleMute(InputDevice.CAMERA);
+    } else if (jsonMessage.event === "leaveCall") {
+      leaveCall();
     } else if (jsonMessage.event === "getMicState") {
       sendMuteState(
         InputDevice.MIC,
@@ -145,6 +147,35 @@ function setMuteState(inputDevice, muted) {
   if (isElementMuted(button) !== muted) {
     button.click();
   }
+}
+
+/**
+ * Get a button based on its aria label.
+ */
+function getAriaElement(label) {
+  const elements = Array.from(document.querySelectorAll("[aria-label]"));
+  const found = elements.find((element) => {
+    return (
+      element.ariaLabel && element.ariaLabel.includes(label)
+    );
+  });
+
+  if (!found) {
+    /**
+     * We expect these elements to always be present in any active meeting, and
+     * there's not much our extension can do if the buttons are missing.
+     */
+    throw new ControlsNotFoundError(
+      "No button found with aria label " + label
+    );
+  }
+
+  return found;
+}
+
+function leaveCall() {
+  const button = getAriaElement("Leave call");
+  button.click();
 }
 
 /**
