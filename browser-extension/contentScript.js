@@ -59,6 +59,10 @@ function initializeWebsocket() {
       toggleMute(InputDevice.CAMERA);
     } else if (jsonMessage.event === "leaveCall") {
       leaveCall();
+    } else if (jsonMessage.event === "toggleParticipants") {
+      toggleParticipants();
+    } else if (jsonMessage.event === "toggleChat") {
+      toggleChat();
     } else if (jsonMessage.event === "getMicState") {
       sendMuteState(
         InputDevice.MIC,
@@ -154,28 +158,54 @@ function setMuteState(inputDevice, muted) {
  */
 function getAriaElement(label) {
   const elements = Array.from(document.querySelectorAll("[aria-label]"));
-  const found = elements.find((element) => {
+  return elements.find((element) => {
     return (
       element.ariaLabel && element.ariaLabel.includes(label)
     );
   });
-
-  if (!found) {
-    /**
-     * We expect these elements to always be present in any active meeting, and
-     * there's not much our extension can do if the buttons are missing.
-     */
-    throw new ControlsNotFoundError(
-      "No button found with aria label " + label
-    );
-  }
-
-  return found;
 }
 
 function leaveCall() {
   const button = getAriaElement("Leave call");
   button.click();
+}
+
+/**
+ * Toggle display of the participants list in the side panel.
+ */
+function toggleParticipants() {
+  const participantsButton = getAriaElement("participant");
+  if (participantsButton != undefined) {
+    if (participantsButton.ariaSelected !== "true") {
+      participantsButton.click();
+    } else {
+      const closeButton = getAriaElement("Close");
+      closeButton.click();
+    }
+    return  
+  }
+
+  const showEveryoneButton = getAriaElement("Show everyone");
+  showEveryoneButton.click();
+}
+
+/**
+ * Toggle display of the chat messages in the side panel.
+ */
+function toggleChat() {
+  const messagesButton = getAriaElement("messages");
+  if (messagesButton != undefined) {
+    if (messagesButton.ariaSelected !== "true") {
+      messagesButton.click();
+    } else {
+      const closeButton = getAriaElement("Close");
+      closeButton.click();
+    }
+    return
+  }
+
+  const chatEveryoneButton = getAriaElement("Chat with everyone");
+  chatEveryoneButton.click();
 }
 
 /**

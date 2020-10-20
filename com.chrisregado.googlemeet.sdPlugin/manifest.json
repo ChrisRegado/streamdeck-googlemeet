@@ -130,6 +130,38 @@
       ],
       "Tooltip": "Leave call.",
       "UUID": "com.chrisregado.googlemeet.leavecall"
+    },
+    {
+      "Icon": "images/actions/chat",
+      "Name": "Toggle Chat",
+      "States": [
+        {
+          "Image": "images/keys/chat",
+          "Title": "Chat",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Toggle chat",
+      "UUID": "com.chrisregado.googlemeet.togglechat"
+    },
+    {
+      "Icon": "images/actions/participants",
+      "Name": "Toggle Participants",
+      "States": [
+        {
+          "Image": "images/keys/participants",
+          "Title": "Participants",
+          "TitleAlignment": "top",
+          "FontSize": "8",
+          "ShowTitle": false
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Toggle participants",
+      "UUID": "com.chrisregado.googlemeet.toggleparticipants"
     }
   ],
   "SDKVersion": 2,
