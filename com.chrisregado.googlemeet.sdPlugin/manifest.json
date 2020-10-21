@@ -144,7 +144,7 @@
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Toggle chat",
+      "Tooltip": "Toggle chat.",
       "UUID": "com.chrisregado.googlemeet.togglechat"
     },
     {
@@ -160,7 +160,7 @@
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Toggle participants",
+      "Tooltip": "Toggle participants.",
       "UUID": "com.chrisregado.googlemeet.toggleparticipants"
     }
   ],
@@ -172,7 +172,7 @@
   "Name": "Google Meet",
   "Icon": "images/plugin_icon",
   "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "Version": "1.0.1",
+  "Version": "1.1.0",
   "Category": "Google Meet",
   "CategoryIcon": "images/category_icon",
   "OS": [
