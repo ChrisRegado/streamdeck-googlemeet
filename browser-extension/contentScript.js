@@ -182,7 +182,7 @@ function toggleParticipants() {
       const closeButton = getAriaElement("Close");
       closeButton.click();
     }
-    return  
+    return
   }
 
   const showEveryoneButton = getAriaElement("Show everyone");
@@ -226,12 +226,16 @@ function observeMuteStateChanges(onChange) {
 function handleMuteStateChange(mutationsList) {
   for (const mutation of mutationsList) {
     if (mutation.type === "attributes") {
-      const oldIsMuted = Boolean(
-        mutation.oldValue == null || mutation.oldValue === "true"
-      );
+      const oldIsMuted = Boolean(mutation.oldValue === "true");
       const newIsMuted = isElementMuted(mutation.target);
 
-      if (oldIsMuted !== newIsMuted) {
+      /**
+       * Note: The `null` oldValue case happens at the start of a call. We
+       * can't assume an initial mute state, since it's decided by Meet. The
+       * normal default is unmuted, but it may start muted if joining a large
+       * call, for example.
+       */
+      if (mutation.oldValue == null || oldIsMuted !== newIsMuted) {
         const tooltip = mutation.target.dataset.tooltip;
         if (tooltip) {
           Object.values(InputDevice).forEach((inputDevice) => {
