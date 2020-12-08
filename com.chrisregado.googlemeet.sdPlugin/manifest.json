@@ -172,7 +172,7 @@
   "Name": "Google Meet",
   "Icon": "images/plugin_icon",
   "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "Version": "1.1.0",
+  "Version": "1.1.1",
   "Category": "Google Meet",
   "CategoryIcon": "images/category_icon",
   "OS": [
