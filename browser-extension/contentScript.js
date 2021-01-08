@@ -159,8 +159,9 @@ function setMuteState(inputDevice, muted) {
 function getAriaElement(label) {
   const elements = Array.from(document.querySelectorAll("[aria-label]"));
   return elements.find((element) => {
+    const ariaLabel = element.getAttribute("aria-label");
     return (
-      element.ariaLabel && element.ariaLabel.includes(label)
+      ariaLabel && ariaLabel.includes(label)
     );
   });
 }
@@ -176,7 +177,7 @@ function leaveCall() {
 function toggleParticipants() {
   const participantsButton = getAriaElement("participant");
   if (participantsButton != undefined) {
-    if (participantsButton.ariaSelected !== "true") {
+    if (participantsButton.getAttribute("aria-selected") !== "true") {
       participantsButton.click();
     } else {
       const closeButton = getAriaElement("Close");
@@ -195,7 +196,7 @@ function toggleParticipants() {
 function toggleChat() {
   const messagesButton = getAriaElement("messages");
   if (messagesButton != undefined) {
-    if (messagesButton.ariaSelected !== "true") {
+    if (messagesButton.getAttribute("aria-selected") !== "true") {
       messagesButton.click();
     } else {
       const closeButton = getAriaElement("Close");
