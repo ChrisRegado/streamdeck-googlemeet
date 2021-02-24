@@ -10,9 +10,16 @@ const RECONNECTION_INTERVAL_SECS = 2;
 const STREAM_DECK_PORT = 2394;
 
 const InputDevice = Object.freeze({
-  CAMERA: "camera",
-  MIC: "microphone",
+  CAMERA: {
+    eventName: "cameraMutedState",
+    language: ["camera", "Kamera"]
+  },
+  MIC: {
+    eventName: "micMutedState",
+    language: ["microphone", "Mikrofon"]
+  },
 });
+
 
 // This is the connection to the websocket server launched by our Stream Deck plugin.
 var socket = null;
@@ -64,15 +71,9 @@ function initializeWebsocket() {
     } else if (jsonMessage.event === "toggleChat") {
       toggleChat();
     } else if (jsonMessage.event === "getMicState") {
-      sendMuteState(
-        InputDevice.MIC,
-        isElementMuted(getMuteElement("microphone"))
-      );
+      sendMuteState(InputDevice.MIC);
     } else if (jsonMessage.event === "getCameraState") {
-      sendMuteState(
-        InputDevice.CAMERA,
-        isElementMuted(getMuteElement("camera"))
-      );
+      sendMuteState(InputDevice.CAMERA);
     } else {
       console.warn(
         "Received unknown event from Stream Deck plugin: ",
@@ -91,11 +92,8 @@ function initializeWebsocket() {
  */
 function attemptStateTransmission() {
   try {
-    sendMuteState(
-      InputDevice.MIC,
-      isElementMuted(getMuteElement("microphone"))
-    );
-    sendMuteState(InputDevice.CAMERA, isElementMuted(getMuteElement("camera")));
+    sendMuteState(InputDevice.MIC);
+    sendMuteState(InputDevice.CAMERA);
   } catch (e) {
     if (e instanceof ControlsNotFoundError) {
       // These are expected at startup.
@@ -120,7 +118,7 @@ function getMuteElement(inputDevice /* An InputDevice */) {
   const muteElements = Array.from(document.querySelectorAll("[data-is-muted]"));
   const found = muteElements.find((element) => {
     return (
-      element.dataset.tooltip && element.dataset.tooltip.includes(inputDevice)
+      element.dataset.tooltip && inputDevice.language.find((dev) => element.dataset.tooltip.includes(dev))
     );
   });
 
@@ -240,7 +238,7 @@ function handleMuteStateChange(mutationsList) {
         const tooltip = mutation.target.dataset.tooltip;
         if (tooltip) {
           Object.values(InputDevice).forEach((inputDevice) => {
-            if (tooltip.includes(inputDevice)) {
+            if (inputDevice.language.find((dev) => tooltip.includes(dev))) {
               sendMuteState(inputDevice, newIsMuted);
             }
           });
@@ -250,13 +248,10 @@ function handleMuteStateChange(mutationsList) {
   }
 }
 
-function sendMuteState(inputDevice, isMuted) {
-  let eventName;
-  if (inputDevice === InputDevice.CAMERA) {
-    eventName = "cameraMutedState";
-  } else if (inputDevice === InputDevice.MIC) {
-    eventName = "micMutedState";
-  } else {
+function sendMuteState(inputDevice) {
+  let isMuted = isElementMuted(getMuteElement(inputDevice));
+  let eventName = inputDevice.eventName;
+  if (eventName === undefined) {
     throw Error("Unknown input device: " + inputDevice);
   }
 
