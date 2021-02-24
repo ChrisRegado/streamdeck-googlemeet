@@ -9,17 +9,55 @@ const RECONNECTION_INTERVAL_SECS = 2;
 // The localhost port our Stream Deck plugin is listening on.
 const STREAM_DECK_PORT = 2394;
 
+// Strings found in the labels of various Meet UI elements:
+const CameraLabels = [
+  "camera",                            // English
+  "Kamera"                             // German
+]
+const MicrophoneLabels = [
+  "microphone",                        // English
+  "Mikrofon"                           // German
+]
+const LeaveCallButtonLabels = [
+  "Leave call",                        // English
+  "Anruf verlassen",                   // German
+]
+const SidepanelCloseButtonLabels = [
+  // The close button on the sidepanel when it is open.
+  "Close",                             // English
+  "Schließen",                         // German
+]
+const ChatButtonLabels = [
+  // This is the chat button that's visible when the sidepanel is closed.
+  "Chat with everyone",                // English
+  "Mit allen chatten",                 // German
+]
+const SidepanelChatButtonLabels = [
+  // This is the chat button that's visible when the sidepanel is open.
+  "messages",                          // English
+  "Nachrichten",                       // German
+]
+const ParticipantsButtonLabels = [
+  // This is the participants button that's visible when the sidepanel is closed.
+  "Show everyone",                     // English
+  "Alle anzeigen",                     // German
+]
+const SidepanelParticipantsButtonLabels = [
+  // This is the participants button that's visible when the sidepanel is open.
+  "participant",                       // English
+  "Teilnehmer",                        // German
+]
+
 const InputDevice = Object.freeze({
   CAMERA: {
     eventName: "cameraMutedState",
-    language: ["camera", "Kamera"]
+    deviceLabels: CameraLabels
   },
   MIC: {
     eventName: "micMutedState",
-    language: ["microphone", "Mikrofon"]
+    deviceLabels: MicrophoneLabels
   },
 });
-
 
 // This is the connection to the websocket server launched by our Stream Deck plugin.
 var socket = null;
@@ -118,7 +156,7 @@ function getMuteElement(inputDevice /* An InputDevice */) {
   const muteElements = Array.from(document.querySelectorAll("[data-is-muted]"));
   const found = muteElements.find((element) => {
     return (
-      element.dataset.tooltip && inputDevice.language.find((dev) => element.dataset.tooltip.includes(dev))
+      element.dataset.tooltip && inputDevice.deviceLabels.find((dev) => element.dataset.tooltip.includes(dev))
     );
   });
 
@@ -152,20 +190,20 @@ function setMuteState(inputDevice, muted) {
 }
 
 /**
- * Get a button based on its aria label.
+ * Get a button based on its aria label, returning the first matching element.
  */
-function getAriaElement(label) {
+function getAriaElement(labels) {
   const elements = Array.from(document.querySelectorAll("[aria-label]"));
   return elements.find((element) => {
     const ariaLabel = element.getAttribute("aria-label");
     return (
-      ariaLabel && ariaLabel.includes(label)
+      ariaLabel && labels.find((label) => ariaLabel.includes(label))
     );
   });
 }
 
 function leaveCall() {
-  const button = getAriaElement("Leave call");
+  const button = getAriaElement(LeaveCallButtonLabels);
   button.click();
 }
 
@@ -173,18 +211,18 @@ function leaveCall() {
  * Toggle display of the participants list in the side panel.
  */
 function toggleParticipants() {
-  const participantsButton = getAriaElement("participant");
+  const participantsButton = getAriaElement(SidepanelParticipantsButtonLabels);
   if (participantsButton != undefined) {
     if (participantsButton.getAttribute("aria-selected") !== "true") {
       participantsButton.click();
     } else {
-      const closeButton = getAriaElement("Close");
+      const closeButton = getAriaElement(SidepanelCloseButtonLabels);
       closeButton.click();
     }
     return
   }
 
-  const showEveryoneButton = getAriaElement("Show everyone");
+  const showEveryoneButton = getAriaElement(ParticipantsButtonLabels);
   showEveryoneButton.click();
 }
 
@@ -192,18 +230,18 @@ function toggleParticipants() {
  * Toggle display of the chat messages in the side panel.
  */
 function toggleChat() {
-  const messagesButton = getAriaElement("messages");
+  const messagesButton = getAriaElement(SidepanelChatButtonLabels);
   if (messagesButton != undefined) {
     if (messagesButton.getAttribute("aria-selected") !== "true") {
       messagesButton.click();
     } else {
-      const closeButton = getAriaElement("Close");
+      const closeButton = getAriaElement(SidepanelCloseButtonLabels);
       closeButton.click();
     }
     return
   }
 
-  const chatEveryoneButton = getAriaElement("Chat with everyone");
+  const chatEveryoneButton = getAriaElement(ChatButtonLabels);
   chatEveryoneButton.click();
 }
 
@@ -238,8 +276,8 @@ function handleMuteStateChange(mutationsList) {
         const tooltip = mutation.target.dataset.tooltip;
         if (tooltip) {
           Object.values(InputDevice).forEach((inputDevice) => {
-            if (inputDevice.language.find((dev) => tooltip.includes(dev))) {
-              sendMuteState(inputDevice, newIsMuted);
+            if (inputDevice.deviceLabels.find((dev) => tooltip.includes(dev))) {
+              sendMuteState(inputDevice);
             }
           });
         }
