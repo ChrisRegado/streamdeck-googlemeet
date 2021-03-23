@@ -47,6 +47,16 @@ const SidepanelParticipantsButtonLabels = [
   "participant",                       // English
   "Teilnehmer",                        // German
 ]
+const HandButtonLabels = [
+  // This is the raise hand button
+  ["Raise hand", "Lower hand"],        // English
+  ["Raise hand", "Lower hand"],        // TODO: Replace with the equivalent strings in German
+];
+const PinButtonLabels = [
+  // This is the pin presentation button
+  ["presentation to your main screen", "presentation to your main screen"], // English
+  ["presentation to your main screen", "presentation to your main screen"], // TODO: Replace with the equivalent strings in German
+];
 
 const InputDevice = Object.freeze({
   CAMERA: {
@@ -57,6 +67,14 @@ const InputDevice = Object.freeze({
     eventName: "micMutedState",
     deviceLabels: MicrophoneLabels
   },
+  HAND: {
+    eventName: "handMutedState",
+    deviceAriaLabels: HandButtonLabels
+  },
+  PIN: {
+    eventName: "pinMutedState",
+    deviceAriaLabels: PinButtonLabels
+  }
 });
 
 // This is the connection to the websocket server launched by our Stream Deck plugin.
@@ -104,6 +122,10 @@ function initializeWebsocket() {
       toggleMute(InputDevice.CAMERA);
     } else if (jsonMessage.event === "leaveCall") {
       leaveCall();
+    } else if (jsonMessage.event === "toggleHand") {
+      toggleMute(InputDevice.HAND);
+    } else if (jsonMessage.event === "togglePin") {
+      toggleMute(InputDevice.PIN);
     } else if (jsonMessage.event === "toggleParticipants") {
       toggleParticipants();
     } else if (jsonMessage.event === "toggleChat") {
@@ -112,6 +134,12 @@ function initializeWebsocket() {
       sendMuteState(InputDevice.MIC);
     } else if (jsonMessage.event === "getCameraState") {
       sendMuteState(InputDevice.CAMERA);
+    } else if (jsonMessage.event === "getHandState") {
+      const isMuted = getAriaElement(InputDevice.HAND.deviceAriaLabels[0]);
+      sendMuteState(InputDevice.HAND);
+    } else if (jsonMessage.event === "getPinState") {
+      const isMuted = getAriaElement(nputDevice.PIN.deviceAriaLabels[0]);
+      sendMuteState(InputDevice.PIN);
     } else {
       console.warn(
         "Received unknown event from Stream Deck plugin: ",
@@ -130,6 +158,8 @@ function initializeWebsocket() {
  */
 function attemptStateTransmission() {
   try {
+    sendMuteState(InputDevice.PIN, true);
+    sendMuteState(InputDevice.HAND, true);
     sendMuteState(InputDevice.MIC);
     sendMuteState(InputDevice.CAMERA);
   } catch (e) {
@@ -153,10 +183,20 @@ class ControlsNotFoundError extends Error {
  * identify the buttons based on the few human-readable data attributes we have.
  */
 function getMuteElement(inputDevice /* An InputDevice */) {
+  if (inputDevice.deviceAriaLabels) {
+    const mutedElement = getAriaElement(inputDevice.deviceAriaLabels[0]);
+    const unmutedElement = getAriaElement(inputDevice.deviceAriaLabels[1]);
+    return mutedElement || unmutedElement;
+  }
+
   const muteElements = Array.from(document.querySelectorAll("[data-is-muted]"));
   const found = muteElements.find((element) => {
     return (
-      element.dataset.tooltip && inputDevice.deviceLabels.find((dev) => element.dataset.tooltip.includes(dev))
+      element.dataset.tooltip &&
+      inputDevice.deviceLabels &&
+      inputDevice.deviceLabels.find((dev) =>
+        element.dataset.tooltip.includes(dev)
+      )
     );
   });
 
@@ -174,17 +214,49 @@ function getMuteElement(inputDevice /* An InputDevice */) {
 }
 
 function isElementMuted(element) {
+  if (!element) {
+    return false;
+  }
+
+  const ariaLabel = element.attributes["aria-label"];
+  const value = ariaLabel && ariaLabel.value;
+  if (value) {
+    let muteOrUnmute;
+    Object.keys(InputDevice).forEach((inputDeviceName) => {
+      const inputDevice = InputDevice[inputDeviceName];
+      const muteUnmuteStringsAcrossLanguages =
+        inputDevice.deviceAriaLabels || [];
+      if (muteUnmuteStringsAcrossLanguages) {
+        muteUnmuteStringsAcrossLanguages.forEach((muteUnmuteStrings) => {
+          const muteString = muteUnmuteStrings[0];
+          const unmuteString = muteUnmuteStrings[1];
+          if (value.includes(muteString)) {
+            muteOrUnmute = true;
+          } else if (value.includes(unmuteString)) {
+            muteOrUnmute = false;
+          }
+        });
+      }
+    });
+    if (muteOrUnmute !== undefined) {
+      return muteOrUnmute;
+    }
+  }
   return element.dataset.isMuted === "true";
 }
 
 function toggleMute(inputDevice) {
   const element = getMuteElement(inputDevice);
-  element.click();
+  if (element) {
+    element.click();
+  } else {
+    sendMuteState(inputDevice, undefined, true);
+  }
 }
 
 function setMuteState(inputDevice, muted) {
   const button = getMuteElement(inputDevice);
-  if (isElementMuted(button) !== muted) {
+  if (button && isElementMuted(button) !== muted) {
     button.click();
   }
 }
@@ -196,9 +268,7 @@ function getAriaElement(labels) {
   const elements = Array.from(document.querySelectorAll("[aria-label]"));
   return elements.find((element) => {
     const ariaLabel = element.getAttribute("aria-label");
-    return (
-      ariaLabel && labels.find((label) => ariaLabel.includes(label))
-    );
+    return ariaLabel && labels.find((label) => ariaLabel.includes(label));
   });
 }
 
@@ -258,36 +328,84 @@ function observeMuteStateChanges(onChange) {
     attributeOldValue: true,
     subtree: true,
   });
+
+  const ariaObserver = new MutationObserver(onChange);
+  ariaObserver.observe(document.body, {
+    childList: false,
+    attributes: true,
+    attributeFilter: ["aria-label"],
+    attributeOldValue: true,
+    subtree: true,
+  });
 }
 
 function handleMuteStateChange(mutationsList) {
   for (const mutation of mutationsList) {
     if (mutation.type === "attributes") {
-      const oldIsMuted = Boolean(mutation.oldValue === "true");
-      const newIsMuted = isElementMuted(mutation.target);
+      if (mutation.attributeName === "aria-label") {
+        const foundKeys = [];
+        Object.keys(InputDevice).forEach((inputDeviceName) => {
+          const inputDevice = InputDevice[inputDeviceName];
+          const muteUnmuteStringsAcrossLanguages =
+            inputDevice.deviceAriaLabels || [];
+          muteUnmuteStringsAcrossLanguages.forEach((muteUnmuteStrings) => {
+            if (muteUnmuteStrings) {
+              const muteString = muteUnmuteStrings[0];
+              const unmuteString = muteUnmuteStrings[1];
+              const value =
+                mutation.target.attributes["aria-label"].value || "";
+              const ariaPressed = mutation.target.attributes["aria-pressed"];
 
-      /**
-       * Note: The `null` oldValue case happens at the start of a call. We
-       * can't assume an initial mute state, since it's decided by Meet. The
-       * normal default is unmuted, but it may start muted if joining a large
-       * call, for example.
-       */
-      if (mutation.oldValue == null || oldIsMuted !== newIsMuted) {
-        const tooltip = mutation.target.dataset.tooltip;
-        if (tooltip) {
-          Object.values(InputDevice).forEach((inputDevice) => {
-            if (inputDevice.deviceLabels.find((dev) => tooltip.includes(dev))) {
-              sendMuteState(inputDevice);
+              let isPressed = ariaPressed && ariaPressed.value;
+              isPressed = isPressed || "false";
+              isPressed = isPressed === "true";
+
+              if (value.includes(muteString)) {
+                sendMuteState(inputDevice, !isPressed);
+                foundKeys.push(inputDevice);
+              } else if (value.includes(unmuteString)) {
+                sendMuteState(inputDevice, isPressed);
+                foundKeys.push(inputDevice);
+              }
             }
           });
+        });
+      } else if (mutation.attributeName === "data-is-muted") {
+        /**
+         * Note: The `null` oldValue case happens at the start of a call. We
+         * can't assume an initial mute state, since it's decided by Meet. The
+         * normal default is unmuted, but it may start muted if joining a large
+         * call, for example.
+         */
+        const oldIsMuted = Boolean(
+          mutation.oldValue == null || mutation.oldValue === "true"
+        );
+        const newIsMuted = isElementMuted(mutation.target);
+
+        if (oldIsMuted !== newIsMuted) {
+          const tooltip = mutation.target.dataset.tooltip;
+          if (tooltip) {
+            Object.values(InputDevice).forEach((inputDevice) => {
+              if (
+                inputDevice.deviceLabels &&
+                inputDevice.deviceLabels.find((dev) => tooltip.includes(dev)) &&
+                !inputDevice.deviceAriaLabels
+              ) {
+                sendMuteState(inputDevice, newIsMuted);
+              }
+            });
+          }
         }
       }
     }
   }
 }
 
-function sendMuteState(inputDevice) {
-  let isMuted = isElementMuted(getMuteElement(inputDevice));
+function sendMuteState(inputDevice, isMutedOptional, isDisconnected) {
+  let isMuted =
+    isMutedOptional === undefined
+      ? isElementMuted(getMuteElement(inputDevice))
+      : isMutedOptional;
   let eventName = inputDevice.eventName;
   if (eventName === undefined) {
     throw Error("Unknown input device: " + inputDevice);
@@ -296,6 +414,7 @@ function sendMuteState(inputDevice) {
   const message = {
     event: eventName,
     muted: isMuted,
+    disconnected: Boolean(isDisconnected),
   };
   if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(message));

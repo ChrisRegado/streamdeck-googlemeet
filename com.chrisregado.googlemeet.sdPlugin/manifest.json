@@ -1,6 +1,22 @@
 {
   "Actions": [
     {
+      "Icon": "images/actions/google_meet",
+      "Name": "Create or Join Meeting",
+      "States": [
+        {
+          "Image": "images/keys/google_meet",
+          "Title": "Create/Join Meeting",
+          "TitleAlignment": "top",
+          "FontSize": "8",
+          "ShowTitle": false
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Create or Join Meeting.",
+      "UUID": "com.chrisregado.googlemeet.createorjoin"
+    },
+    {
       "Icon": "images/actions/mic_off",
       "Name": "Mic Toggle",
       "States": [
@@ -131,6 +147,66 @@
       "Tooltip": "Leave call.",
       "UUID": "com.chrisregado.googlemeet.leavecall"
     },
+    {
+      "Icon": "images/actions/hand_on",
+      "Name": "Toggle Hand",
+      "States": [
+        {
+          "Image": "images/keys/hand_off",
+          "Title": "Disconnected",
+          "TitleAlignment": "top",
+          "FontSize": "7",
+          "ShowTitle": false
+        },
+        {
+          "Image": "images/keys/hand_off",
+          "Title": "Hand",
+          "TitleAlignment": "top",
+          "FontSize": "13",
+          "ShowTitle": false
+        },
+        {
+          "Image": "images/keys/hand_on",
+          "Title": "Hand Raised",
+          "TitleAlignment": "top",
+          "FontSize": "13",
+          "ShowTitle": false
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Toggle hand.",
+      "UUID": "com.chrisregado.googlemeet.togglehand"
+    },    
+    {
+      "Icon": "images/actions/pin_on",
+      "Name": "Toggle Pin",
+      "States": [
+        {
+          "Image": "images/keys/pin_disconnected",
+          "Title": "Disconnected",
+          "TitleAlignment": "top",
+          "FontSize": "7",
+          "ShowTitle": false
+        },
+        {
+          "Image": "images/keys/pin_off",
+          "Title": "Unpinned",
+          "TitleAlignment": "top",
+          "FontSize": "13",
+          "ShowTitle": false
+        },
+        {
+          "Image": "images/keys/pin_on",
+          "Title": "Pinned",
+          "TitleAlignment": "top",
+          "FontSize": "13",
+          "ShowTitle": false
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Toggle pin.",
+      "UUID": "com.chrisregado.googlemeet.togglepin"
+    },    
     {
       "Icon": "images/actions/chat",
       "Name": "Toggle Chat",

@@ -53,9 +53,17 @@ class BaseToggleEventHandler(EventHandler):
         event_type = event.get("event")
 
         if event_type == self.BROWSER_STATE_UPDATED_EVENT_TYPE:
-            desired_sd_state = SDToggleState.MUTED if event.get(
-                "muted") else SDToggleState.UNMUTED
-            await self._set_stream_deck_mute_state(desired_sd_state)
+            self._logger.info(f"on_browser_event browser event!")
+            if event.get("muted"):
+                desired_sd_state = SDToggleState.MUTED 
+                await self._set_stream_deck_mute_state(desired_sd_state)
+            elif event.get("disconnected"):
+                desired_sd_state = SDToggleState.DISCONNECTED 
+                await self._set_stream_deck_mute_state(desired_sd_state)
+            else:
+                desired_sd_state = SDToggleState.UNMUTED
+                await self._set_stream_deck_mute_state(desired_sd_state)
+        
 
     async def on_all_browsers_disconnected(self) -> None:
         await self._set_stream_deck_mute_state(state=SDToggleState.DISCONNECTED)
