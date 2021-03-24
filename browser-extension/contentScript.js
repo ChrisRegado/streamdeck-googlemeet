@@ -50,12 +50,12 @@ const SidepanelParticipantsButtonLabels = [
 const HandButtonLabels = [
   // This is the raise hand button
   ["Raise hand", "Lower hand"],        // English
-  ["Raise hand", "Lower hand"],        // TODO: Replace with the equivalent strings in German
+  ["Melden", "Meldung zurückziehen"],  // TODO: Replace with the equivalent strings in German
 ];
 const PinButtonLabels = [
   // This is the pin presentation button
-  ["presentation to your main screen", "presentation to your main screen"], // English
-  ["presentation to your main screen", "presentation to your main screen"], // TODO: Replace with the equivalent strings in German
+  ["presentation to your main screen", "presentation to your main screen"],     // English
+  ["an meinen Hauptbildschirm anpinnen", "an meinen Hauptbildschirm anpinnen"], // TODO: Replace with the equivalent strings in German
 ];
 
 const InputDevice = Object.freeze({
