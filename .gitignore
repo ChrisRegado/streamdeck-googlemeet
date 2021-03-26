@@ -142,3 +142,6 @@ dmypy.json
 
 .vscode/
 .DS_Store
+DistributionTool.exe
+DistributionTool
+com.chrisregado.googlemeet.streamDeckPlugin

@@ -3,15 +3,15 @@ import asyncio
 import logging
 
 from browser_websocket_server import BrowserWebsocketServer
-from event_handlers.create_or_join_event_handler import CreateOrJoinEventHandler
 from event_handlers.camera_toggle_event_handler import CameraToggleEventHandler
 from event_handlers.chat_toggle_event_handler import ChatToggleEventHandler
-from event_handlers.pin_toggle_event_handler import PinToggleEventHandler
 from event_handlers.hand_toggle_event_handler import HandToggleEventHandler
 from event_handlers.leave_call_event_handler import LeaveCallEventHandler
 from event_handlers.mic_toggle_event_handler import MicToggleEventHandler
 from event_handlers.mute_mic_event_handler import MuteMicEventHandler
+from event_handlers.open_meet_event_handler import OpenMeetEventHandler
 from event_handlers.participants_toggle_event_handler import ParticipantsToggleEventHandler
+from event_handlers.pin_presentation_toggle_event_handler import PinPresentationToggleEventHandler
 from event_handlers.turn_off_camera_event_handler import TurnOffCameraEventHandler
 from event_handlers.turn_on_camera_event_handler import TurnOnCameraEventHandler
 from event_handlers.unmute_mic_event_handler import UnmuteMicEventHandler
@@ -49,15 +49,15 @@ def register_handlers(
         stream_deck_client: StreamDeckWebsocketClient,
         browser_manager: BrowserWebsocketServer) -> None:
     event_handlers = [
-        CreateOrJoinEventHandler(stream_deck_client, browser_manager),
         CameraToggleEventHandler(stream_deck_client, browser_manager),
         ChatToggleEventHandler(stream_deck_client, browser_manager),
         HandToggleEventHandler(stream_deck_client, browser_manager),
-        PinToggleEventHandler(stream_deck_client, browser_manager),
         LeaveCallEventHandler(stream_deck_client, browser_manager),
         MicToggleEventHandler(stream_deck_client, browser_manager),
         MuteMicEventHandler(stream_deck_client, browser_manager),
+        OpenMeetEventHandler(stream_deck_client, browser_manager),
         ParticipantsToggleEventHandler(stream_deck_client, browser_manager),
+        PinPresentationToggleEventHandler(stream_deck_client, browser_manager),
         TurnOffCameraEventHandler(stream_deck_client, browser_manager),
         TurnOnCameraEventHandler(stream_deck_client, browser_manager),
         UnmuteMicEventHandler(stream_deck_client, browser_manager),

@@ -3,7 +3,7 @@ from event_handlers.base_toggle_event_handler import BaseToggleEventHandler
 
 class HandToggleEventHandler(BaseToggleEventHandler):
     """
-    A Stream Deck button that shows your raised hand ,
+    A Stream Deck button that shows whether or not your hand is raised,
     and toggles the hand on and off when you press the button.
     """
 

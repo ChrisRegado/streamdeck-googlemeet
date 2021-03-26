@@ -2,11 +2,11 @@
 
 ![Screenshot](keys_screenshot.png)
 
-This is a plugin that allows the [Elgato Stream Deck](https://www.elgato.com/en/gaming/stream-deck) to control your camera and microphone in a Google Meet call. It provides toggle buttons that show whether your camera and mic are on or off, and they update whenever you press a Stream Deck button or mute/unmute directly in Meet. It also provides dedicated on/off keys, in case you prefer single-purpose buttons.
+This is a plugin that allows the [Elgato Stream Deck](https://www.elgato.com/en/gaming/stream-deck) to control your camera and microphone in a Google Meet call. It provides toggle buttons that show whether your camera and mic are on or off, and they update whenever you press a Stream Deck button or mute/unmute directly in Meet. It also provides some other buttons to control various elements of the Meet web UI.
 
 This plugin works in conjuction with our Google Chrome web extension, which is required for this plugin to function.
 
-Developed and tested primarily on macOS 10.15, Python 3.8.5, Chrome 84, and Stream Deck app v4.8.1. It should work on Windows as well.
+Developed and tested primarily on macOS 11.2, Python 3.8.5, Chrome 89, and Stream Deck app v4.9.3. It should work on Windows as well.
 
 ## Installing
 

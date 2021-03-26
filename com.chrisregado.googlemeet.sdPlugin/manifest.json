@@ -1,20 +1,20 @@
 {
   "Actions": [
     {
-      "Icon": "images/actions/google_meet",
-      "Name": "Create or Join Meeting",
+      "Icon": "images/actions/open_meet",
+      "Name": "Open Meet",
       "States": [
         {
-          "Image": "images/keys/google_meet",
-          "Title": "Create/Join Meeting",
+          "Image": "images/keys/open_meet",
+          "Title": "Open Meet",
           "TitleAlignment": "top",
           "FontSize": "8",
           "ShowTitle": false
         }
       ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Create or Join Meeting.",
-      "UUID": "com.chrisregado.googlemeet.createorjoin"
+      "SupportedInMultiActions": true,
+      "Tooltip": "Open a Google Meet browser window.",
+      "UUID": "com.chrisregado.googlemeet.openmeet"
     },
     {
       "Icon": "images/actions/mic_off",
@@ -148,7 +148,7 @@
       "UUID": "com.chrisregado.googlemeet.leavecall"
     },
     {
-      "Icon": "images/actions/hand_on",
+      "Icon": "images/actions/hand",
       "Name": "Toggle Hand",
       "States": [
         {
@@ -160,53 +160,53 @@
         },
         {
           "Image": "images/keys/hand_off",
-          "Title": "Hand",
+          "Title": "Hand Down",
           "TitleAlignment": "top",
-          "FontSize": "13",
+          "FontSize": "7",
           "ShowTitle": false
         },
         {
           "Image": "images/keys/hand_on",
           "Title": "Hand Raised",
           "TitleAlignment": "top",
-          "FontSize": "13",
+          "FontSize": "7",
           "ShowTitle": false
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Toggle hand.",
+      "Tooltip": "Raise/lower your hand.",
       "UUID": "com.chrisregado.googlemeet.togglehand"
-    },    
+    },
     {
-      "Icon": "images/actions/pin_on",
-      "Name": "Toggle Pin",
+      "Icon": "images/actions/pin_presentation",
+      "Name": "Toggle Pinned Presentation",
       "States": [
         {
-          "Image": "images/keys/pin_disconnected",
+          "Image": "images/keys/presentation_pin_off",
           "Title": "Disconnected",
+          "TitleAlignment": "top",
+          "FontSize": "6",
+          "ShowTitle": false
+        },
+        {
+          "Image": "images/keys/presentation_pin_off",
+          "Title": "Pres Unpinned",
           "TitleAlignment": "top",
           "FontSize": "7",
           "ShowTitle": false
         },
         {
-          "Image": "images/keys/pin_off",
-          "Title": "Unpinned",
+          "Image": "images/keys/presentation_pin_on",
+          "Title": "Pres Pinned",
           "TitleAlignment": "top",
-          "FontSize": "13",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/pin_on",
-          "Title": "Pinned",
-          "TitleAlignment": "top",
-          "FontSize": "13",
+          "FontSize": "7",
           "ShowTitle": false
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Toggle pin.",
-      "UUID": "com.chrisregado.googlemeet.togglepin"
-    },    
+      "Tooltip": "Pin (or unpin) a presentation to your screen.",
+      "UUID": "com.chrisregado.googlemeet.togglepinpresentation"
+    },
     {
       "Icon": "images/actions/chat",
       "Name": "Toggle Chat",
@@ -220,7 +220,7 @@
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Toggle chat.",
+      "Tooltip": "Show/hide the chat panel.",
       "UUID": "com.chrisregado.googlemeet.togglechat"
     },
     {
@@ -236,7 +236,7 @@
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Toggle participants.",
+      "Tooltip": "Show/hide the list of meeting participants.",
       "UUID": "com.chrisregado.googlemeet.toggleparticipants"
     }
   ],
@@ -248,7 +248,7 @@
   "Name": "Google Meet",
   "Icon": "images/plugin_icon",
   "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "Version": "1.1.1",
+  "Version": "1.2.0",
   "Category": "Google Meet",
   "CategoryIcon": "images/category_icon",
   "OS": [
