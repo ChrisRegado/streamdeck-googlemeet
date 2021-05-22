@@ -2,17 +2,19 @@ class PinPresentationEventHandler extends ToggleEventHandler {
 
   _controlElementSelector = () => {
     /**
-     * For the most part, a presentation is very similar to any normal camera view.
-     * One distinguishing aspect is the absense of the participant's name. We use
-     * that here to infer which video feed is for a presentation.
+     * For the most part, a presentation is very similar to any normal camera view,
+     * but they have a couple of distinguishing aspects. When not pinned, they have a
+     * special presentation icon in the name tag. When pinned, they don't display a
+     * name tag at all, unlike camera feeds.
      */
     const views = document.querySelectorAll('div[jsname="E2KThb"]');
     if (!views) {
       return undefined;
     }
     for (var i = 0; i < views.length; i++) {
+      const presentationIcon = views[i].querySelector('.L3eATc');
       const videoNameTag = views[i].querySelector('div[jsname="giiMnc"]');
-      if (!videoNameTag) {
+      if (presentationIcon || !videoNameTag) {
         return views[i].querySelector('div[jsname="fniDcc"]');
       }
     }
@@ -57,7 +59,7 @@ class PinPresentationEventHandler extends ToggleEventHandler {
     observer.observe(document.body, {
       childList: false,
       attributes: true,
-      attributeFilter: ["aria-pressed"],
+      attributeFilter: ["aria-pressed", "data-requested-participant-id"],
       attributeOldValue: true,
       subtree: true,
     });

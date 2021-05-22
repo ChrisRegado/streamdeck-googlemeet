@@ -1,7 +1,7 @@
 class CameraEventHandler extends ToggleEventHandler {
 
   _controlElementSelector = () => {
-    return document.querySelector('div[jsname="R3GXJb"] div[role="button"][jsname="BOHaEe"]');
+    return document.querySelector('div[jsname="R3GXJb"] [jsname="BOHaEe"]');
   }
 
   _sendMuteState = () => {

@@ -7,7 +7,7 @@ class LeaveCallEventHandler extends SDEventHandler {
   }
 
   _leaveCall = () => {
-    const button = document.querySelector('div[role="button"][jsname="CQylAd"]');
+    const button = document.querySelector('[jsname="CQylAd"]');
     if (!button) {
       throw new ControlsNotFoundError("No Leave Call button found!")
     }

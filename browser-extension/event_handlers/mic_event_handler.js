@@ -1,7 +1,7 @@
 class MicEventHandler extends ToggleEventHandler {
 
   _controlElementSelector = () => {
-    return document.querySelector('div[jsname="Dg9Wp"] div[role="button"][jsname="BOHaEe"]');
+    return document.querySelector('div[jsname="Dg9Wp"] [jsname="BOHaEe"]');
   }
 
   _sendMuteState = () => {
