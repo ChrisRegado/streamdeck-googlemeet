@@ -6,7 +6,7 @@ This is a plugin that allows the [Elgato Stream Deck](https://www.elgato.com/en/
 
 This plugin works in conjuction with our Google Chrome web extension, which is required for this plugin to function.
 
-Developed and tested primarily on macOS 11.2, Python 3.8.5, Chrome 89, and Stream Deck app v4.9.3. It should work on Windows as well.
+Developed and tested primarily on macOS 11.2, Python 3.8.5, Chrome 89, and Stream Deck app v5.0.0. It should work on Windows as well.
 
 ## Installing
 
@@ -18,11 +18,21 @@ Developed and tested primarily on macOS 11.2, Python 3.8.5, Chrome 89, and Strea
 6. If you use an ad blocker (such as uBlock Origin with the EasyPrivacy filter list), you may have to add meet.google.com as a trusted site in your blocker's settings to allow the Chrome Extension to work. (Some filters block websockets to 127.0.0.1, which this extension needs to communicate with the Stream Deck.)
 7. Add the buttons to your Stream Deck, and start a Google Meet call to try them out!
 
+It's safe to delete the `com.chrisregado.googlemeet.streamDeckPlugin` file once it's installed. However, on Windows, you may need to quit the Stream Deck desktop software (by right clicking its icon in the Windows task tray and clicking Quit) and re-launch it to avoid "action can't be completed because the file is open" errors.
+
 ## Updating
 
-To update the Stream Deck plugin, download and open the plugin package just like when you initially installed it. If you experience any glitches after updating (such as on/off icons not changing on the toggle buttons), please try deleting your Meet buttons and re-adding them to your Stream Deck in the Stream Deck desktop app.
+To update the Stream Deck plugin, download and open the new plugin package just like when you initially installed it. If you experience any glitches after updating (such as on/off icons not changing on the toggle buttons), please try deleting your Meet buttons and re-adding them to your Stream Deck in the Stream Deck desktop app.
 
 To update the Chrome extension, uninstall your existing version by clicking Remove on the Chrome Extension Settings page, and then follow the installation instructions again to install the new version.
+
+## Uninstalling
+
+In Chrome, go to your Extensions Settings page (`chrome://extensions/`), and click the Remove button for Stream Deck Google Meet Actions.
+
+In the Stream Deck desktop app, right click on one of the Google Meet actions in the list on the right-hand side of the window, and click the "Uninstall..." button.
+
+![Screenshot](uninstall_screenshot.png)
 
 ## How It Works
 
@@ -120,12 +130,6 @@ Finally, use the DistributionTool to bundle everything into the Stream Deck plug
 ## Developing the Chrome Extension
 
 Follow the usual "Load unpacked" installation instructions described above, pointing Chrome at the `browser-extension` folder of your workspace. You can then reload the extension directly from source using the reload button on Chrome's Extension Settings page. See https://developer.chrome.com/extensions/getstarted for more details.
-
-## Uninstalling
-
-In the Stream Deck desktop app, click the "More Actions..." button, search for "Google Meet" (or scroll down to find it), and click the "Uninstall..." button.
-
-In Chrome, go to your Extensions Settings page (`chrome://extensions/`), and click the Remove button for the Stream Deck Google Meet Actions.
 
 ## Contributing
 
