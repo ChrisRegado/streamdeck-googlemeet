@@ -4,8 +4,11 @@
   "description": "Connects to our accompanying Elgato Stream Deck plugin to create physical controls for your Google Meet calls.",
   "author": "Chris Regado",
   "homepage_url": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "manifest_version": 2,
-  "permissions": ["https://meet.google.com/*"],
+  "manifest_version": 3,
+  "permissions": [],
+  "host_permissions": [
+    "https://meet.google.com/*"
+  ],
   "content_scripts": [
     {
       "matches": ["https://meet.google.com/*"],
@@ -28,3 +31,4 @@
     }
   ]
 }
+
