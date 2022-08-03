@@ -16,7 +16,8 @@ const eventHandlers = [
   new ChatEventHandler(connectionManager),
   new ParticipantsEventHandler(connectionManager),
   new PinPresentationEventHandler(connectionManager),
-  new HandEventHandler(connectionManager)
+  new HandEventHandler(connectionManager),
+  new CaptionsEventHandler(connectionManager)
 ]
 
 connectionManager.initialize();
