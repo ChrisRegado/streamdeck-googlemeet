@@ -4,6 +4,7 @@ import logging
 
 from browser_websocket_server import BrowserWebsocketServer
 from event_handlers.camera_toggle_event_handler import CameraToggleEventHandler
+from event_handlers.captions_toggle_event_handler import CaptionsToggleEventHandler
 from event_handlers.chat_toggle_event_handler import ChatToggleEventHandler
 from event_handlers.hand_toggle_event_handler import HandToggleEventHandler
 from event_handlers.leave_call_event_handler import LeaveCallEventHandler
@@ -50,6 +51,7 @@ def register_handlers(
         browser_manager: BrowserWebsocketServer) -> None:
     event_handlers = [
         CameraToggleEventHandler(stream_deck_client, browser_manager),
+        CaptionsToggleEventHandler(stream_deck_client, browser_manager),
         ChatToggleEventHandler(stream_deck_client, browser_manager),
         HandToggleEventHandler(stream_deck_client, browser_manager),
         LeaveCallEventHandler(stream_deck_client, browser_manager),

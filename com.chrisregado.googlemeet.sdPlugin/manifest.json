@@ -178,6 +178,36 @@
       "UUID": "com.chrisregado.googlemeet.togglehand"
     },
     {
+      "Icon": "images/actions/captions",
+      "Name": "Toggle Captions",
+      "States": [
+        {
+          "Image": "images/keys/captions_off",
+          "Title": "Disconnected",
+          "TitleAlignment": "top",
+          "FontSize": "7",
+          "ShowTitle": false
+        },
+        {
+          "Image": "images/keys/captions_off",
+          "Title": "Captions Off",
+          "TitleAlignment": "top",
+          "FontSize": "7",
+          "ShowTitle": false
+        },
+        {
+          "Image": "images/keys/captions_on",
+          "Title": "Captions On",
+          "TitleAlignment": "top",
+          "FontSize": "7",
+          "ShowTitle": false
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Enable/Disable captions.",
+      "UUID": "com.chrisregado.googlemeet.togglecaptions"
+    },
+    {
       "Icon": "images/actions/pin_presentation",
       "Name": "Toggle Pinned Presentation",
       "States": [
@@ -248,7 +278,7 @@
   "Name": "Google Meet",
   "Icon": "images/plugin_icon",
   "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "Version": "1.2.0",
+  "Version": "1.2.1",
   "Category": "Google Meet",
   "CategoryIcon": "images/category_icon",
   "OS": [
