@@ -204,7 +204,7 @@
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Enable/Disable captions.",
+      "Tooltip": "Enable/disable captions.",
       "UUID": "com.chrisregado.googlemeet.togglecaptions"
     },
     {
@@ -278,7 +278,7 @@
   "Name": "Google Meet",
   "Icon": "images/plugin_icon",
   "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "Version": "1.2.1",
+  "Version": "1.3.0",
   "Category": "Google Meet",
   "CategoryIcon": "images/category_icon",
   "OS": [
