@@ -15,6 +15,7 @@
       "js": [
         "event_handlers/base_event_handler.js",
         "event_handlers/toggle_event_handler.js",
+        "event_handlers/label_based_toggle_event_handler.js",
         "event_handlers/side_panel_event_handler.js",
         "event_handlers/camera_event_handler.js",
         "event_handlers/chat_event_handler.js",
