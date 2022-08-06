@@ -1,5 +1,6 @@
 name: "Build and bundle the Stream Deck plugin"
 on:
+  workflow_dispatch:
   push:
     paths:
       - streamdeck-plugin/**
