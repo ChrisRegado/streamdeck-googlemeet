@@ -54,6 +54,8 @@ jobs:
         run: curl https://developer.elgato.com/documentation/stream-deck/distributiontool/DistributionToolMac.zip -o DistributionToolMac.zip
       - name: Extract DistributionTool
         run: unzip DistributionToolMac.zip
+      - name: Make DistributionTool Executable
+        run: chmod +x DistributionTool
       - name: Download macOS plugin artifact
         uses: actions/download-artifact@v3
         with:
