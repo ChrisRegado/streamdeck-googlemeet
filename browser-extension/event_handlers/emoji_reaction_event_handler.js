@@ -29,15 +29,11 @@ class EmojiReactionEventHandler extends SDEventHandler {
                 resolve(true);
 
             } else {
-                this._waitForElementDelay(300).then(() => {
+                new Promise((resolve) => setTimeout(resolve, 300)).then(() => {
                     resolve(this._tryClickEmojiReactButton(emojiChar, attempts - 1));
                 })
             }
         });
-    }
-
-    _waitForElementDelay = (t) => {
-        return new Promise((resolve) => setTimeout(resolve, t))
     }
 
     _openEmojiChoicesPanel = () => {
