@@ -12,12 +12,13 @@ const connectionManager = new StreamDeckConnectionMananger();
 const eventHandlers = [
   new MicEventHandler(connectionManager),
   new CameraEventHandler(connectionManager),
-  new LeaveCallEventHandler(connectionManager),
+  // new LeaveCallEventHandler(connectionManager),
   new ChatEventHandler(connectionManager),
   new ParticipantsEventHandler(connectionManager),
   new PinPresentationEventHandler(connectionManager),
   new HandEventHandler(connectionManager),
-  new CaptionsEventHandler(connectionManager)
+  new CaptionsEventHandler(connectionManager),
+  new EmojiReactionEventHandler(connectionManager)
 ]
 
 connectionManager.initialize();
