@@ -19,8 +19,7 @@ class EmojiReactionEventHandler extends SDEventHandler {
 
     _tryClickEmojiReactButton = (emojiChar, attempts) => {
         return new Promise((resolve) => {
-            if(attempts <= 0)
-            {
+            if (attempts <= 0) {
                 throw new ControlsNotFoundError(`Could not find button for emoji reaction ${emojiChar}!`);
             }
             let button = document.querySelector(`div[data-emoji="${emojiChar}"]`);
@@ -29,17 +28,16 @@ class EmojiReactionEventHandler extends SDEventHandler {
                 resolve(true);
 
             } else {
-                new Promise((resolve) => setTimeout(resolve, 300)).then(() => {
+                resolve(new Promise((resolve) => setTimeout(() => {
                     resolve(this._tryClickEmojiReactButton(emojiChar, attempts - 1));
-                })
+                }, 300)));
             }
         });
     }
 
     _openEmojiChoicesPanel = () => {
         const emojiChoicesButton = document.querySelector('button[jsname="G0pghc"]');
-        if(!emojiChoicesButton)
-        {
+        if (!emojiChoicesButton) {
             throw new ControlsNotFoundError("Tried to open the emoji reaction panel but could not find the button!")
         }
         emojiChoicesButton.click();
@@ -51,7 +49,6 @@ class EmojiReactionEventHandler extends SDEventHandler {
             this._tryClickEmojiReactButton(emojiChar, 5);
         });
     }
-
 
 
 }
