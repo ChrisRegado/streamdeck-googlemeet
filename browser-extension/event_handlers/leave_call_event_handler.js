@@ -1,4 +1,3 @@
-/*
 class LeaveCallEventHandler extends SDEventHandler {
 
   handleStreamDeckEvent = (message) => {
@@ -15,4 +14,4 @@ class LeaveCallEventHandler extends SDEventHandler {
     button.click();
   }
 
-}*/
+}
