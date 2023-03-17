@@ -1,19 +1,11 @@
 class EmojiReactionEventHandler extends SDEventHandler {
-    _emojiChoices = [
-        "💖",
-        "👍",
-        "🎉",
-        "👏",
-        "😂",
-        "😮",
-        "😢",
-        "🤔",
-        "👎"
-    ];
+    _eventPattern = /emojiReact=(?<emojiChar>\p{Extended_Pictographic})/u;
 
     handleStreamDeckEvent = (message) => {
-        if (message.event === "leaveCall") {
-            this._emojiReact("💖");
+
+        let match = this._eventPattern.exec(message.event);
+        if(match) {
+            this._emojiReact(match.groups.emojiChar);
         }
     }
 
@@ -49,6 +41,4 @@ class EmojiReactionEventHandler extends SDEventHandler {
             this._tryClickEmojiReactButton(emojiChar, 5);
         });
     }
-
-
 }
