@@ -19,6 +19,8 @@ class EventHandler:
     action, unless you override the default `on_stream_deck_event` implementation.
     """
     STREAM_DECK_ACTION = "(invalid)"
+    # If set to an action prefix string, allows matching a family of actions sharing a prefix.
+    STREAM_DECK_ACTION_PREFIX = None
 
     def __init__(self, stream_deck: "StreamDeckWebsocketClient", browser_manager: "BrowserWebsocketServer") -> None:
         self._logger = logging.getLogger(__name__)
@@ -48,7 +50,8 @@ class EventHandler:
         event_type = event.get("event")
         target_action = event.get("action")
 
-        if target_action != self.STREAM_DECK_ACTION:
+        if target_action != self.STREAM_DECK_ACTION \
+                and not (target_action or "").startswith(self.STREAM_DECK_ACTION_PREFIX):
             # This message is probably intended for some other event handler.
             return
 
