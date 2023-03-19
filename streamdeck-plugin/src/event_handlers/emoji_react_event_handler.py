@@ -6,7 +6,7 @@ class EmojiReactEventHandler(EventHandler):
     A reusable handler for Emoji reactions.
     """
 
-    EMOJI_REACTION_PARAMS = {
+    ACTION_TO_EMOJI = {
         "com.chrisregado.googlemeet.emojireact.sparklingheart": "💖",
         "com.chrisregado.googlemeet.emojireact.thumbsup": "👍",
         "com.chrisregado.googlemeet.emojireact.partypopper": "🎉",
@@ -21,12 +21,9 @@ class EmojiReactEventHandler(EventHandler):
     # The full action string is this prefix followed by the literal emoji character sequence
     STREAM_DECK_ACTION_PREFIX = "com.chrisregado.googlemeet.emojireact."
 
-    def __init__(self, stream_deck: "StreamDeckWebsocketClient", browser_manager: "BrowserWebsocketServer"):
-        super().__init__(stream_deck, browser_manager)
-
     def _get_emoji_char_for_event(self, event: dict):
         action = event['action']
-        emoji_char = self.EMOJI_REACTION_PARAMS.get(action)
+        emoji_char = self.ACTION_TO_EMOJI.get(action)
         if not emoji_char:
             raise NotImplementedError(f"The action '{action}' was requested, but there is no corresponding emoji.")
         return emoji_char
