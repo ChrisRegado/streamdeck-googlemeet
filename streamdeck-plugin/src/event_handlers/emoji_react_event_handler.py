@@ -18,7 +18,6 @@ class EmojiReactEventHandler(EventHandler):
         "com.chrisregado.googlemeet.emojireact.thumbsdown": "👎"
     }
 
-    # The full action string is this prefix followed by the literal emoji character sequence
     STREAM_DECK_ACTION_PREFIX = "com.chrisregado.googlemeet.emojireact."
 
     def _get_emoji_char_for_event(self, event: dict):
