@@ -1,3 +1,4 @@
+import json
 from event_handlers.base_event_handler import EventHandler
 
 
@@ -20,7 +21,7 @@ class EmojiReactEventHandler(EventHandler):
 
     STREAM_DECK_ACTION_PREFIX = "com.chrisregado.googlemeet.emojireact."
 
-    def _get_emoji_char_for_event(self, event: dict):
+    def _get_emoji_char_for_event(self, event: dict) -> str:
         action = event['action']
         emoji_char = self.ACTION_TO_EMOJI.get(action)
         if not emoji_char:
@@ -28,10 +29,15 @@ class EmojiReactEventHandler(EventHandler):
         return emoji_char
 
     @staticmethod
-    def _make_emoji_react_browser_plugin_message(self, emoji_char):
-        return self._make_simple_sd_event(f"emojiReact={emoji_char}")
+    def _make_emoji_react_browser_plugin_message(emoji_char) -> str:
+        return json.dumps({"event": "emojiReact", "emojiChar": emoji_char})
 
     async def _key_up_handler(self, event: dict) -> None:
-        emoji_char = self._get_emoji_char_for_event(event)
+        # noinspection PyBroadException
+        try:
+            emoji_char = self._get_emoji_char_for_event(event)
+        except Exception:
+            self._logger.exception("Failed to find emoji for event!")
+            return
         message = self._make_emoji_react_browser_plugin_message(emoji_char)
         await self._browser_manager.send_to_clients(message)

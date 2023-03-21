@@ -1,11 +1,8 @@
-class EmojiReactionEventHandler extends SDEventHandler {
-    _eventPattern = /emojiReact=(?<emojiChar>\p{Extended_Pictographic})/u;
+class EmojiReactEventHandler extends SDEventHandler {
 
     handleStreamDeckEvent = (message) => {
-
-        let match = this._eventPattern.exec(message.event);
-        if(match) {
-            this._emojiReact(match.groups.emojiChar);
+        if (message.event === "emojiReact") {
+            this._emojiReact(message.emojiChar);
         }
     }
 
