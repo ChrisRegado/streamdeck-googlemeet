@@ -1,6 +1,9 @@
 import json
 import logging
 
+# TODO remove this. Temporary logging for debugging during development
+logging.basicConfig(filename='C:\\Users\\samjg\\projects\\streamdeck-googlemeet\\log.txt', encoding='utf-8', level=logging.DEBUG)
+
 
 class EventHandler:
     """
@@ -50,8 +53,11 @@ class EventHandler:
         event_type = event.get("event")
         target_action = event.get("action")
 
-        if target_action != self.STREAM_DECK_ACTION \
-                and not (target_action or "").startswith(self.STREAM_DECK_ACTION_PREFIX):
+        action_matches_on_prefix = self.STREAM_DECK_ACTION_PREFIX is not None \
+                                   and target_action is not None \
+                                   and target_action.startswith(self.STREAM_DECK_ACTION_PREFIX)
+
+        if target_action != self.STREAM_DECK_ACTION and not action_matches_on_prefix:
             # This message is probably intended for some other event handler.
             return
 

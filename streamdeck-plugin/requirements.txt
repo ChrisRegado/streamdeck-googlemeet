@@ -1,5 +1,5 @@
-altgraph==0.17
-macholib==1.14
-pyinstaller==4.6
-pyinstaller-hooks-contrib==2021.1
-websockets==8.1
+altgraph~=0.17
+macholib~=1.16
+pyinstaller~=5.9
+pyinstaller-hooks-contrib~=2023.1
+websockets~=10.4
