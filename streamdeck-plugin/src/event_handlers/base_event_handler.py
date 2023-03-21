@@ -1,9 +1,6 @@
 import json
 import logging
 
-# TODO remove this. Temporary logging for debugging during development
-logging.basicConfig(filename='C:\\Users\\samjg\\projects\\streamdeck-googlemeet\\log.txt', encoding='utf-8', level=logging.DEBUG)
-
 
 class EventHandler:
     """
