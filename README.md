@@ -144,3 +144,7 @@ Feel free to contribute a feature or bug fix by opening a pull request. If you d
 This project was inspired by https://github.com/JeroenVdb/streamdeck-googlemeet.
 
 Neither this app nor its creator are affiliated with or endorsed by Google. The Google Meet name and logo are the exclusive property of Google.
+
+Fonts for the actions and keys utilize rendered characters from the `Noto Emoji` and `Noto Color Emoji` fonts, under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+https://fonts.google.com/noto/specimen/Noto+Color+Emoji?query=emoji&noto.query=emoji&preview.text=%F0%9F%92%96&preview.text_type=custom
+https://fonts.google.com/noto/specimen/Noto+Emoji?query=emoji&noto.query=emoji&preview.text=%F0%9F%92%96&preview.text_type=custom

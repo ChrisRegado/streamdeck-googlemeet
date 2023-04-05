@@ -283,6 +283,126 @@
       ],
       "Tooltip": "Emoji react - Sparkling heart",
       "UUID": "com.chrisregado.googlemeet.emojireact.sparklingheart"
+    },
+    {
+      "Icon": "images/actions/emoji_react_thumbs_up",
+      "Name": "Emoji react - Thumbs up",
+      "States": [
+        {
+          "Image": "images/keys/emoji_react_thumbs_up",
+          "Title": "Emoji react - Thumbs up",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Tooltip": "Emoji react - Thumbs up",
+      "UUID": "com.chrisregado.googlemeet.emojireact.thumbsup"
+    },
+    {
+      "Icon": "images/actions/emoji_react_thumbs_up",
+      "Name": "Emoji react - Party popper",
+      "States": [
+        {
+          "Image": "images/keys/emoji_react_party_popper",
+          "Title": "Emoji react - Party popper",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Tooltip": "Emoji react - Party popper",
+      "UUID": "com.chrisregado.googlemeet.emojireact.partypopper"
+    },
+    {
+      "Icon": "images/actions/emoji_react_clapping_hands",
+      "Name": "Emoji react - Clapping hands",
+      "States": [
+        {
+          "Image": "images/keys/emoji_react_clapping_hands",
+          "Title": "Emoji react - Clapping hands",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Tooltip": "Emoji react - Clapping hands",
+      "UUID": "com.chrisregado.googlemeet.emojireact.clappinghands"
+    },
+    {
+      "Icon": "images/actions/emoji_react_face_with_tears_of_joy",
+      "Name": "Emoji react - Face with tears of joy",
+      "States": [
+        {
+          "Image": "images/keys/emoji_react_face_with_tears_of_joy",
+          "Title": "Emoji react - Face with tears of joy",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Tooltip": "Emoji react - Face with tears of joy",
+      "UUID": "com.chrisregado.googlemeet.emojireact.facewithtearsofjoy"
+    },
+    {
+      "Icon": "images/actions/emoji_react_face_with_open_mouth",
+      "Name": "Emoji react - Face with open mouth",
+      "States": [
+        {
+          "Image": "images/keys/emoji_react_face_with_open_mouth",
+          "Title": "Emoji react - Face with open mouth",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Tooltip": "Emoji react - Face with open mouth",
+      "UUID": "com.chrisregado.googlemeet.emojireact.facewithopenmouth"
+    },
+    {
+      "Icon": "images/actions/emoji_react_crying_face",
+      "Name": "Emoji react - Crying face",
+      "States": [
+        {
+          "Image": "images/keys/emoji_react_crying_face",
+          "Title": "Emoji react - Crying face",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Tooltip": "Emoji react - Crying face",
+      "UUID": "com.chrisregado.googlemeet.emojireact.cryingface"
+    },
+    {
+      "Icon": "images/actions/emoji_react_thinking_face",
+      "Name": "Emoji react - Thinking face",
+      "States": [
+        {
+          "Image": "images/keys/emoji_react_thinking_face",
+          "Title": "Emoji react - Thinking face",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Tooltip": "Emoji react - Thinking face",
+      "UUID": "com.chrisregado.googlemeet.emojireact.thinkingface"
+    },
+    {
+      "Icon": "images/actions/emoji_react_thumbs_down",
+      "Name": "Emoji react - Thumbs down",
+      "States": [
+        {
+          "Image": "images/keys/emoji_react_thumbs_down",
+          "Title": "Emoji react - Thumbs down",
+          "TitleAlignment": "top",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Tooltip": "Emoji react - Thumbs down",
+      "UUID": "com.chrisregado.googlemeet.emojireact.thumbsdown"
     }
   ],
   "SDKVersion": 2,
