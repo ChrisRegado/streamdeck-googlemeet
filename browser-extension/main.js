@@ -17,7 +17,8 @@ const eventHandlers = [
   new ParticipantsEventHandler(connectionManager),
   new PinPresentationEventHandler(connectionManager),
   new HandEventHandler(connectionManager),
-  new CaptionsEventHandler(connectionManager)
+  new CaptionsEventHandler(connectionManager),
+  new EmojiReactEventHandler(connectionManager)
 ]
 
 connectionManager.initialize();

@@ -50,7 +50,7 @@ class BrowserWebsocketServer:
         if self._ws_clients:
             self._logger.info(
                 f"Broadcasting message to connected browser clients: {message}")
-            await asyncio.wait([client.send(message) for client in self._ws_clients])
+            await asyncio.gather(*[client.send(message) for client in self._ws_clients])
         else:
             self._logger.warn(
                 ("There were no active browser extension clients to send our"

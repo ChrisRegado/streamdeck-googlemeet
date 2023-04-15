@@ -25,6 +25,7 @@
         "event_handlers/pin_presentation_event_handler.js",
         "event_handlers/hand_event_handler.js",
         "event_handlers/captions_event_handler.js",
+        "event_handlers/emoji_react_event_handler.js",
         "stream_deck_connection_manager.js",
         "errors.js",
         "main.js"

@@ -16,6 +16,7 @@ from event_handlers.pin_presentation_toggle_event_handler import PinPresentation
 from event_handlers.turn_off_camera_event_handler import TurnOffCameraEventHandler
 from event_handlers.turn_on_camera_event_handler import TurnOnCameraEventHandler
 from event_handlers.unmute_mic_event_handler import UnmuteMicEventHandler
+from event_handlers.emoji_react_event_handler import EmojiReactEventHandler
 from stream_deck_client import StreamDeckWebsocketClient
 
 
@@ -63,6 +64,7 @@ def register_handlers(
         TurnOffCameraEventHandler(stream_deck_client, browser_manager),
         TurnOnCameraEventHandler(stream_deck_client, browser_manager),
         UnmuteMicEventHandler(stream_deck_client, browser_manager),
+        EmojiReactEventHandler(stream_deck_client, browser_manager),
     ]
 
     for event_handler in event_handlers:
