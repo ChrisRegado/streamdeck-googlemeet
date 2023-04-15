@@ -271,137 +271,137 @@
     },
     {
       "Icon": "images/actions/emoji_react_sparkling_heart",
-      "Name": "Emoji react - Sparkling heart",
+      "Name": "Emoji React - Sparkling Heart",
       "States": [
         {
           "Image": "images/keys/emoji_react_sparkling_heart",
-          "Title": "Emoji react - Sparkling heart",
+          "Title": "Emoji React",
           "TitleAlignment": "top",
           "FontSize": "10",
           "ShowTitle": false
         }
       ],
-      "Tooltip": "Emoji react - Sparkling heart",
+      "Tooltip": "Emoji React - Sparkling Heart",
       "UUID": "com.chrisregado.googlemeet.emojireact.sparklingheart"
     },
     {
       "Icon": "images/actions/emoji_react_thumbs_up",
-      "Name": "Emoji react - Thumbs up",
+      "Name": "Emoji React - Thumbs Up",
       "States": [
         {
           "Image": "images/keys/emoji_react_thumbs_up",
-          "Title": "Emoji react - Thumbs up",
+          "Title": "Emoji React",
           "TitleAlignment": "top",
           "FontSize": "10",
           "ShowTitle": false
         }
       ],
-      "Tooltip": "Emoji react - Thumbs up",
+      "Tooltip": "Emoji React - Thumbs Up",
       "UUID": "com.chrisregado.googlemeet.emojireact.thumbsup"
     },
     {
-      "Icon": "images/actions/emoji_react_thumbs_up",
-      "Name": "Emoji react - Party popper",
+      "Icon": "images/actions/emoji_react_party_popper",
+      "Name": "Emoji React - Party Popper",
       "States": [
         {
           "Image": "images/keys/emoji_react_party_popper",
-          "Title": "Emoji react - Party popper",
+          "Title": "Emoji React",
           "TitleAlignment": "top",
           "FontSize": "10",
           "ShowTitle": false
         }
       ],
-      "Tooltip": "Emoji react - Party popper",
+      "Tooltip": "Emoji React - Party Popper",
       "UUID": "com.chrisregado.googlemeet.emojireact.partypopper"
     },
     {
       "Icon": "images/actions/emoji_react_clapping_hands",
-      "Name": "Emoji react - Clapping hands",
+      "Name": "Emoji React - Clapping Hands",
       "States": [
         {
           "Image": "images/keys/emoji_react_clapping_hands",
-          "Title": "Emoji react - Clapping hands",
+          "Title": "Emoji React",
           "TitleAlignment": "top",
           "FontSize": "10",
           "ShowTitle": false
         }
       ],
-      "Tooltip": "Emoji react - Clapping hands",
+      "Tooltip": "Emoji React - Clapping Hands",
       "UUID": "com.chrisregado.googlemeet.emojireact.clappinghands"
     },
     {
       "Icon": "images/actions/emoji_react_face_with_tears_of_joy",
-      "Name": "Emoji react - Face with tears of joy",
+      "Name": "Emoji React - Face with Tears of Joy",
       "States": [
         {
           "Image": "images/keys/emoji_react_face_with_tears_of_joy",
-          "Title": "Emoji react - Face with tears of joy",
+          "Title": "Emoji React",
           "TitleAlignment": "top",
           "FontSize": "10",
           "ShowTitle": false
         }
       ],
-      "Tooltip": "Emoji react - Face with tears of joy",
+      "Tooltip": "Emoji React - Face with Tears of Joy",
       "UUID": "com.chrisregado.googlemeet.emojireact.facewithtearsofjoy"
     },
     {
       "Icon": "images/actions/emoji_react_face_with_open_mouth",
-      "Name": "Emoji react - Face with open mouth",
+      "Name": "Emoji React - Face with Open Mouth",
       "States": [
         {
           "Image": "images/keys/emoji_react_face_with_open_mouth",
-          "Title": "Emoji react - Face with open mouth",
+          "Title": "Emoji React",
           "TitleAlignment": "top",
           "FontSize": "10",
           "ShowTitle": false
         }
       ],
-      "Tooltip": "Emoji react - Face with open mouth",
+      "Tooltip": "Emoji React - Face with Open Mouth",
       "UUID": "com.chrisregado.googlemeet.emojireact.facewithopenmouth"
     },
     {
       "Icon": "images/actions/emoji_react_crying_face",
-      "Name": "Emoji react - Crying face",
+      "Name": "Emoji React - Crying Face",
       "States": [
         {
           "Image": "images/keys/emoji_react_crying_face",
-          "Title": "Emoji react - Crying face",
+          "Title": "Emoji React",
           "TitleAlignment": "top",
           "FontSize": "10",
           "ShowTitle": false
         }
       ],
-      "Tooltip": "Emoji react - Crying face",
+      "Tooltip": "Emoji React - Crying Face",
       "UUID": "com.chrisregado.googlemeet.emojireact.cryingface"
     },
     {
       "Icon": "images/actions/emoji_react_thinking_face",
-      "Name": "Emoji react - Thinking face",
+      "Name": "Emoji React - Thinking Face",
       "States": [
         {
           "Image": "images/keys/emoji_react_thinking_face",
-          "Title": "Emoji react - Thinking face",
+          "Title": "Emoji React",
           "TitleAlignment": "top",
           "FontSize": "10",
           "ShowTitle": false
         }
       ],
-      "Tooltip": "Emoji react - Thinking face",
+      "Tooltip": "Emoji React - Thinking Face",
       "UUID": "com.chrisregado.googlemeet.emojireact.thinkingface"
     },
     {
       "Icon": "images/actions/emoji_react_thumbs_down",
-      "Name": "Emoji react - Thumbs down",
+      "Name": "Emoji React - Thumbs Down",
       "States": [
         {
           "Image": "images/keys/emoji_react_thumbs_down",
-          "Title": "Emoji react - Thumbs down",
+          "Title": "Emoji React",
           "TitleAlignment": "top",
           "FontSize": "10",
           "ShowTitle": false
         }
       ],
-      "Tooltip": "Emoji react - Thumbs down",
+      "Tooltip": "Emoji React - Thumbs Down",
       "UUID": "com.chrisregado.googlemeet.emojireact.thumbsdown"
     }
   ],
@@ -413,7 +413,7 @@
   "Name": "Google Meet",
   "Icon": "images/plugin_icon",
   "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "Version": "1.3.0",
+  "Version": "1.4.0",
   "Category": "Google Meet",
   "CategoryIcon": "images/category_icon",
   "OS": [

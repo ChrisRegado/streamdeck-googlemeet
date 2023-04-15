@@ -51,8 +51,8 @@ class EventHandler:
         target_action = event.get("action")
 
         action_matches_on_prefix = self.STREAM_DECK_ACTION_PREFIX is not None \
-                                   and target_action is not None \
-                                   and target_action.startswith(self.STREAM_DECK_ACTION_PREFIX)
+            and target_action is not None \
+            and target_action.startswith(self.STREAM_DECK_ACTION_PREFIX)
 
         if target_action != self.STREAM_DECK_ACTION and not action_matches_on_prefix:
             # This message is probably intended for some other event handler.

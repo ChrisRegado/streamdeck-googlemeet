@@ -11,11 +11,10 @@ class EmojiReactEventHandler extends SDEventHandler {
             if (attempts <= 0) {
                 throw new ControlsNotFoundError(`Could not find button for emoji reaction ${emojiChar}!`);
             }
-            let button = document.querySelector(`img[data-emoji="${emojiChar}"]`);
+            let button = document.querySelector(`button[jsname="vnVdbf"][data-emoji^="${emojiChar}"]`);
             if (button) {
                 button.click();
                 resolve(true);
-
             } else {
                 resolve(new Promise((resolve) => setTimeout(() => {
                     resolve(this._tryClickEmojiReactButton(emojiChar, attempts - 1));
