@@ -3,6 +3,7 @@ class HandEventHandler extends LabelBasedToggleEventHandler {
   static ButtonLabels = [
     ["Raise hand", "Lower hand"],            // English
     ["Melden", "Meldung zurückziehen"],      // German
+    ["Levantar la mano", "Bajar la mano"],   // Spanish
   ];
 
   _sendMuteState = () => {
