@@ -51,9 +51,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Download DistributionTool
-        run: curl https://developer.elgato.com/documentation/stream-deck/distributiontool/DistributionToolMac.zip -o DistributionToolMac.zip
-      - name: Extract DistributionTool
-        run: unzip DistributionToolMac.zip
+        run: curl -L https://github.com/ChrisRegado/streamdeck-build-tools/raw/master/DistributionToolMac/DistributionTool -o DistributionTool
       - name: Make DistributionTool Executable
         run: chmod +x DistributionTool
       - name: Download macOS plugin artifact
