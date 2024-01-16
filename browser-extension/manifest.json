@@ -32,6 +32,11 @@
       ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{48fc7cf2-9903-4618-9bb9-27ffcaa64814}"
+    }
+  }
 }
 
