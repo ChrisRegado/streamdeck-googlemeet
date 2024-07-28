@@ -4,7 +4,7 @@
 class SidepanelEventHandler extends SDEventHandler {
 
   _toggleSidepanel = (sidepanelTabId) => {
-    const toggleSelector = `[jscontroller="PIVayb"][data-panel-id="${sidepanelTabId}"]`;
+    const toggleSelector = `[jsname="A5il2e"][data-panel-id="${sidepanelTabId}"]`;
     const sidepanelToggleButton = document.querySelector(toggleSelector);
     if (sidepanelToggleButton) {
       sidepanelToggleButton.click();
