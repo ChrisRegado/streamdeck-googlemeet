@@ -2,35 +2,31 @@ class PinPresentationEventHandler extends ToggleEventHandler {
 
   _controlElementSelector = () => {
     /**
-     * For the most part, a presentation is very similar to any normal camera view,
-     * but they have a couple of distinguishing aspects. When not pinned, they have a
-     * special presentation icon in the name tag. When pinned, they don't display a
-     * name tag at all, unlike camera feeds.
+     * This jsname appears to only be used for presentations. Normal video feeds
+     * use `jsname="fxbmRe"`.
      */
-    const views = document.querySelectorAll('div[jsname="E2KThb"]');
-    if (!views) {
-      return undefined;
-    }
-    for (var i = 0; i < views.length; i++) {
-      const presentationIcon = views[i].querySelector('.L3eATc');
-      const videoNameTag = views[i].querySelector('div[jsname="giiMnc"]');
-      if (presentationIcon || !videoNameTag) {
-        return views[i].querySelector('div[jsname="fniDcc"]');
-      }
-    }
-    return undefined;
+    return document.querySelector('button[jsname="fniDcc"]');
   }
 
   _isElementMuted = (element) => {
     // "muted" means there's no pinned presentation.
-    if (!element || element.attributes["aria-pressed"] === undefined) {
-      /**
-       * Note: It seems the "aria-pressed" attribute is usually missing until the
-       * first time you try to pin the presentation.
-       */
+    if (!element) {
       return true;
     }
-    return element.attributes["aria-pressed"]?.value === "false";
+
+    /**
+     * When the presentation is pinned, we see an Unpin icon:
+     *   <i class="google-material-icons VfPpkd-kBDsod" aria-hidden="true">keep_off</i>
+     * When the presentation is not pinned, we see a Pin icon:
+     *   <i class="google-material-icons VfPpkd-kBDsod" aria-hidden="true">keep_outline</i>
+     */
+    const iTags = element.querySelectorAll('i');
+    for (var i = 0; i < iTags.length; i++) {
+      if (iTags[i].getHTML().includes('keep_outline')) {
+        return true;
+      }
+    }
+    return false;
   }
 
   _getControlElement = () => {
@@ -59,7 +55,7 @@ class PinPresentationEventHandler extends ToggleEventHandler {
     observer.observe(document.body, {
       childList: false,
       attributes: true,
-      attributeFilter: ["aria-pressed", "data-requested-participant-id"],
+      attributeFilter: ["data-requested-participant-id"],
       attributeOldValue: true,
       subtree: true,
     });
