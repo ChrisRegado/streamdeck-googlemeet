@@ -1,8 +1,6 @@
-class CaptionsEventHandler extends LabelBasedToggleEventHandler {
+class CaptionsEventHandler extends AriaPressedBasedToggleEventHandler {
 
-  static ButtonLabels = [
-    ["Turn on captions", "Turn off captions"],               // English
-  ];
+  static ButtonJsName = "r8qRAd";
 
   _sendMuteState = () => {
     this._sendSimpleMuteStateUpdate("captionsMutedState");

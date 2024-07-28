@@ -1,13 +1,6 @@
-class HandEventHandler extends LabelBasedToggleEventHandler {
+class HandEventHandler extends AriaPressedBasedToggleEventHandler {
 
-  static ButtonLabels = [
-    ["Raise hand", "Lower hand"],            // English
-    ["Melden", "Meldung zurückziehen"],      // German
-    ["Levantar la mano", "Bajar la mano"],   // Spanish
-    ["Levantar a mão", "Abaixar a mão"],     // Portuguese
-    ["Alza la mano", "Abbassa la mano"],     // Italian
-    ["Lever la main", "Baisser la main"],    // French
-  ];
+  static ButtonJsName = "FpSaz";
 
   _sendMuteState = () => {
     this._sendSimpleMuteStateUpdate("handMutedState");
