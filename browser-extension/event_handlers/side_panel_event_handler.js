@@ -34,7 +34,7 @@ class SidepanelEventHandler extends SDEventHandler {
         targetTabButton.click();
       } else {
         // We're already on the right tab, so close the sidepanel to toggle it away.
-        document.querySelector('button[jscontroller="soHxf"]')?.click();
+        document.querySelector('button[jscontroller="PIVayb"]')?.click();
       }
     } else {
       // The sidepanel is currently hidden.
@@ -51,7 +51,7 @@ class SidepanelEventHandler extends SDEventHandler {
    * Handles sidepanel toggling for the new May/June 2021 Meet web UI refresh.
    */
   _toggleUpdatedSidepanel = (sidepanelTabId) => {
-    const toggleSelector = `[jscontroller="soHxf"][data-panel-id="${sidepanelTabId}"]`;
+    const toggleSelector = `[jscontroller="PIVayb"][data-panel-id="${sidepanelTabId}"]`;
     const sidepanelToggleButton = document.querySelector(toggleSelector);
     if (sidepanelToggleButton) {
       sidepanelToggleButton.click();
