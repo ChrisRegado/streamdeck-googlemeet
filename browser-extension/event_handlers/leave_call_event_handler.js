@@ -6,21 +6,27 @@ class LeaveCallEventHandler extends SDEventHandler {
     }
   }
 
+  /**
+   * Some meetings ask you if you want to "just leave the call" or "end the call for everyone"
+   * when you try to hang up. If that dialog appears, a 2nd press of our Leave button will
+   * select "just leave the call".
+   */
   _leaveCall = () => {
-    const leaveDialogPresent = document.querySelector('[jscontroller="ZakeSe"]');
-    if(leaveDialogPresent) {
-      this._leaveCallAction('[data-mdc-dialog-action="Pd96ce"]', 'Leave Call dialog');
+    const leaveCallConfirmationButton = document.querySelector('[data-mdc-dialog-action="Pd96ce"]');
+
+    if (leaveCallConfirmationButton) {
+      this._clickButton(leaveCallConfirmationButton, 'Leave Call confirmation');
     } else {
-      this._leaveCallAction('[jsname="CQylAd"]', 'Leave Call button');
+      const leaveCallButton = document.querySelector('[jsname="CQylAd"]');
+      this._clickButton(leaveCallButton, 'Leave Call');
     }
   }
 
-  _leaveCallAction = (selector, buttonType) => {
-    const button = document.querySelector(selector);
-    if (!button) {
-      throw new ControlsNotFoundError("No " + buttonType + " found!")
+  _clickButton = (buttonElement, buttonType) => {
+    if (!buttonElement) {
+      throw new ControlsNotFoundError("No " + buttonType + " button found!");
     }
-    button.click();
+    buttonElement.click();
   }
 
 }
