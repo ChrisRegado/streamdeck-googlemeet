@@ -6,14 +6,16 @@ This is a plugin that allows the [Elgato Stream Deck](https://www.elgato.com/en/
 
 This plugin works in conjuction with our Google Chrome web extension, which is required for this plugin to function.
 
-Developed and tested primarily on macOS 11.2, Python 3.8.5, Chrome 89, and Stream Deck app v5.0.0. It should work on Windows as well.
+Developed and tested primarily on macOS 15.0, Python 3.13.0, Chrome 130, and Stream Deck app v6.6. It should work on Windows as well.
 
 ## Installing
 
 1. If you're running on an Apple Silicon Mac (e.g. an M1 chip), you must have Apple's [Rosetta 2](https://support.apple.com/en-us/HT211861) installed. If you don't (or if you're not sure), open Terminal and run this command:
+
 ```
 softwareupdate --install-rosetta --agree-to-license
 ```
+
 2. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the `com.chrisregado.googlemeet.streamDeckPlugin` package and open it. The Stream Deck desktop software will prompt you to install the plugin.
 3. The Chrome extension is not in the web store, so we'll install it manually from source. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the source code zip and extract it somewhere you can keep it. (If you move the folder after installing, Chrome will remove the extension from your browser and you'll have to re-add it.)
 4. From Chrome's Extension settings (`chrome://extensions/`), turn on "Developer mode" using the toggle in the top-right corner.
@@ -146,5 +148,6 @@ This project was inspired by https://github.com/JeroenVdb/streamdeck-googlemeet.
 Neither this app nor its creator are affiliated with or endorsed by Google. The Google Meet name and logo are the exclusive property of Google.
 
 Fonts for the actions and keys utilize rendered characters from the `Noto Emoji` and `Noto Color Emoji` fonts, under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
-https://fonts.google.com/noto/specimen/Noto+Color+Emoji?query=emoji&noto.query=emoji&preview.text=%F0%9F%92%96&preview.text_type=custom
-https://fonts.google.com/noto/specimen/Noto+Emoji?query=emoji&noto.query=emoji&preview.text=%F0%9F%92%96&preview.text_type=custom
+
+- https://fonts.google.com/noto/specimen/Noto+Color+Emoji?query=emoji&noto.query=emoji&preview.text=%F0%9F%92%96&preview.text_type=custom
+- https://fonts.google.com/noto/specimen/Noto+Emoji?query=emoji&noto.query=emoji&preview.text=%F0%9F%92%96&preview.text_type=custom

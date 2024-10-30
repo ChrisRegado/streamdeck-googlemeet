@@ -120,7 +120,7 @@ class BaseToggleEventHandler(EventHandler):
         events = [self._make_sd_set_state_event(
             context, state.value) for context in self._toggle_contexts]
 
-        await asyncio.wait([
+        await asyncio.gather(*[
             self._stream_deck.send_outbound_message(event) for event in events
         ])
 
