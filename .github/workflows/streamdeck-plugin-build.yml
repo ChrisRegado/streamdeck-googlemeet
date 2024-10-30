@@ -13,7 +13,7 @@ jobs:
           - os: macos
             runs_on: macos-latest
           - os: windows
-            runs_on: windows-2019
+            runs_on: windows-latest
     name: Build ${{ matrix.os }} Stream Deck Plugin
     runs-on: ${{ matrix.runs_on }}
     defaults:
@@ -22,9 +22,9 @@ jobs:
         working-directory: streamdeck-plugin
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: "3.8"
       - name: Set up Pip
@@ -35,7 +35,7 @@ jobs:
         run: python -m unittest
       - name: Bundle plugin
         run: pyinstaller --clean --dist ../com.chrisregado.googlemeet.sdPlugin/dist/${{ matrix.os }} src/main.py && rm -rf build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-plugin-intermediate-build
           path: ${{ github.workspace }}/com.chrisregado.googlemeet.sdPlugin/dist/${{ matrix.os }}
@@ -49,18 +49,18 @@ jobs:
         shell: bash
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download DistributionTool
         run: curl -L https://github.com/ChrisRegado/streamdeck-build-tools/raw/master/DistributionToolMac/DistributionTool -o DistributionTool
       - name: Make DistributionTool Executable
         run: chmod +x DistributionTool
       - name: Download macOS plugin artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: macos-plugin-intermediate-build
           path: com.chrisregado.googlemeet.sdPlugin/dist/macos
       - name: Download Windows plugin artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: windows-plugin-intermediate-build
           path: com.chrisregado.googlemeet.sdPlugin/dist/windows
@@ -69,7 +69,7 @@ jobs:
       - name: Bundle plugin
         run: ./DistributionTool -b -i ./com.chrisregado.googlemeet.sdPlugin -o output/
       - name: Upload final plugin binary
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: com.chrisregado.googlemeet.streamDeckPlugin
           path: output/com.chrisregado.googlemeet.streamDeckPlugin
