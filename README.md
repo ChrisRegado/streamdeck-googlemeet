@@ -22,8 +22,7 @@ softwareupdate --install-rosetta --agree-to-license
 5. Click the "Load unpacked" button in the top-left corner, and select the `browser-extension` folder from the zip you extracted earlier.
 6. You can turn Developer mode back off now if you want.
 7. If you use an ad blocker (such as uBlock Origin with the EasyPrivacy filter list), you may have to add meet.google.com as a trusted site in your blocker's settings to allow the Chrome Extension to work. (Some filters block websockets to 127.0.0.1, which this extension needs to communicate with the Stream Deck.)
-9. You may need to allow/whitelist the extension, because it was not installed from the web store.  On Windows you can do this by editing the registry.  Under both `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist` and `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome\ExtensionInstallAllowlist` add a string value, with the name "1" (or a greater number if "1" already exists). The value should be the extension id which you can get from [edge://extensions/](edge://extensions/).  If this does not work, or you're on another operating system you may find [this post](https://superuser.com/questions/767286/re-enable-extensions-not-coming-from-chrome-web-store-on-chrome-v35-with-enhan#) helpful.
-10. Add the buttons to your Stream Deck, and start a Google Meet call to try them out!
+8. Add the buttons to your Stream Deck, and start a Google Meet call to try them out!
 
 It's safe to delete the `com.chrisregado.googlemeet.streamDeckPlugin` file once it's installed. However, on Windows, you may need to quit the Stream Deck desktop software (by right clicking its icon in the Windows task tray and clicking Quit) and re-launch it to avoid "action can't be completed because the file is open" errors.
 
@@ -40,6 +39,10 @@ In Chrome, go to your Extensions Settings page (`chrome://extensions/`), and cli
 In the Stream Deck desktop app, right click on one of the Google Meet actions in the list on the right-hand side of the window, and click the "Uninstall..." button.
 
 ![Screenshot](uninstall_screenshot.png)
+
+## Troubleshooting
+
+* If Chrome won't let you enable the extension because it was not installed from the web store, you may need to allowlist the extension. On Windows, you can do this by editing the registry. Under both `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist` and `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome\ExtensionInstallAllowlist` add a string value, with the name "1" (or a greater number if "1" already exists). The value should be the extension ID, which you can get from [chrome://extensions/](chrome://extensions/) with Developer Mode on. If this does not work or you're on another operating system, you may find [this post](https://superuser.com/questions/767286/re-enable-extensions-not-coming-from-chrome-web-store-on-chrome-v35-with-enhan#) helpful.
 
 ## How It Works
 
