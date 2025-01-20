@@ -1,7 +1,8 @@
 class CameraEventHandler extends ToggleEventHandler {
 
   _controlElementSelector = () => {
-    return document.querySelector('div[jsname="R3GXJb"] [jsname="psRWwc"]') || // after September 2024 Meet redesign
+    return document.querySelector('button[jsname="psRWwc"]') ||                // after September 2024 Meet redesign
+      document.querySelector('div[role="button"][jsname="psRWwc"]') ||         // used on the Join screen
       document.querySelector('div[jsname="R3GXJb"] [jsname="BOHaEe"]');        // before September 2024 Meet redesign
   }
 
