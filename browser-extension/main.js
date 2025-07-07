@@ -18,8 +18,9 @@ const eventHandlers = [
   new PinPresentationEventHandler(connectionManager),
   new HandEventHandler(connectionManager),
   new CaptionsEventHandler(connectionManager),
-  new EmojiReactEventHandler(connectionManager)
-]
+  new EmojiReactEventHandler(connectionManager),
+  new ZenModeEventHandler(connectionManager),
+];
 
 connectionManager.initialize();
 eventHandlers.forEach((handler) => connectionManager.registerEventHandler(handler));
