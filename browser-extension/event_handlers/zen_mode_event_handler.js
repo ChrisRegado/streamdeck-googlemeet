@@ -7,6 +7,7 @@ class ZenModeEventHandler extends ToggleEventHandler {
   };
 
   _toggleZenMode = () => {
+    // Credit for this code: https://github.com/verlok/google-meet-true-full-screen
     const jsCtrlId = "hVZhab";
     for (const controller of document.querySelectorAll(`[jscontroller="${jsCtrlId}"]`))
       if (controller.style.display === "") controller.style.display = "none";
