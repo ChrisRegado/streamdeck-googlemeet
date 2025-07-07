@@ -1,6 +1,6 @@
 class ZenModeEventHandler extends ToggleEventHandler {
+
   handleStreamDeckEvent = (message) => {
-    console.log("toggleZenMode", message);
     if (message.event === "toggleZenMode") {
       this._toggleZenMode();
     }
