@@ -403,6 +403,21 @@
       ],
       "Tooltip": "Emoji React - Thumbs Down",
       "UUID": "com.chrisregado.googlemeet.emojireact.thumbsdown"
+    },
+    {
+	    "Icon": "images/actions/zen_mode",
+	    "Name": "Toggle Zen Mode",
+	    "States": [
+		    {
+			    "Image": "images/keys/zen_mode",
+			    "Title": "Zen",
+			    "TitleAlignment": "top",
+			    "FontSize": 10,
+			    "ShowTitle": false
+		  }
+	    ],
+	    "Tooltip": "Toggle Zen Mode",
+	    "UUID": "com.chrisregado.googlemeet.togglezenmode"
     }
   ],
   "SDKVersion": 2,
@@ -413,7 +428,7 @@
   "Name": "Google Meet",
   "Icon": "images/plugin_icon",
   "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "Version": "1.4.0",
+  "Version": "1.5.0",
   "Category": "Google Meet",
   "CategoryIcon": "images/category_icon",
   "OS": [

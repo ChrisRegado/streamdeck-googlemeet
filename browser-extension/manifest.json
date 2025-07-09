@@ -1,6 +1,6 @@
 {
   "name": "Stream Deck Google Meet Actions",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Connects to our accompanying Elgato Stream Deck plugin to create physical controls for your Google Meet calls.",
   "author": "Chris Regado",
   "homepage_url": "https://github.com/ChrisRegado/streamdeck-googlemeet",
@@ -27,6 +27,7 @@
         "event_handlers/hand_event_handler.js",
         "event_handlers/captions_event_handler.js",
         "event_handlers/emoji_react_event_handler.js",
+        "event_handlers/zen_mode_event_handler.js",
         "stream_deck_connection_manager.js",
         "errors.js",
         "main.js"
