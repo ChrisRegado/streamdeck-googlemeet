@@ -17,7 +17,7 @@ from event_handlers.turn_off_camera_event_handler import TurnOffCameraEventHandl
 from event_handlers.turn_on_camera_event_handler import TurnOnCameraEventHandler
 from event_handlers.unmute_mic_event_handler import UnmuteMicEventHandler
 from event_handlers.emoji_react_event_handler import EmojiReactEventHandler
-from event_handlers.zen_mode_event_handler import ZenModeToggleEventHandler
+from event_handlers.zen_mode_event_handler import ZenModeEventHandler
 from stream_deck_client import StreamDeckWebsocketClient
 
 
@@ -66,7 +66,7 @@ def register_handlers(
         TurnOnCameraEventHandler(stream_deck_client, browser_manager),
         UnmuteMicEventHandler(stream_deck_client, browser_manager),
         EmojiReactEventHandler(stream_deck_client, browser_manager),
-        ZenModeToggleEventHandler(stream_deck_client, browser_manager)
+        ZenModeEventHandler(stream_deck_client, browser_manager),
     ]
 
     for event_handler in event_handlers:

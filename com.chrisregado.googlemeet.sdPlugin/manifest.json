@@ -416,7 +416,7 @@
 			    "ShowTitle": false
 		  }
 	    ],
-	    "Tooltip": "Toggle Zen Mode",
+	    "Tooltip": "Show/hide Meet web UI toolbars. Not an official Google Meet feature.",
 	    "UUID": "com.chrisregado.googlemeet.togglezenmode"
     }
   ],
@@ -428,7 +428,7 @@
   "Name": "Google Meet",
   "Icon": "images/plugin_icon",
   "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "Version": "1.5.0",
+  "Version": "1.6.0",
   "Category": "Google Meet",
   "CategoryIcon": "images/category_icon",
   "OS": [
