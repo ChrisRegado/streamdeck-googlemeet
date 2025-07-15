@@ -145,3 +145,8 @@ dmypy.json
 DistributionTool.exe
 DistributionTool
 com.chrisregado.googlemeet.streamDeckPlugin
+
+# Browser extension build artifacts
+browser-extension/build/
+browser-extension/node_modules/
+*.zip

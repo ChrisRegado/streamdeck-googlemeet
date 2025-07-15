@@ -1,10 +1,6 @@
-name: "Build and bundle the Stream Deck plugin"
+name: "Build and bundle the Stream Deck plugin and browser extensions"
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - streamdeck-plugin/**
-      - com.chrisregado.googlemeet.sdPlugin/**
 jobs:
   build-plugin:
     strategy:
@@ -40,10 +36,49 @@ jobs:
           name: ${{ matrix.os }}-plugin-intermediate-build
           path: ${{ github.workspace }}/com.chrisregado.googlemeet.sdPlugin/dist/${{ matrix.os }}
 
+  build-browser-extensions:
+    name: Build browser extensions for Chrome and Firefox
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: browser-extension
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Build extensions
+        run: |
+          npm run build
+          npm run package-chrome
+          npm run package-firefox
+          # Rename web-ext generated file to a more user-friendly name
+          for file in build/stream_deck_google_meet_actions-*.zip; do
+            if [ -f "$file" ]; then
+              mv "$file" build/firefox-extension.zip
+              break
+            fi
+          done
+      - name: Upload Chrome extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension
+          path: browser-extension/build/chrome-extension.zip
+      - name: Upload Firefox extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-extension
+          path: browser-extension/build/firefox-extension.zip
+
   bundle-streamdeck-distributable:
     name: Bundle multi-OS Stream Deck plugin distributable binary
     runs-on: macos-latest
-    needs: [build-plugin]
+    needs: [build-plugin, build-browser-extensions]
     defaults:
       run:
         shell: bash
@@ -64,6 +99,16 @@ jobs:
         with:
           name: windows-plugin-intermediate-build
           path: com.chrisregado.googlemeet.sdPlugin/dist/windows
+      - name: Download Chrome extension artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chrome-extension
+          path: browser-extensions/
+      - name: Download Firefox extension artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: firefox-extension
+          path: browser-extensions/
       - name: Make output dir
         run: mkdir output
       - name: Bundle plugin
@@ -73,3 +118,55 @@ jobs:
         with:
           name: com.chrisregado.googlemeet.streamDeckPlugin
           path: output/com.chrisregado.googlemeet.streamDeckPlugin
+      - name: Upload browser extensions
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-extensions
+          path: browser-extensions/
+
+  create-release:
+    name: Create GitHub Release (on tags)
+    runs-on: ubuntu-latest
+    needs: [bundle-streamdeck-distributable]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Download Stream Deck plugin
+        uses: actions/download-artifact@v4
+        with:
+          name: com.chrisregado.googlemeet.streamDeckPlugin
+          path: ./
+      - name: Download browser extensions
+        uses: actions/download-artifact@v4
+        with:
+          name: browser-extensions
+          path: ./
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            com.chrisregado.googlemeet.streamDeckPlugin
+            chrome-extension.zip
+            firefox-extension.zip
+          body: |
+            ## Stream Deck Google Meet Plugin Release
+            
+            This release includes:
+            - **Stream Deck Plugin**: `com.chrisregado.googlemeet.streamDeckPlugin`
+            - **Chrome Extension**: `chrome-extension.zip`
+            - **Firefox Extension**: `firefox-extension.zip`
+            
+            ### Installation:
+            1. Install the Stream Deck plugin by double-clicking the `.streamDeckPlugin` file
+            2. Install the browser extension:
+               - **Chrome**: Extract and load unpacked from `chrome-extension.zip`
+               - **Firefox**: 
+                 - **Recommended**: Install from Firefox Add-ons (search for "Stream Deck Google Meet Actions")
+                 - **Development**: Load temporarily from `firefox-extension.zip` via `about:debugging`
+            
+            **Firefox Note**: Direct ZIP installation will show "corrupt package" error. Use temporary installation method: `about:debugging` → "This Firefox" → "Load Temporary Add-on" → select `firefox-extension.zip`
+            
+            See the README for complete installation instructions.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
