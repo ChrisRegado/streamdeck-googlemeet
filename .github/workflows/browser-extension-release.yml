@@ -45,18 +45,17 @@ jobs:
       - name: Update package.json version
         run: npm run update-version
       
-      - name: Build extensions
+      - name: Build and package extensions
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
         run: |
           npm run build
           npm run package-chrome
-          npm run package-firefox
-          # Rename Firefox extension for consistency
-          for file in build/stream_deck_google_meet_actions-*.zip; do
-            if [ -f "$file" ]; then
-              mv "$file" build/firefox-extension.zip
-              break
-            fi
-          done
+          # Sign Firefox extension (builds and signs in one step)
+          npm run sign-firefox
+          # Rename extensions for consistency
+          mv build/stream_deck_google_meet_actions-*.zip build/firefox-extension.zip
       
       - name: Upload Chrome extension artifact
         uses: actions/upload-artifact@v4
@@ -79,57 +78,3 @@ jobs:
             browser-extension/build/firefox-extension.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish-to-stores:
-    name: Publish extensions to stores
-    runs-on: ubuntu-latest
-    needs: [build-extensions]
-    if: ${{ needs.build-extensions.outputs.is-prerelease == 'false' }}
-    strategy:
-      matrix:
-        store: [chrome, firefox]
-    steps:
-      - name: Download Chrome extension
-        if: matrix.store == 'chrome'
-        uses: actions/download-artifact@v4
-        with:
-          name: chrome-extension-${{ needs.build-extensions.outputs.version }}
-          path: ./
-      
-      - name: Download Firefox extension
-        if: matrix.store == 'firefox'
-        uses: actions/download-artifact@v4
-        with:
-          name: firefox-extension-${{ needs.build-extensions.outputs.version }}
-          path: ./
-      
-      - name: Publish to Chrome Web Store
-        if: matrix.store == 'chrome'
-        uses: mnao305/chrome-extension-upload@v5.0.0
-        with:
-          file-path: chrome-extension.zip
-          extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
-          client-id: ${{ secrets.CHROME_CLIENT_ID }}
-          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-          publish: true
-          publish-target: default
-      
-      - name: Publish to Firefox Add-ons
-        if: matrix.store == 'firefox'
-        uses: wdzeng/firefox-addon@v1
-        with:
-          addon-guid: ${{ secrets.FIREFOX_ADDON_GUID }}
-          xpi-path: firefox-extension.zip
-          jwt-issuer: ${{ secrets.FIREFOX_JWT_ISSUER }}
-          jwt-secret: ${{ secrets.FIREFOX_JWT_SECRET }}
-          approval-notes: |
-            Automated release via GitHub Actions - Version ${{ needs.build-extensions.outputs.version }}
-            
-            This extension connects to a localhost Stream Deck plugin via WebSocket.
-            No external data is collected or transmitted.
-            
-            Changes in this version:
-            - See GitHub releases for detailed changelog
-            - Compatible with latest Google Meet interface
-            - Tested with Stream Deck software v6.6+

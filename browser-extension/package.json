@@ -7,7 +7,7 @@
     "build": "node build.js",
     "package-chrome": "node package-chrome.js",
     "package-firefox": "web-ext build --source-dir=build/firefox --artifacts-dir=build --overwrite-dest",
-    "package-firefox-zip": "cd build/firefox && zip -r ../firefox-extension.zip *",
+    "sign-firefox": "web-ext sign --channel=unlisted --source-dir=build/firefox --artifacts-dir=build --api-key=$WEB_EXT_API_KEY --api-secret=$WEB_EXT_API_SECRET",
     "package-all": "npm run build && npm run package-chrome && npm run package-firefox",
     "dev-firefox": "npm run build && web-ext run --source-dir=build/firefox --browser-console",
     "test-firefox": "node test-firefox.js",
