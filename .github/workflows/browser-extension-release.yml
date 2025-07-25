@@ -52,10 +52,7 @@ jobs:
         run: |
           npm run build
           npm run package-chrome
-          # Sign Firefox extension (builds and signs in one step)
-          npm run sign-firefox
-          # Rename extensions for consistency
-          mv build/stream_deck_google_meet_actions-*.zip build/firefox-extension.zip
+          mv build/streamdeck_googlemeet*.xpi build/firefox-extension.xpi
       
       - name: Upload Chrome extension artifact
         uses: actions/upload-artifact@v4
@@ -67,7 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: firefox-extension-${{ steps.get-version.outputs.version }}
-          path: browser-extension/build/firefox-extension.zip
+          path: browser-extension/build/firefox-extension.xpi
       
       - name: Attach extensions to release
         if: always()
@@ -75,6 +72,6 @@ jobs:
         with:
           files: |
             browser-extension/build/chrome-extension.zip
-            browser-extension/build/firefox-extension.zip
+            browser-extension/build/firefox-extension.xpi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
