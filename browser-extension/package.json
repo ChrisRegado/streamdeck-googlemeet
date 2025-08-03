@@ -1,0 +1,31 @@
+{
+  "name": "streamdeck-googlemeet-browser-extension",
+  "version": "0.0.3",
+  "description": "Browser extension for Stream Deck Google Meet plugin",
+  "scripts": {
+    "update-version": "node -e \"const fs = require('fs'); const {getVersion} = require('./get-version'); const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8')); pkg.version = getVersion(); fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));\"",
+    "build": "node build.js",
+    "package-chrome": "node package-chrome.js",
+    "package-firefox": "web-ext build --source-dir=build/firefox --artifacts-dir=build --overwrite-dest",
+    "sign-firefox": "web-ext sign --channel=unlisted --source-dir=build/firefox --artifacts-dir=build",
+    "package-all": "npm run build && npm run package-chrome && npm run package-firefox",
+    "dev-firefox": "npm run build && web-ext run --source-dir=build/firefox --browser-console",
+    "test-firefox": "node test-firefox.js",
+    "lint-firefox": "web-ext lint --source-dir=build/firefox",
+    "publish-chrome": "echo 'Use GitHub Actions workflow for Chrome publishing'",
+    "publish-firefox": "echo 'Use GitHub Actions workflow for Firefox publishing'",
+    "publish-all": "echo 'Use GitHub Actions workflow for publishing both extensions'",
+    "validate-publishing": "node validate-publishing-setup.js"
+  },
+  "devDependencies": {
+    "web-ext": "^7.8.0"
+  },
+  "keywords": [
+    "streamdeck",
+    "google-meet",
+    "chrome-extension",
+    "firefox-extension"
+  ],
+  "author": "Chris Regado",
+  "license": "MIT"
+}
