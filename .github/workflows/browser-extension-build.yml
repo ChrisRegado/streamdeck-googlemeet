@@ -1,0 +1,158 @@
+name: "Browser Extensions"
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+  pull_request:
+    paths:
+      - browser-extension/**
+      - .github/workflows/**
+  push:
+    paths:
+      - browser-extension/**
+      - .github/workflows/**
+    branches:
+      - '**'
+    tags-ignore:
+      # Don't run again on tags since we already run on all branches.
+      - '**'
+jobs:
+  build-extensions:
+    name: Build and bundle the browser extensions
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: browser-extension
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for tags
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Get version from git tag
+        id: get-version
+        run: |
+          VERSION=$(node get-version.js)
+          if [[ -z "$VERSION" ]]; then
+            echo "❌ Version extraction failed"
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using version: $VERSION"
+
+      - name: Build extensions
+        run: |
+          npm run build
+
+      - name: Run Firefox linting
+        run: |
+          npm run lint-firefox
+
+      - name: Package Chrome extension
+        # Note that the CI artifact will be double-zipped because actions/upload-artifact zips it again.
+        # But this is necessary because actions/download-artifact will always attempt to unzip.
+        run: |
+          npm run package-chrome
+
+      - name: Package Firefox extension (unsigned)
+        run: |
+          npm run package-firefox
+
+      - name: Package Firefox extension (signed for release)
+        # Only sign versions that we actually intend to release. Mozilla does not allow the same version
+        # number to be signed multiple times, so duplicated build attempts will fail.
+        if: ${{ github.event_name == 'release' }}
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+        run: |
+          npm run sign-firefox
+
+      - name: Validate manifest files
+        run: |
+          if [[ ! -f "build/chrome/manifest.json" ]] || [[ ! -f "build/firefox/manifest.json" ]]; then
+            echo "❌ Manifest files not found"
+            exit 1
+          fi
+
+          # Check that version was injected correctly
+          CHROME_VERSION=$(jq .version build/chrome/manifest.json)
+          FIREFOX_VERSION=$(jq .version build/firefox/manifest.json)
+
+          if [[ -z "$CHROME_VERSION" ]] || [[ "null" == "$CHROME_VERSION" ]]; then
+            echo "❌ Manifest missing version number"
+            exit 1
+          fi
+
+          if [[ "$CHROME_VERSION" != "$FIREFOX_VERSION" ]]; then
+            echo "❌ Version mismatch between Chrome ($CHROME_VERSION) and Firefox ($FIREFOX_VERSION)"
+            exit 1
+          fi
+
+          echo "✅ Manifest validation passed - Version: $CHROME_VERSION"
+
+      - name: Upload Chrome extension artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension-v${{ steps.get-version.outputs.version }}
+          path: browser-extension/build/chrome-extension.zip
+
+      - name: Upload Firefox extension artifact (unsigned)
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-extension-unsigned-v${{ steps.get-version.outputs.version }}
+          path: browser-extension/build/firefox-extension.zip
+
+      - name: Upload Firefox extension artifact (signed)
+        if: ${{ github.event_name == 'release' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-extension-signed-v${{ steps.get-version.outputs.version }}
+          path: browser-extension/build/streamdeck_googlemeet-${{ steps.get-version.outputs.version }}.xpi
+
+  attach-to-release:
+    name: Attach artifacts to the GitHub Release
+    if: ${{ github.event_name == 'release' }}
+    runs-on: ubuntu-latest
+    needs: [build-extensions]
+    permissions:
+      contents: write  # Needed for softprops/action-gh-release
+    steps:
+      - name: Download Chrome extension
+        uses: actions/download-artifact@v4
+        with:
+          name: chrome-extension-v${{ needs.build-extensions.outputs.version }}
+          path: ./artifacts
+
+      - name: Rename Chrome extension
+        run: |
+          mv ./artifacts/chrome-extension.zip ./chrome-extension-v${{ needs.build-extensions.outputs.version }}.zip
+
+      - name: Download Firefox extension
+        uses: actions/download-artifact@v4
+        with:
+          name: firefox-extension-signed-v${{ needs.build-extensions.outputs.version }}
+          path: ./artifacts
+
+      - name: Rename Firefox extension
+        run: |
+          mv ./artifacts/streamdeck_googlemeet-${{ needs.build-extensions.outputs.version }}.xpi ./firefox-extension-v${{ needs.build-extensions.outputs.version }}.xpi
+
+      - name: Attach all artifacts to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ./chrome-extension-v${{ needs.build-extensions.outputs.version }}.zip
+            ./firefox-extension-v${{ needs.build-extensions.outputs.version }}.xpi
