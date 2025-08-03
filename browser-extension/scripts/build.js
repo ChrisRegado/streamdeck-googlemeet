@@ -1,15 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const { getVersion } = require('./get-version');
+const { buildDir, chromeDir, firefoxDir, projectRoot } = require('./directories');
 
 // Get version from git tag
 const version = getVersion();
 console.log(`Using version: ${version}`);
-
-// These directories are where we'll output our build artifacts:
-const buildDir = path.join(__dirname, 'build');
-const chromeDir = path.join(buildDir, 'chrome');
-const firefoxDir = path.join(buildDir, 'firefox');
 
 // Ensure build directories exist
 if (!fs.existsSync(buildDir)) fs.mkdirSync(buildDir);
@@ -70,14 +66,14 @@ copyFiles(sourceFilesInManifest, firefoxDir);
 
 // Copy and update manifest files with dynamic version
 updateManifestVersion(
-  path.join(__dirname, 'manifest.json'),
+  path.join(projectRoot, 'manifest.json'),
   path.join(chromeDir, 'manifest.json'),
   version
 );
 // For Firefox, we use our Chrome manifest as a base and inject Firefox-specific fields
 renderFirefoxManifest(
-  path.join(__dirname, 'manifest.json'),
-  path.join(__dirname, 'manifest_firefox_stub.json'),
+  path.join(projectRoot, 'manifest.json'),
+  path.join(projectRoot, 'manifest_firefox_stub.json'),
   path.join(firefoxDir, 'manifest.json'),
   version
 );

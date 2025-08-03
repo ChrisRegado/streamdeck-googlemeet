@@ -197,6 +197,7 @@ We have the following commands:
 * `npm run package-all`: Convenience command to run `npm run build`, `npm run package-chrome`, and `npm run package-firefox`. Intended for use when running locally.
 * `npm run dev-firefox`: Builds the extension and launches a Firefox window that has the extension temporarily installed, to help with testing during development. Intended for use when running locally.
 * `npm run lint-firefox`: Performs some of the same basic validations that the Firefox Add-on Hub enforces. Used to validate the addon before submitting it to Mozilla for signing. Runs both locally and in CI jobs.
+* `npm run get-version`: Tries to determine the target version number of browser extension builds. If the current git SHA is tagged with our semantic versioning scheme (`v1.2.3`), outputs that number without the `v` prefix (`1.2.3`) as the desired version. Otherwise falls back to using the version defined in `package.json`. Intended to be used in CI jobs.
 
 ## Contributing
 

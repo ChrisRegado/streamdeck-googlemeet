@@ -3,14 +3,15 @@
   "version": "0.0.1",
   "description": "Browser extensions for the Stream Deck Google Meet plugin",
   "scripts": {
-    "build": "node build.js",
-    "clean": "node clean.js",
-    "package-chrome": "node package-chrome.js",
+    "build": "node scripts/build.js",
+    "clean": "node scripts/clean.js",
+    "package-chrome": "node scripts/package-chrome.js",
     "package-firefox": "web-ext build --source-dir=build/firefox --artifacts-dir=build --filename=firefox-extension.zip --overwrite-dest",
     "sign-firefox": "web-ext sign --channel=unlisted --source-dir=build/firefox --artifacts-dir=build",
     "package-all": "npm run build && npm run package-chrome && npm run package-firefox",
     "lint-firefox": "web-ext lint --source-dir=build/firefox",
-    "dev-firefox": "npm run build && web-ext run --source-dir=build/firefox --browser-console --start-url https://meet.google.com/"
+    "dev-firefox": "npm run build && web-ext run --source-dir=build/firefox --browser-console --start-url https://meet.google.com/",
+    "get-version": "node scripts/get-version.js"
   },
   "devDependencies": {
     "web-ext": "^8.9.0"

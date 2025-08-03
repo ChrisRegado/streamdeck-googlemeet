@@ -44,7 +44,7 @@ jobs:
       - name: Get version from git tag
         id: get-version
         run: |
-          VERSION=$(node get-version.js)
+          VERSION=$(npm run --silent get-version)
           if [[ -z "$VERSION" ]]; then
             echo "❌ Version extraction failed"
             exit 1

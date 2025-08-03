@@ -1,6 +1,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { projectRoot } = require('./directories');
 
 function getVersion() {
   try {
@@ -15,7 +16,7 @@ function getVersion() {
   } catch (error) {
     // Fallback to package.json version
     console.warn('Warning: No git tags found. Using package.json version.');
-    const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
+    const packageJson = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package.json'), 'utf8'));
     return packageJson.version;
   }
 }
