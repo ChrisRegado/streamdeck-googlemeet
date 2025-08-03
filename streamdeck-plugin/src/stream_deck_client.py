@@ -1,7 +1,10 @@
 import json
 import logging
-from typing import List
+from typing import List, TYPE_CHECKING
 import websockets
+
+if TYPE_CHECKING:
+    from event_handlers.base_event_handler import EventHandler
 
 
 class StreamDeckWebsocketClient:
@@ -26,7 +29,7 @@ class StreamDeckWebsocketClient:
         """
         Our socket to the Stream Deck desktop software.
         """
-        self._websocket: "WebSocketClientProtocol" = None
+        self._websocket: websockets.ClientConnection | None = None
 
     async def start(self, port: int, register_event: str, plugin_uuid: str) -> None:
         uri = f"ws://127.0.0.1:{port}"
@@ -64,23 +67,23 @@ class StreamDeckWebsocketClient:
             f"Sending outbound message to Stream Deck. Message: {message}")
         await self._websocket.send(message)
 
-    async def _message_receive_loop(self, websocket: websockets.WebSocketClientProtocol) -> None:
+    async def _message_receive_loop(self, websocket: websockets.ClientConnection) -> None:
         """
         Loop of waiting for and processing inbound websocket messages, until the
         connection dies.
         """
         async for message in websocket:
             self._logger.info(
-                f"Received inbound message from Stream Deck: {message}")
+                f"Received inbound message from Stream Deck: {str(message)}")
             await self._process_inbound_message(message)
 
-    async def _process_inbound_message(self, message: str) -> None:
+    async def _process_inbound_message(self, message: str | bytes) -> None:
         """
         Process one individual inbound websocket message.
         """
         try:
             parsed_event = json.loads(message)
-        except:
+        except Exception:
             """
             If we're receiving invalid data from the Stream Deck app, our socket
             is in a questionable state... Let the error propagate. If the plugin
@@ -93,6 +96,6 @@ class StreamDeckWebsocketClient:
         for handler in self._handlers:
             try:
                 await handler.on_stream_deck_event(parsed_event)
-            except:
+            except Exception:
                 self._logger.exception(
                     "StreamDeckWebsocketClient received an exception from EventHandler!")

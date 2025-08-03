@@ -1,8 +1,11 @@
 import asyncio
 import json
 import logging
-from typing import List, Set
+from typing import List, TYPE_CHECKING, Set
 import websockets
+
+if TYPE_CHECKING:
+    from event_handlers.base_event_handler import EventHandler
 
 
 class BrowserWebsocketServer:
@@ -31,15 +34,15 @@ class BrowserWebsocketServer:
         so we can use them to send outbound messages from this plugin to the
         extension.
         """
-        self._ws_clients: Set[websockets.WebSocketServerProtocol] = set()
+        self._ws_clients: Set[websockets.ServerConnection] = set()
 
         """
         Any EventHandlers registered to receive inbound events from the browser extension.
         """
         self._handlers: List["EventHandler"] = []
 
-    def start(self, hostname: str, port: int) -> None:
-        return websockets.serve(self._message_receive_loop, hostname, port)
+    async def start(self, hostname: str, port: int) -> websockets.Server:
+        return await websockets.serve(self._message_receive_loop, hostname, port)
 
     async def send_to_clients(self, message: str) -> None:
         """
@@ -66,16 +69,16 @@ class BrowserWebsocketServer:
     def num_connected_clients(self) -> int:
         return len(self._ws_clients)
 
-    def _register_client(self, ws: websockets.WebSocketServerProtocol) -> None:
+    def _register_client(self, ws: websockets.ServerConnection) -> None:
         self._ws_clients.add(ws)
         self._logger.info(
             (f"{ws.remote_address} has connected to our browser websocket."
              f" We now have {len(self._ws_clients)} active connection(s)."))
 
-    async def _unregister_client(self, ws: websockets.WebSocketServerProtocol) -> None:
+    async def _unregister_client(self, ws: websockets.ServerConnection) -> None:
         try:
             await ws.close()
-        except:
+        except Exception:
             self._logger.exception(
                 "Exception while closing browser webocket connection.")
         if ws in self._ws_clients:
@@ -84,7 +87,7 @@ class BrowserWebsocketServer:
             (f"{ws.remote_address} has disconnected from our browser websocket."
              f" We now have {len(self._ws_clients)} active connection(s) remaining."))
 
-    async def _message_receive_loop(self, ws: websockets.WebSocketServerProtocol, uri: str) -> None:
+    async def _message_receive_loop(self, ws: websockets.ServerConnection) -> None:
         """
         Loop of waiting for and processing inbound websocket messages, until the
         connection dies. Each connection will create one of these coroutines.
@@ -93,9 +96,9 @@ class BrowserWebsocketServer:
         try:
             async for message in ws:
                 self._logger.info(
-                    f"Received inbound message from browser extension. Message: {message}")
+                    f"Received inbound message from browser extension. Message: {str(message)}")
                 await self._process_inbound_message(message)
-        except:
+        except Exception:
             self._logger.exception(
                 "BrowserWebsocketServer encountered an exception while waiting for inbound messages.")
         finally:
@@ -105,24 +108,24 @@ class BrowserWebsocketServer:
             for handler in self._handlers:
                 try:
                     await handler.on_all_browsers_disconnected()
-                except:
+                except Exception:
                     self._logger.exception(
                         "Connection mananger received an exception from EventHandler!")
 
-    async def _process_inbound_message(self, message: str) -> None:
+    async def _process_inbound_message(self, message: str | bytes) -> None:
         """
         Process one individual inbound websocket message.
         """
         try:
             parsed_event = json.loads(message)
-        except:
+        except Exception:
             self._logger.exception(
-                f"Failed to parse browser websocket message as JSON. Message: {message}")
+                f"Failed to parse browser websocket message as JSON. Message: {str(message)}")
             return
 
         for handler in self._handlers:
             try:
                 await handler.on_browser_event(parsed_event)
-            except:
+            except Exception:
                 self._logger.exception(
                     "Connection mananger received an exception from EventHandler!")

@@ -1,9 +1,13 @@
 import asyncio
 from enum import Enum
 import json
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from event_handlers.base_event_handler import EventHandler
+
+if TYPE_CHECKING:
+    from browser_websocket_server import BrowserWebsocketServer
+    from stream_deck_client import StreamDeckWebsocketClient
 
 
 class SDToggleState(Enum):

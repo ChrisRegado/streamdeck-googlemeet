@@ -42,7 +42,7 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
         server._register_client = MagicMock()
         server._unregister_client = AsyncMock()
 
-        await server._message_receive_loop(mock_websocket, "testUri")
+        await server._message_receive_loop(mock_websocket)
 
         server._register_client.assert_called_with(mock_websocket)
         server._unregister_client.assert_called_with(mock_websocket)
@@ -56,7 +56,7 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
         mock_websocket = AsyncMock()
         server._ws_clients = set([mock_websocket])
 
-        await server._message_receive_loop(mock_websocket, "testUri")
+        await server._message_receive_loop(mock_websocket)
 
         mock_websocket.close.assert_called_once()
 
@@ -70,7 +70,7 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
         server.register_event_handler(event_handler)
         mock_websocket = AsyncMock()
 
-        await server._message_receive_loop(mock_websocket, "testUri")
+        await server._message_receive_loop(mock_websocket)
 
         event_handler.on_all_browsers_disconnected.assert_called_with()
 
@@ -86,7 +86,7 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
         server.register_event_handler(event_handler)
         server._register_client(mock_websocket_1)
 
-        await server._message_receive_loop(mock_websocket_2, "testUri")
+        await server._message_receive_loop(mock_websocket_2)
 
         event_handler.on_all_browsers_disconnected.assert_not_called()
 
@@ -99,7 +99,7 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
         mock_websocket.__aiter__.return_value = ["m1", "m2"]
         server._process_inbound_message = AsyncMock()
 
-        await server._message_receive_loop(mock_websocket, "testUri")
+        await server._message_receive_loop(mock_websocket)
 
         mock_websocket.__aiter__.assert_called_with()
         server._process_inbound_message.assert_has_calls(

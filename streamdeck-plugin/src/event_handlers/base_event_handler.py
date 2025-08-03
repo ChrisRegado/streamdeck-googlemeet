@@ -1,5 +1,10 @@
 import json
 import logging
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from browser_websocket_server import BrowserWebsocketServer
+    from stream_deck_client import StreamDeckWebsocketClient
 
 
 class EventHandler:
@@ -20,7 +25,7 @@ class EventHandler:
     """
     STREAM_DECK_ACTION = "(invalid)"
     # If set to an action prefix string, allows matching a family of actions sharing a prefix.
-    STREAM_DECK_ACTION_PREFIX = None
+    STREAM_DECK_ACTION_PREFIX: str | None = None
 
     def __init__(self, stream_deck: "StreamDeckWebsocketClient", browser_manager: "BrowserWebsocketServer") -> None:
         self._logger = logging.getLogger(__name__)

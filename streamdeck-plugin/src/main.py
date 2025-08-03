@@ -92,8 +92,12 @@ if __name__ == '__main__':
 
     register_handlers(stream_deck_client, browser_manager)
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(browser_manager.start(
-        hostname="127.0.0.1", port=BROWSER_WEBSOCKET_PORT))
-    loop.run_until_complete(stream_deck_client.start(
-        port=args.port, register_event=args.register_event, plugin_uuid=args.plugin_uuid))
+    browser_manager_loop = browser_manager.start(
+        hostname="127.0.0.1", port=BROWSER_WEBSOCKET_PORT)
+    stream_deck_loop = stream_deck_client.start(
+        port=args.port, register_event=args.register_event, plugin_uuid=args.plugin_uuid)
+
+    async def websocket_loop():
+        await asyncio.gather(browser_manager_loop, stream_deck_loop)
+
+    asyncio.run(websocket_loop())

@@ -1,4 +1,3 @@
-import asyncio
 import json
 from event_handlers.base_event_handler import EventHandler
 

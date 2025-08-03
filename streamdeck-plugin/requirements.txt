@@ -1,7 +1,7 @@
 altgraph==0.17.4
 macholib==1.16.3
-packaging==24.1
-pyinstaller==6.11.0
-pyinstaller-hooks-contrib==2024.9
-setuptools==75.3.0
-websockets==13.1
+packaging==25.0
+pyinstaller==6.14.2
+pyinstaller-hooks-contrib==2025.8
+setuptools==80.9.0
+websockets==15.0.1
