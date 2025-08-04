@@ -1,0 +1,91 @@
+# This job runs when a GitHub Release is created. It finds our build artifacts for the CI jobs
+# that ran against this release's associated git tag, and attaches those artifacts to our GitHub
+# Release. We use this multi-step procedure (rather than just doing the build when the Release is
+# created) so that artifacts can be tested and validated before they become available on the Releases
+# page where users are more likely to download them even if they're marked as pre-release.
+
+name: "Prepare GitHub Release"
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  attach-artifacts:
+    name: Attach artifacts from git tag builds to the GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read    # Needed for `gh run list`
+      contents: write  # Needed for softprops/action-gh-release
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      # Find the GitHub Action run IDs of the most recent build jobs for our release's git tag:
+      - name: "Find GHA run IDs for this release's git tag"
+        id: get-workflow-id
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          function getRunId() {
+            gh run list \
+                --branch "${{ github.event.release.tag_name }}" \
+                --workflow "$1" \
+                --limit 1 \
+                --json "status,conclusion,createdAt,databaseId,event,headBranch,headSha,number,startedAt,status,updatedAt,url" \
+                --event push | tee build_workflow_run.json
+
+            TAG_RUN_ID=$( jq 'if .[0].conclusion == "success" then .[0].databaseId else halt end' build_workflow_run.json )
+            if [[ -z "$TAG_RUN_ID" ]]; then
+                echo "❌ The most recent build for a tag matching this GitHub Release name is either missing, incomplete, or unsuccessful!"
+                echo "Check the build history for tag '${{ github.event.release.tag_name }}' to see if it's still running or failed."
+                exit 1
+            fi
+          }
+
+          getRunId "Build Browser Extensions"
+          extensions_run_id="$TAG_RUN_ID"
+          echo "Workflow run ID for browser extensions: ${extensions_run_id}"
+          echo "extensions_run_id=$extensions_run_id" >> $GITHUB_OUTPUT
+
+          getRunId "Build Stream Deck Plugin"
+          plugin_run_id="$TAG_RUN_ID"
+          echo "Workflow run ID for Stream Deck plugin: ${plugin_run_id}"
+          echo "plugin_run_id=$plugin_run_id" >> $GITHUB_OUTPUT
+
+      - name: Download Chrome extension
+        uses: actions/download-artifact@v4
+        with:
+          # Artifact name must match the `actions/upload-artifact` steps from the build job
+          name: chrome-extension
+          run-id: ${{ steps.get-workflow-id.outputs.extensions_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./artifacts
+
+      - name: Download Firefox extension
+        uses: actions/download-artifact@v4
+        with:
+          # Artifact name must match the `actions/upload-artifact` steps from the build job
+          name: firefox-extension-signed
+          run-id: ${{ steps.get-workflow-id.outputs.extensions_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./artifacts
+
+      - name: Download Stream Deck Plugin
+        uses: actions/download-artifact@v4
+        with:
+          # Artifact name must match the `actions/upload-artifact` steps from the build job
+          name: com.chrisregado.googlemeet.streamDeckPlugin
+          run-id: ${{ steps.get-workflow-id.outputs.plugin_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./artifacts
+
+      - name: Attach artifacts to release
+        uses: softprops/action-gh-release@v2
+        with:
+          # Artifact filenames must match the `actions/upload-artifact` steps from the build jobs
+          files: |
+            ./artifacts/chrome-extension-${{ github.event.release.tag_name }}.zip
+            ./artifacts/firefox-extension-${{ github.event.release.tag_name }}.xpi
+            ./artifacts/com.chrisregado.googlemeet.streamDeckPlugin

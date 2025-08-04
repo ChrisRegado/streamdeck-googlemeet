@@ -1,9 +1,7 @@
-name: "Stream Deck Plugin"
+name: "Build Stream Deck Plugin"  # If you change this name, you'll also need to update the release.yaml job
 
 on:
   workflow_dispatch:
-  release:
-    types: [published]
   pull_request:
     paths:
       - streamdeck-plugin/**
@@ -16,9 +14,9 @@ on:
       - .github/workflows/**
     branches:
       - '**'
-    tags-ignore:
-      # Don't run again on tags since we already run on all branches.
-      - '**'
+    tags:
+      # Only run on release tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build-plugin:
@@ -30,6 +28,8 @@ jobs:
           - os: windows
             runs_on: windows-latest
     name: Build ${{ matrix.os }} Stream Deck Plugin
+    # Since we run on both branch pushes and PRs, don't do a duplicated run if the PR is for a branch in the local repo:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
     runs-on: ${{ matrix.runs_on }}
     defaults:
       run:
@@ -88,23 +88,3 @@ jobs:
         with:
           name: com.chrisregado.googlemeet.streamDeckPlugin
           path: output/com.chrisregado.googlemeet.streamDeckPlugin
-
-  attach-to-release:
-    name: Attach artifacts to release
-    if: ${{ github.event_name == 'release' }}
-    runs-on: ubuntu-latest
-    needs: [bundle-streamdeck-distributable]
-    permissions:
-      contents: write  # Needed for softprops/action-gh-release
-    steps:
-      - name: Download Stream Deck plugin
-        uses: actions/download-artifact@v4
-        with:
-          name: com.chrisregado.googlemeet.streamDeckPlugin
-          path: ./artifacts
-
-      - name: Attach artifacts to release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            ./artifacts/com.chrisregado.googlemeet.streamDeckPlugin
