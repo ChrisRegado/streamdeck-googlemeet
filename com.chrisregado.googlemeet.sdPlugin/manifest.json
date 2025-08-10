@@ -1,447 +1,449 @@
 {
-  "Actions": [
-    {
-      "Icon": "images/actions/open_meet",
-      "Name": "Open Meet",
-      "States": [
-        {
-          "Image": "images/keys/open_meet",
-          "Title": "Open Meet",
-          "TitleAlignment": "top",
-          "FontSize": "8",
-          "ShowTitle": false
-        }
-      ],
-      "SupportedInMultiActions": true,
-      "Tooltip": "Open a Google Meet browser window.",
-      "UUID": "com.chrisregado.googlemeet.openmeet"
-    },
-    {
-      "Icon": "images/actions/mic_off",
-      "Name": "Mic Toggle",
-      "States": [
-        {
-          "Image": "images/keys/mic_disconnected",
-          "Title": "Disconnected",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/mic_off",
-          "Title": "Mic Off",
-          "TitleAlignment": "top",
-          "FontSize": "13",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/mic_on",
-          "Title": "Mic On",
-          "TitleAlignment": "top",
-          "FontSize": "13",
-          "ShowTitle": false
-        }
-      ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Toggle your microphone mute.",
-      "UUID": "com.chrisregado.googlemeet.togglemic"
-    },
-    {
-      "Icon": "images/actions/camera_off",
-      "Name": "Camera Toggle",
-      "States": [
-        {
-          "Image": "images/keys/camera_disconnected",
-          "Title": "Disconnected",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/camera_off",
-          "Title": "Cam Off",
-          "TitleAlignment": "top",
-          "FontSize": "13",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/camera_on",
-          "Title": "Cam On",
-          "TitleAlignment": "top",
-          "FontSize": "13",
-          "ShowTitle": false
-        }
-      ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Toggle your camera on/off.",
-      "UUID": "com.chrisregado.googlemeet.togglecamera"
-    },
-    {
-      "Icon": "images/actions/mic_on",
-      "Name": "Unmute Mic",
-      "States": [
-        {
-          "Image": "images/keys/mic_on",
-          "TitleAlignment": "top",
-          "Title": "Unmute Mic",
-          "FontSize": "9"
-        }
-      ],
-      "Tooltip": "Unmute your microphone.",
-      "UUID": "com.chrisregado.googlemeet.unmutemic"
-    },
-    {
-      "Icon": "images/actions/mic_off",
-      "Name": "Mute Mic",
-      "States": [
-        {
-          "Image": "images/keys/mic_off",
-          "TitleAlignment": "top",
-          "Title": "Mute Mic",
-          "FontSize": "10"
-        }
-      ],
-      "Tooltip": "Mute your microphone.",
-      "UUID": "com.chrisregado.googlemeet.mutemic"
-    },
-    {
-      "Icon": "images/actions/camera_on",
-      "Name": "Enable Camera",
-      "States": [
-        {
-          "Image": "images/keys/camera_on",
-          "Title": "Start Cam",
-          "TitleAlignment": "top",
-          "FontSize": "9"
-        }
-      ],
-      "Tooltip": "Turn on your camera.",
-      "UUID": "com.chrisregado.googlemeet.enablecamera"
-    },
-    {
-      "Icon": "images/actions/camera_off",
-      "Name": "Disable Camera",
-      "States": [
-        {
-          "Image": "images/keys/camera_off",
-          "Title": "Stop Cam",
-          "TitleAlignment": "top",
-          "FontSize": "10"
-        }
-      ],
-      "Tooltip": "Turn off your camera.",
-      "UUID": "com.chrisregado.googlemeet.disablecamera"
-    },
-    {
-      "Icon": "images/actions/leave_call",
-      "Name": "Leave Call",
-      "States": [
-        {
-          "Image": "images/keys/leave_call",
-          "Title": "Leave\nCall",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Leave call.",
-      "UUID": "com.chrisregado.googlemeet.leavecall"
-    },
-    {
-      "Icon": "images/actions/hand",
-      "Name": "Toggle Hand",
-      "States": [
-        {
-          "Image": "images/keys/hand_off",
-          "Title": "Disconnected",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/hand_off",
-          "Title": "Hand Down",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/hand_on",
-          "Title": "Hand Raised",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        }
-      ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Raise/lower your hand.",
-      "UUID": "com.chrisregado.googlemeet.togglehand"
-    },
-    {
-      "Icon": "images/actions/captions",
-      "Name": "Toggle Captions",
-      "States": [
-        {
-          "Image": "images/keys/captions_off",
-          "Title": "Disconnected",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/captions_off",
-          "Title": "Captions Off",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/captions_on",
-          "Title": "Captions On",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        }
-      ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Enable/disable captions.",
-      "UUID": "com.chrisregado.googlemeet.togglecaptions"
-    },
-    {
-      "Icon": "images/actions/pin_presentation",
-      "Name": "Toggle Pinned Presentation",
-      "States": [
-        {
-          "Image": "images/keys/presentation_pin_off",
-          "Title": "Disconnected",
-          "TitleAlignment": "top",
-          "FontSize": "6",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/presentation_pin_off",
-          "Title": "Pres Unpinned",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        },
-        {
-          "Image": "images/keys/presentation_pin_on",
-          "Title": "Pres Pinned",
-          "TitleAlignment": "top",
-          "FontSize": "7",
-          "ShowTitle": false
-        }
-      ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Pin (or unpin) a presentation to your screen.",
-      "UUID": "com.chrisregado.googlemeet.togglepinpresentation"
-    },
-    {
-      "Icon": "images/actions/chat",
-      "Name": "Toggle Chat",
-      "States": [
-        {
-          "Image": "images/keys/chat",
-          "Title": "Chat",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Show/hide the chat panel.",
-      "UUID": "com.chrisregado.googlemeet.togglechat"
-    },
-    {
-      "Icon": "images/actions/participants",
-      "Name": "Toggle Participants",
-      "States": [
-        {
-          "Image": "images/keys/participants",
-          "Title": "Participants",
-          "TitleAlignment": "top",
-          "FontSize": "8",
-          "ShowTitle": false
-        }
-      ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Show/hide the list of meeting participants.",
-      "UUID": "com.chrisregado.googlemeet.toggleparticipants"
-    },
-    {
-      "Icon": "images/actions/emoji_react_sparkling_heart",
-      "Name": "Emoji React - Sparkling Heart",
-      "States": [
-        {
-          "Image": "images/keys/emoji_react_sparkling_heart",
-          "Title": "Emoji React",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Emoji React - Sparkling Heart",
-      "UUID": "com.chrisregado.googlemeet.emojireact.sparklingheart"
-    },
-    {
-      "Icon": "images/actions/emoji_react_thumbs_up",
-      "Name": "Emoji React - Thumbs Up",
-      "States": [
-        {
-          "Image": "images/keys/emoji_react_thumbs_up",
-          "Title": "Emoji React",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Emoji React - Thumbs Up",
-      "UUID": "com.chrisregado.googlemeet.emojireact.thumbsup"
-    },
-    {
-      "Icon": "images/actions/emoji_react_party_popper",
-      "Name": "Emoji React - Party Popper",
-      "States": [
-        {
-          "Image": "images/keys/emoji_react_party_popper",
-          "Title": "Emoji React",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Emoji React - Party Popper",
-      "UUID": "com.chrisregado.googlemeet.emojireact.partypopper"
-    },
-    {
-      "Icon": "images/actions/emoji_react_clapping_hands",
-      "Name": "Emoji React - Clapping Hands",
-      "States": [
-        {
-          "Image": "images/keys/emoji_react_clapping_hands",
-          "Title": "Emoji React",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Emoji React - Clapping Hands",
-      "UUID": "com.chrisregado.googlemeet.emojireact.clappinghands"
-    },
-    {
-      "Icon": "images/actions/emoji_react_face_with_tears_of_joy",
-      "Name": "Emoji React - Face with Tears of Joy",
-      "States": [
-        {
-          "Image": "images/keys/emoji_react_face_with_tears_of_joy",
-          "Title": "Emoji React",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Emoji React - Face with Tears of Joy",
-      "UUID": "com.chrisregado.googlemeet.emojireact.facewithtearsofjoy"
-    },
-    {
-      "Icon": "images/actions/emoji_react_face_with_open_mouth",
-      "Name": "Emoji React - Face with Open Mouth",
-      "States": [
-        {
-          "Image": "images/keys/emoji_react_face_with_open_mouth",
-          "Title": "Emoji React",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Emoji React - Face with Open Mouth",
-      "UUID": "com.chrisregado.googlemeet.emojireact.facewithopenmouth"
-    },
-    {
-      "Icon": "images/actions/emoji_react_crying_face",
-      "Name": "Emoji React - Crying Face",
-      "States": [
-        {
-          "Image": "images/keys/emoji_react_crying_face",
-          "Title": "Emoji React",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Emoji React - Crying Face",
-      "UUID": "com.chrisregado.googlemeet.emojireact.cryingface"
-    },
-    {
-      "Icon": "images/actions/emoji_react_thinking_face",
-      "Name": "Emoji React - Thinking Face",
-      "States": [
-        {
-          "Image": "images/keys/emoji_react_thinking_face",
-          "Title": "Emoji React",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Emoji React - Thinking Face",
-      "UUID": "com.chrisregado.googlemeet.emojireact.thinkingface"
-    },
-    {
-      "Icon": "images/actions/emoji_react_thumbs_down",
-      "Name": "Emoji React - Thumbs Down",
-      "States": [
-        {
-          "Image": "images/keys/emoji_react_thumbs_down",
-          "Title": "Emoji React",
-          "TitleAlignment": "top",
-          "FontSize": "10",
-          "ShowTitle": false
-        }
-      ],
-      "Tooltip": "Emoji React - Thumbs Down",
-      "UUID": "com.chrisregado.googlemeet.emojireact.thumbsdown"
-    },
-    {
-	    "Icon": "images/actions/zen_mode",
-	    "Name": "Toggle Zen Mode",
-	    "States": [
-		    {
-			    "Image": "images/keys/zen_mode",
-			    "Title": "Zen",
-			    "TitleAlignment": "top",
-			    "FontSize": 10,
-			    "ShowTitle": false
-		  }
-	    ],
-	    "Tooltip": "Show/hide Meet web UI toolbars. Not an official Google Meet feature.",
-	    "UUID": "com.chrisregado.googlemeet.togglezenmode"
-    }
-  ],
-  "SDKVersion": 2,
-  "Author": "Chris Regado",
-  "CodePathMac": "dist/macos/main/main",
-  "CodePathWin": "dist/windows/main/main.exe",
-  "Description": "A Stream Deck plugin to manage your Google Meet calls.",
-  "Name": "Google Meet",
-  "Icon": "images/plugin_icon",
-  "URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
-  "Version": "1.6.1",
-  "Category": "Google Meet",
-  "CategoryIcon": "images/category_icon",
-  "OS": [
-    {
-      "Platform": "mac",
-      "MinimumVersion": "10.11"
-    },
-    {
-      "Platform": "windows",
-      "MinimumVersion": "10"
-    }
-  ],
-  "Software": {
-    "MinimumVersion": "4.1"
-  }
+	"Actions": [
+		{
+			"Icon": "images/actions/open_meet",
+			"Name": "Open Meet",
+			"States": [
+				{
+					"Image": "images/keys/open_meet",
+					"Title": "Open Meet",
+					"TitleAlignment": "top",
+					"FontSize": 8,
+					"ShowTitle": false
+				}
+			],
+			"SupportedInMultiActions": true,
+			"Tooltip": "Open a Google Meet browser window.",
+			"UUID": "com.chrisregado.googlemeet.openmeet"
+		},
+		{
+			"Icon": "images/actions/mic_off",
+			"Name": "Mic Toggle",
+			"States": [
+				{
+					"Image": "images/keys/mic_disconnected",
+					"Title": "Disconnected",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/mic_off",
+					"Title": "Mic Off",
+					"TitleAlignment": "top",
+					"FontSize": 13,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/mic_on",
+					"Title": "Mic On",
+					"TitleAlignment": "top",
+					"FontSize": 13,
+					"ShowTitle": false
+				}
+			],
+			"SupportedInMultiActions": false,
+			"Tooltip": "Toggle your microphone mute.",
+			"UUID": "com.chrisregado.googlemeet.togglemic"
+		},
+		{
+			"Icon": "images/actions/camera_off",
+			"Name": "Camera Toggle",
+			"States": [
+				{
+					"Image": "images/keys/camera_disconnected",
+					"Title": "Disconnected",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/camera_off",
+					"Title": "Cam Off",
+					"TitleAlignment": "top",
+					"FontSize": 13,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/camera_on",
+					"Title": "Cam On",
+					"TitleAlignment": "top",
+					"FontSize": 13,
+					"ShowTitle": false
+				}
+			],
+			"SupportedInMultiActions": false,
+			"Tooltip": "Toggle your camera on/off.",
+			"UUID": "com.chrisregado.googlemeet.togglecamera"
+		},
+		{
+			"Icon": "images/actions/mic_on",
+			"Name": "Unmute Mic",
+			"States": [
+				{
+					"Image": "images/keys/mic_on",
+					"TitleAlignment": "top",
+					"Title": "Unmute Mic",
+					"FontSize": 8
+				}
+			],
+			"Tooltip": "Unmute your microphone.",
+			"UUID": "com.chrisregado.googlemeet.unmutemic"
+		},
+		{
+			"Icon": "images/actions/mic_off",
+			"Name": "Mute Mic",
+			"States": [
+				{
+					"Image": "images/keys/mic_off",
+					"TitleAlignment": "top",
+					"Title": "Mute Mic",
+					"FontSize": 10
+				}
+			],
+			"Tooltip": "Mute your microphone.",
+			"UUID": "com.chrisregado.googlemeet.mutemic"
+		},
+		{
+			"Icon": "images/actions/camera_on",
+			"Name": "Enable Camera",
+			"States": [
+				{
+					"Image": "images/keys/camera_on",
+					"Title": "Start Cam",
+					"TitleAlignment": "top",
+					"FontSize": 9
+				}
+			],
+			"Tooltip": "Turn on your camera.",
+			"UUID": "com.chrisregado.googlemeet.enablecamera"
+		},
+		{
+			"Icon": "images/actions/camera_off",
+			"Name": "Disable Camera",
+			"States": [
+				{
+					"Image": "images/keys/camera_off",
+					"Title": "Stop Cam",
+					"TitleAlignment": "top",
+					"FontSize": 10
+				}
+			],
+			"Tooltip": "Turn off your camera.",
+			"UUID": "com.chrisregado.googlemeet.disablecamera"
+		},
+		{
+			"Icon": "images/actions/leave_call",
+			"Name": "Leave Call",
+			"States": [
+				{
+					"Image": "images/keys/leave_call",
+					"Title": "Leave\nCall",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Leave call.",
+			"UUID": "com.chrisregado.googlemeet.leavecall"
+		},
+		{
+			"Icon": "images/actions/hand",
+			"Name": "Toggle Hand",
+			"States": [
+				{
+					"Image": "images/keys/hand_off",
+					"Title": "Disconnected",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/hand_off",
+					"Title": "Hand Down",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/hand_on",
+					"Title": "Hand Raised",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				}
+			],
+			"SupportedInMultiActions": false,
+			"Tooltip": "Raise/lower your hand.",
+			"UUID": "com.chrisregado.googlemeet.togglehand"
+		},
+		{
+			"Icon": "images/actions/captions",
+			"Name": "Toggle Captions",
+			"States": [
+				{
+					"Image": "images/keys/captions_off",
+					"Title": "Disconnected",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/captions_off",
+					"Title": "Captions Off",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/captions_on",
+					"Title": "Captions On",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				}
+			],
+			"SupportedInMultiActions": false,
+			"Tooltip": "Enable/disable captions.",
+			"UUID": "com.chrisregado.googlemeet.togglecaptions"
+		},
+		{
+			"Icon": "images/actions/pin_presentation",
+			"Name": "Toggle Pinned Presentation",
+			"States": [
+				{
+					"Image": "images/keys/presentation_pin_off",
+					"Title": "Disconnected",
+					"TitleAlignment": "top",
+					"FontSize": 6,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/presentation_pin_off",
+					"Title": "Pres Unpinned",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				},
+				{
+					"Image": "images/keys/presentation_pin_on",
+					"Title": "Pres Pinned",
+					"TitleAlignment": "top",
+					"FontSize": 7,
+					"ShowTitle": false
+				}
+			],
+			"SupportedInMultiActions": false,
+			"Tooltip": "Pin (or unpin) a presentation to your screen.",
+			"UUID": "com.chrisregado.googlemeet.togglepinpresentation"
+		},
+		{
+			"Icon": "images/actions/chat",
+			"Name": "Toggle Chat",
+			"States": [
+				{
+					"Image": "images/keys/chat",
+					"Title": "Chat",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"SupportedInMultiActions": false,
+			"Tooltip": "Show/hide the chat panel.",
+			"UUID": "com.chrisregado.googlemeet.togglechat"
+		},
+		{
+			"Icon": "images/actions/participants",
+			"Name": "Toggle Participants",
+			"States": [
+				{
+					"Image": "images/keys/participants",
+					"Title": "Participants",
+					"TitleAlignment": "top",
+					"FontSize": 8,
+					"ShowTitle": false
+				}
+			],
+			"SupportedInMultiActions": false,
+			"Tooltip": "Show/hide the list of meeting participants.",
+			"UUID": "com.chrisregado.googlemeet.toggleparticipants"
+		},
+		{
+			"Icon": "images/actions/emoji_react_sparkling_heart",
+			"Name": "Emoji React - Sparkling Heart",
+			"States": [
+				{
+					"Image": "images/keys/emoji_react_sparkling_heart",
+					"Title": "Emoji React",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Emoji React - Sparkling Heart",
+			"UUID": "com.chrisregado.googlemeet.emojireact.sparklingheart"
+		},
+		{
+			"Icon": "images/actions/emoji_react_thumbs_up",
+			"Name": "Emoji React - Thumbs Up",
+			"States": [
+				{
+					"Image": "images/keys/emoji_react_thumbs_up",
+					"Title": "Emoji React",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Emoji React - Thumbs Up",
+			"UUID": "com.chrisregado.googlemeet.emojireact.thumbsup"
+		},
+		{
+			"Icon": "images/actions/emoji_react_party_popper",
+			"Name": "Emoji React - Party Popper",
+			"States": [
+				{
+					"Image": "images/keys/emoji_react_party_popper",
+					"Title": "Emoji React",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Emoji React - Party Popper",
+			"UUID": "com.chrisregado.googlemeet.emojireact.partypopper"
+		},
+		{
+			"Icon": "images/actions/emoji_react_clapping_hands",
+			"Name": "Emoji React - Clapping Hands",
+			"States": [
+				{
+					"Image": "images/keys/emoji_react_clapping_hands",
+					"Title": "Emoji React",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Emoji React - Clapping Hands",
+			"UUID": "com.chrisregado.googlemeet.emojireact.clappinghands"
+		},
+		{
+			"Icon": "images/actions/emoji_react_face_with_tears_of_joy",
+			"Name": "Emoji React - Face with Tears of Joy",
+			"States": [
+				{
+					"Image": "images/keys/emoji_react_face_with_tears_of_joy",
+					"Title": "Emoji React",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Emoji React - Face with Tears of Joy",
+			"UUID": "com.chrisregado.googlemeet.emojireact.facewithtearsofjoy"
+		},
+		{
+			"Icon": "images/actions/emoji_react_face_with_open_mouth",
+			"Name": "Emoji React - Face with Open Mouth",
+			"States": [
+				{
+					"Image": "images/keys/emoji_react_face_with_open_mouth",
+					"Title": "Emoji React",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Emoji React - Face with Open Mouth",
+			"UUID": "com.chrisregado.googlemeet.emojireact.facewithopenmouth"
+		},
+		{
+			"Icon": "images/actions/emoji_react_crying_face",
+			"Name": "Emoji React - Crying Face",
+			"States": [
+				{
+					"Image": "images/keys/emoji_react_crying_face",
+					"Title": "Emoji React",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Emoji React - Crying Face",
+			"UUID": "com.chrisregado.googlemeet.emojireact.cryingface"
+		},
+		{
+			"Icon": "images/actions/emoji_react_thinking_face",
+			"Name": "Emoji React - Thinking Face",
+			"States": [
+				{
+					"Image": "images/keys/emoji_react_thinking_face",
+					"Title": "Emoji React",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Emoji React - Thinking Face",
+			"UUID": "com.chrisregado.googlemeet.emojireact.thinkingface"
+		},
+		{
+			"Icon": "images/actions/emoji_react_thumbs_down",
+			"Name": "Emoji React - Thumbs Down",
+			"States": [
+				{
+					"Image": "images/keys/emoji_react_thumbs_down",
+					"Title": "Emoji React",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Emoji React - Thumbs Down",
+			"UUID": "com.chrisregado.googlemeet.emojireact.thumbsdown"
+		},
+		{
+			"Icon": "images/actions/zen_mode",
+			"Name": "Toggle Zen Mode",
+			"States": [
+				{
+					"Image": "images/keys/zen_mode",
+					"Title": "Zen",
+					"TitleAlignment": "top",
+					"FontSize": 10,
+					"ShowTitle": false
+				}
+			],
+			"Tooltip": "Show/hide Meet web UI toolbars. Not an official Google Meet feature.",
+			"UUID": "com.chrisregado.googlemeet.togglezenmode"
+		}
+	],
+	"SDKVersion": 2,
+	"Author": "Chris Regado",
+	"CodePath": "dist/macos/main/main",
+	"CodePathMac": "dist/macos/main/main",
+	"CodePathWin": "dist/windows/main/main.exe",
+	"Description": "A Stream Deck plugin to manage your Google Meet calls.",
+	"Name": "Google Meet",
+	"UUID": "com.chrisregado.googlemeet",
+	"Icon": "images/plugin_icon",
+	"URL": "https://github.com/ChrisRegado/streamdeck-googlemeet",
+	"Version": "0.0.1.0",
+	"Category": "Google Meet",
+	"CategoryIcon": "images/category_icon",
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "10.11"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Software": {
+		"MinimumVersion": "6.4"
+	}
 }

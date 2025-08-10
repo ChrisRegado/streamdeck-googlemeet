@@ -38,18 +38,24 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+
       - name: Set up Pip
         run: python -m pip install --upgrade pip
+
       - name: pip install
         run: pip install -r requirements.txt
+
       - name: Run unit tests
         run: python -m unittest
+
       - name: Bundle plugin
         run: pyinstaller --clean --dist ../com.chrisregado.googlemeet.sdPlugin/dist/${{ matrix.os }} src/main.py && rm -rf build
+
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-plugin-intermediate-build
@@ -65,26 +71,47 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Download DistributionTool
-        run: curl -L https://github.com/ChrisRegado/streamdeck-build-tools/raw/master/DistributionToolMac/DistributionTool -o DistributionTool
-      - name: Make DistributionTool Executable
-        run: chmod +x DistributionTool
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          # See https://docs.elgato.com/streamdeck/cli/intro/ for supported Node.js versions
+          node-version: '22'
+
+      - name: Install Elgato streamdeck CLI tool
+        run: npm install -g @elgato/cli@1.5.0
+
       - name: Download macOS plugin artifact
         uses: actions/download-artifact@v4
         with:
           name: macos-plugin-intermediate-build
           path: com.chrisregado.googlemeet.sdPlugin/dist/macos
+
       - name: Download Windows plugin artifact
         uses: actions/download-artifact@v4
         with:
           name: windows-plugin-intermediate-build
           path: com.chrisregado.googlemeet.sdPlugin/dist/windows
+
+      - name: Run Elgato linter
+        run: streamdeck validate --no-update-check com.chrisregado.googlemeet.sdPlugin
+
       - name: Make output dir
-        run: mkdir output
+        run: mkdir ./build
+
       - name: Bundle plugin
-        run: ./DistributionTool -b -i ./com.chrisregado.googlemeet.sdPlugin -o output/
+        if: ${{ github.ref_type != 'tag' }}
+        run: streamdeck pack --output ./build/ --no-update-check com.chrisregado.googlemeet.sdPlugin
+
+      - name: Bundle plugin using version from git tag
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          GIT_TAG="${{ github.ref_name }}"
+          VERSION_NUMBER="${GIT_TAG#v}"
+          streamdeck pack --output ./build/ --no-update-check --force --version "${VERSION_NUMBER}" com.chrisregado.googlemeet.sdPlugin
+
       - name: Upload final plugin binary
         uses: actions/upload-artifact@v4
         with:
           name: com.chrisregado.googlemeet.streamDeckPlugin
-          path: output/com.chrisregado.googlemeet.streamDeckPlugin
+          path: ./build/com.chrisregado.googlemeet.streamDeckPlugin

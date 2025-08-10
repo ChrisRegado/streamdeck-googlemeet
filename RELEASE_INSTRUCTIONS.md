@@ -34,16 +34,16 @@ Finally, we'll add auth tokens from the Firefox Add-on portal as GitHub Action s
 
 Follow these steps each time you want to release a new version of the plugin and/or browser extension:
 
-1. Manually update the version number of the Stream Deck plugin by editing `com.chrisregado.googlemeet.sdPlugin/manifest.json` and changing the `Version` field. Make sure that change gets merged into `master`. (We have CI jobs to manage version numbers for the browser extensions, so you don't need to touch those.)
-2. Tag the commit you wish to release and push it to GitHub. We use semantic versioning with a "v" prefix for our releases. For example: `git checkout master && git tag v1.2.3 && git push origin tag v1.2.3`
-3. CI jobs should automatically launch against that tag to build the [Stream Deck plugin](https://github.com/ChrisRegado/streamdeck-googlemeet/actions/workflows/streamdeck-plugin-build.yml) and [browser extensions](https://github.com/ChrisRegado/streamdeck-googlemeet/actions/workflows/browser-extension-build.yml). (The list of workflow runs should show one copy of each of those two jobs with your `v1.2.3` tag.) Wait for them to complete successfully.
-4. Click into those two build jobs, and on each job's "Summary" tab, download our build artifacts. The browser extension build job should have `chrome-extension` and `firefox-extension-signed` artifacts, and the plugin build job should have `com.chrisregado.googlemeet.streamDeckPlugin`.
-5. Do a final manual validation of those release artifacts. Install the plugin, Firefox extension, and Chrome extension, and verify basic functionality.
-6. On the Github page for your repo, click "Releases". (https://github.com/ChrisRegado/streamdeck-googlemeet/releases)
-7. Click "Draft a new release".
-8. Click the "Tag" button and select the tag you made in the previous step.
-9. Use the your tag name as the "Release title", and enter a description summarizing notable changes in this release.
-10. Select the "Set as a pre-release" checkbox near the bottom of the page.
-11. Click "Publish release".
-12. Our [release CI job](https://github.com/ChrisRegado/streamdeck-googlemeet/actions/workflows/release.yaml) should automatically start and attach our tag's artifacts to the GitHub Release. Wait for it to complete. If all goes well, in a minute or two you should see 3 attachments appear on the release: the `com.chrisregado.googlemeet.streamDeckPlugin` plugin, a zip of the Chrome extension, and an `.xpi` file for the Firefox extension.
-13. Edit the release, uncheck the "Set as a pre-release" checkbox at the bottom of the page, select the "Set as the latest release" checkbox, and click "Update release".
+1. Tag the commit you wish to release and push it to GitHub. We use semantic versioning with a "v" prefix for our releases. For example: `git checkout master && git tag v1.2.3 && git push origin tag v1.2.3`
+    * Our CI jobs will update version numbers automatically to match that tag for both the plugin and browser extensions. You don't need to manually change any version numbers in code/config.
+2. CI jobs should automatically launch against that tag to build the [Stream Deck plugin](https://github.com/ChrisRegado/streamdeck-googlemeet/actions/workflows/streamdeck-plugin-build.yml) and [browser extensions](https://github.com/ChrisRegado/streamdeck-googlemeet/actions/workflows/browser-extension-build.yml). (The list of workflow runs should show one copy of each of those two jobs with your `v1.2.3` tag.) Wait for them to complete successfully.
+3. Click into those two build jobs, and on each job's "Summary" tab, download our build artifacts. The browser extension build job should have `chrome-extension` and `firefox-extension-signed` artifacts, and the plugin build job should have `com.chrisregado.googlemeet.streamDeckPlugin`.
+4. Do a final manual validation of those release artifacts. Install the plugin, Firefox extension, and Chrome extension, and verify basic functionality.
+5. On the Github page for your repo, click "Releases". (https://github.com/ChrisRegado/streamdeck-googlemeet/releases)
+6. Click "Draft a new release".
+7. Click the "Tag" button and select the tag you made in the previous step.
+8. Use the your tag name as the "Release title", and enter a description summarizing notable changes in this release.
+9. Select the "Set as a pre-release" checkbox near the bottom of the page.
+10. Click "Publish release".
+11. Our [release CI job](https://github.com/ChrisRegado/streamdeck-googlemeet/actions/workflows/release.yaml) should automatically start and attach our tag's artifacts to the GitHub Release. Wait for it to complete. If all goes well, in a minute or two you should see 3 attachments appear on the release: the `com.chrisregado.googlemeet.streamDeckPlugin` plugin, a zip of the Chrome extension, and an `.xpi` file for the Firefox extension.
+12. Edit the release, uncheck the "Set as a pre-release" checkbox at the bottom of the page, select the "Set as the latest release" checkbox, and click "Update release".

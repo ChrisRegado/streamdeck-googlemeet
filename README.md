@@ -59,7 +59,7 @@ In the Stream Deck desktop app, right click on one of the Google Meet actions in
 
 The Stream Deck plugin launches a localhost-only Websocket server on port 2394, which our browser extension connects to. The plugin and browser extension send messages back and forth over that websocket to notify the Stream Deck when Meet changes its device on/off status, and simulates Meet mute button clicks in your browser when you press a key on your Stream Deck.
 
-The Stream Deck plugin code is in the `streamdeck-plugin` directory. The browser extension code is in the `browser-extension` directory. The `com.chrisregado.googlemeet.sdPlugin` directory contains our Stream Deck assets and it becomes our Stream Deck plugin distributable once we bundle our code with the Elgato DistributionTool.
+The Stream Deck plugin code is in the `streamdeck-plugin` directory. The browser extension code is in the `browser-extension` directory. The `com.chrisregado.googlemeet.sdPlugin` directory contains our Stream Deck assets and it becomes our Stream Deck plugin distributable once we bundle our code with the Elgato `streamdeck` CLI.
 
 ## Developing the Stream Deck Plugin
 
@@ -67,7 +67,7 @@ The Stream Deck plugin code is in the `streamdeck-plugin` directory. The browser
 
 The plugin is written in Python. Create a venv to hold your package's dependencies, and install those dependencies:
 
-MacOS:
+**MacOS:**
 
 ```
 cd streamdeck-plugin
@@ -76,7 +76,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Windows:
+**Windows:**
 
 ```
 cd streamdeck-plugin
@@ -89,7 +89,7 @@ Remember that virtualenvs are not portable. If you move this folder at all, you'
 
 ### Running Unit Tests
 
-MacOS:
+**MacOS:**
 
 ```
 cd streamdeck-plugin
@@ -97,7 +97,7 @@ source venv/bin/activate
 python -m unittest
 ```
 
-Windows:
+**Windows:**
 
 ```
 cd streamdeck-plugin
@@ -107,11 +107,13 @@ python -m unittest
 
 ### Bundling
 
-We use `pyinstaller` to bundle our code, dependencies, and a Python runtime environment into an executable. We put that executable into the `com.chrisregado.googlemeet.sdPlugin` folder, which in turn gets zipped up by the [Elgato DistributionTool](https://developer.elgato.com/documentation/stream-deck/sdk/packaging/) as our final distributable plugin package. That plugin package ends up including any assets we need (e.g. icons), the `manifest.json` file that defines our plugin for the Stream Deck desktop app, and our executable plugin code. Double-click that plugin package and the Stream Deck software will prompt you to install it.
+We use `pyinstaller` to bundle our code, dependencies, and a Python runtime environment into an executable. We put that executable into the `com.chrisregado.googlemeet.sdPlugin` folder, which in turn gets zipped up by the [Elgato streamdeck CLI tool](https://docs.elgato.com/streamdeck/cli/intro) as our final distributable plugin package. That plugin package ends up including any assets we need (e.g. icons), the `manifest.json` file that defines our plugin for the Stream Deck desktop app, and our executable plugin code. Double-click that plugin package and the Stream Deck software will prompt you to install it.
 
-To build the bundle:
+Our plugin code is written in Python, but the Elgato CLI tool is distributed as a Node module, so you'll need Node.js installed.
 
-MacOS:
+To build the plugin:
+
+**MacOS:**
 
 ```
 cd streamdeck-plugin
@@ -121,7 +123,7 @@ pyinstaller --clean --dist "../com.chrisregado.googlemeet.sdPlugin/dist/macos" s
 rm -rf build
 ```
 
-Windows:
+**Windows:**
 
 ```
 cd streamdeck-plugin
@@ -133,22 +135,35 @@ rmdir /q /s build
 
 Note that the resulting executable is only valid for the OS you built it on. MacOS and Windows bundles must be created separately from a machine/VM of that OS, and then combined into the `com.chrisregado.googlemeet.sdPlugin/dist/` folder with `macos` and `windows` subdirectories for release.
 
-If you're just testing locally (so you only care about one OS), you can place any file in the other OS's executable location (`CodePath`s from `manifest.json`) to appease the Elgato DistributionTool. Example:
+If you're just testing locally (so you only care about one OS), you can place any file in the other OS's executable location (`CodePath`s from `manifest.json`) to appease the Elgato packaging tool. Example:
 
 ```
+# If you're running macOS:
 mkdir -p com.chrisregado.googlemeet.sdPlugin/dist/windows/main
 touch com.chrisregado.googlemeet.sdPlugin/dist/windows/main/main.exe
+
+# If you're running Windows:
+mkdir com.chrisregado.googlemeet.sdPlugin\dist\macos\main
+type nul > com.chrisregado.googlemeet.sdPlugin\dist\macos\main\main
 ```
 
 Or, if you don't ever plan on publishing your local builds, delete the other OS's CodePath and `OS` entry in manifest.json so you don't have to worry about multi-OS support.
 
-Finally, use the DistributionTool to bundle everything into the Stream Deck plugin distributable that you can send to users:
+Finally, use Elgato's `streamdeck` CLI tool to bundle everything into the Stream Deck plugin distributable that you can install or send to users. From the root of this git repo, run:
 
 ```
-./DistributionTool -b -i ./com.chrisregado.googlemeet.sdPlugin -o ~/Desktop/
+npm install -g @elgato/cli
+
+streamdeck pack --output ./build/ --force  com.chrisregado.googlemeet.sdPlugin
 ```
+
+In the Stream Deck desktop app, uninstall any old copies of the plugin because the app won't overwrite your installation unless the new build has a newer version number.
+
+You can then double-click the `./build/com.chrisregado.googlemeet.streamDeckPlugin` file to install your build of the plugin into the Stream Deck desktop app.
 
 ## Developing the Browser Extension
+
+Our build tools rely on Node.js, so make sure you have Node.js installed.
 
 ### Using Google Chrome
 
