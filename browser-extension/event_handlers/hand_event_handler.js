@@ -1,6 +1,6 @@
 class HandEventHandler extends AriaPressedBasedToggleEventHandler {
 
-  static ButtonJsName = "FpSaz";
+  static ButtonJsNames = ["FpSaz"];
 
   _sendMuteState = () => {
     this._sendSimpleMuteStateUpdate("handMutedState");

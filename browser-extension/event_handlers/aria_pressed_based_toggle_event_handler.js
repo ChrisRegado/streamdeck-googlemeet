@@ -4,11 +4,18 @@
  */
 class AriaPressedBasedToggleEventHandler extends ToggleEventHandler {
 
-  // Subclasses should set this to the `jsname` attribute value on the target toggle button in the Meet UI.
-  static ButtonJsName;
+  // Subclasses should set this to an array of `jsname` attribute value(s) on the target toggle button in the Meet UI.
+  // We'll check all of them and take the first result we find.
+  static ButtonJsNames;
 
   _controlElementSelector = () => {
-    return document.querySelector(`button[jsname="${this.constructor.ButtonJsName}"]`);
+    for (var i = 0; i < this.constructor.ButtonJsNames.length; i++) {
+      const button = document.querySelector(`button[jsname="${this.constructor.ButtonJsNames[i]}"]`);
+      if (button) {
+        return button;
+      }
+    }
+    return null;
   }
 
   _isElementMuted = (element) => {
@@ -26,7 +33,7 @@ class AriaPressedBasedToggleEventHandler extends ToggleEventHandler {
     for (const mutation of mutationsList) {
       if (mutation.type === "attributes" && mutation.attributeName === "aria-pressed") {
         const jsName = mutation.target.attributes["jsname"]?.value;
-        if (jsName === this.constructor.ButtonJsName) {
+        if (this.constructor.ButtonJsNames.includes(jsName)) {
           this._sendMuteState();
         }
       }

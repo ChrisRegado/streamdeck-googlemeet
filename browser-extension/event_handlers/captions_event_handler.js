@@ -1,17 +1,22 @@
-class CaptionsEventHandler extends AriaPressedBasedToggleEventHandler {
+class CaptionsEventHandler extends IconBasedEventHandler {
 
-  static ButtonJsName = "r8qRAd";
+  /**
+   * When captions are off, we see:
+   *   <i class="quRWN-Bz112c google-symbols notranslate" aria-hidden="true" data-google-symbols-override="true">closed_caption_off</i>
+   * When captions are on, we see:
+   *   <i class="quRWN-Bz112c google-symbols notranslate" aria-hidden="true" data-google-symbols-override="true">closed_caption</i>
+   */
+  static MutedIconHTML = "closed_caption_off";
 
-  _sendMuteState = () => {
-    this._sendSimpleMuteStateUpdate("captionsMutedState");
-  }
+  static MuteStateUpdateEventName = "captionsMutedState";
 
-  handleStreamDeckEvent = (message) => {
-    if (message.event === "toggleCaptions") {
-      this._toggleMute();
-    } else if (message.event === "getCaptionsState") {
-      this._sendMuteState();
-    }
+  static ToggleEventName = "toggleCaptions";
+
+  static GetMuteStateEventName = "getCaptionsState";
+
+  _controlElementSelector = () => {
+    return document.querySelector('button[jsname="RrG0hf"]') // From approximately Feb 2026 onwards
+      || document.querySelector('button[jsname="r8qRAd"]');  // Before Feb 2026 redesign
   }
 
 }
