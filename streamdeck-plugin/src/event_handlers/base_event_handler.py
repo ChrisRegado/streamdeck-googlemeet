@@ -27,7 +27,11 @@ class EventHandler:
     # If set to an action prefix string, allows matching a family of actions sharing a prefix.
     STREAM_DECK_ACTION_PREFIX: str | None = None
 
-    def __init__(self, stream_deck: "StreamDeckWebsocketClient", browser_manager: "BrowserWebsocketServer") -> None:
+    def __init__(
+        self,
+        stream_deck: "StreamDeckWebsocketClient",
+        browser_manager: "BrowserWebsocketServer",
+    ) -> None:
         self._logger = logging.getLogger(__name__)
 
         self._stream_deck: "StreamDeckWebsocketClient" = stream_deck
@@ -55,9 +59,11 @@ class EventHandler:
         event_type = event.get("event")
         target_action = event.get("action")
 
-        action_matches_on_prefix = self.STREAM_DECK_ACTION_PREFIX is not None \
-            and target_action is not None \
+        action_matches_on_prefix = (
+            self.STREAM_DECK_ACTION_PREFIX is not None
+            and target_action is not None
             and target_action.startswith(self.STREAM_DECK_ACTION_PREFIX)
+        )
 
         if target_action != self.STREAM_DECK_ACTION and not action_matches_on_prefix:
             # This message is probably intended for some other event handler.
