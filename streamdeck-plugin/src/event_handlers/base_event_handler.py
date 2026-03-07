@@ -27,7 +27,11 @@ class EventHandler:
     # If set to an action prefix string, allows matching a family of actions sharing a prefix.
     STREAM_DECK_ACTION_PREFIX: str | None = None
 
-    def __init__(self, stream_deck: "StreamDeckWebsocketClient", browser_manager: "BrowserWebsocketServer") -> None:
+    def __init__(
+        self,
+        stream_deck: "StreamDeckWebsocketClient",
+        browser_manager: "BrowserWebsocketServer",
+    ) -> None:
         self._logger = logging.getLogger(__name__)
 
         self._stream_deck: "StreamDeckWebsocketClient" = stream_deck
@@ -55,9 +59,11 @@ class EventHandler:
         event_type = event.get("event")
         target_action = event.get("action")
 
-        action_matches_on_prefix = self.STREAM_DECK_ACTION_PREFIX is not None \
-            and target_action is not None \
+        action_matches_on_prefix = (
+            self.STREAM_DECK_ACTION_PREFIX is not None
+            and target_action is not None
             and target_action.startswith(self.STREAM_DECK_ACTION_PREFIX)
+        )
 
         if target_action != self.STREAM_DECK_ACTION and not action_matches_on_prefix:
             # This message is probably intended for some other event handler.
@@ -69,6 +75,8 @@ class EventHandler:
             await self._will_appear_handler(event)
         elif event_type == "willDisappear":
             await self._will_disappear_handler(event)
+        elif event_type == "sendToPlugin":
+            await self._send_to_plugin_handler(event)
         else:
             # There are several different Stream Deck events we don't care about.
             pass
@@ -97,6 +105,13 @@ class EventHandler:
         """
         The "willDisappear" event is called when the Stream Deck hides our button,
         e.g. if the user switches profiles.
+        """
+        pass
+
+    async def _send_to_plugin_handler(self, event: dict) -> None:
+        """
+        The "sendToPlugin" event is called when the Property Inspector sends
+        a message to the plugin.
         """
         pass
 

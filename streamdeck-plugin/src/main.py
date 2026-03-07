@@ -6,20 +6,23 @@ from browser_websocket_server import BrowserWebsocketServer
 from event_handlers.camera_toggle_event_handler import CameraToggleEventHandler
 from event_handlers.captions_toggle_event_handler import CaptionsToggleEventHandler
 from event_handlers.chat_toggle_event_handler import ChatToggleEventHandler
+from event_handlers.emoji_react_event_handler import EmojiReactEventHandler
 from event_handlers.hand_toggle_event_handler import HandToggleEventHandler
 from event_handlers.leave_call_event_handler import LeaveCallEventHandler
 from event_handlers.mic_toggle_event_handler import MicToggleEventHandler
 from event_handlers.mute_mic_event_handler import MuteMicEventHandler
 from event_handlers.open_meet_event_handler import OpenMeetEventHandler
-from event_handlers.participants_toggle_event_handler import ParticipantsToggleEventHandler
-from event_handlers.pin_presentation_toggle_event_handler import PinPresentationToggleEventHandler
+from event_handlers.participants_toggle_event_handler import (
+    ParticipantsToggleEventHandler,
+)
+from event_handlers.pin_presentation_toggle_event_handler import (
+    PinPresentationToggleEventHandler,
+)
 from event_handlers.turn_off_camera_event_handler import TurnOffCameraEventHandler
 from event_handlers.turn_on_camera_event_handler import TurnOnCameraEventHandler
 from event_handlers.unmute_mic_event_handler import UnmuteMicEventHandler
-from event_handlers.emoji_react_event_handler import EmojiReactEventHandler
 from event_handlers.zen_mode_event_handler import ZenModeEventHandler
 from stream_deck_client import StreamDeckWebsocketClient
-
 
 """
 The port that our Websocket server will listen on for connections from our
@@ -33,15 +36,14 @@ def parse_cli_args():
     These flags are the ones required by the Stream Deck SDK's registration procedure.
     They'll be set by the Stream Deck desktop software when it launches our plugin.
     """
-    parser = argparse.ArgumentParser(
-        description='Stream Deck Google Meet Plugin')
+    parser = argparse.ArgumentParser(description="Stream Deck Google Meet Plugin")
 
-    parser.add_argument('-port', type=int, required=True)
-    parser.add_argument('-pluginUUID', dest='plugin_uuid',
-                        type=str, required=True)
-    parser.add_argument('-registerEvent', dest='register_event',
-                        type=str, required=True)
-    parser.add_argument('-info', type=str, required=True)
+    parser.add_argument("-port", type=int, required=True)
+    parser.add_argument("-pluginUUID", dest="plugin_uuid", type=str, required=True)
+    parser.add_argument(
+        "-registerEvent", dest="register_event", type=str, required=True
+    )
+    parser.add_argument("-info", type=str, required=True)
 
     # Ignore unknown args in case a Stream Deck update adds optional flags later.
     (known_args, _) = parser.parse_known_args()
@@ -49,8 +51,9 @@ def parse_cli_args():
 
 
 def register_handlers(
-        stream_deck_client: StreamDeckWebsocketClient,
-        browser_manager: BrowserWebsocketServer) -> None:
+    stream_deck_client: StreamDeckWebsocketClient,
+    browser_manager: BrowserWebsocketServer,
+) -> None:
     event_handlers = [
         CameraToggleEventHandler(stream_deck_client, browser_manager),
         CaptionsToggleEventHandler(stream_deck_client, browser_manager),
@@ -74,7 +77,7 @@ def register_handlers(
         stream_deck_client.register_event_handler(event_handler)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """
     Note: The Stream Deck SDK doesn't offer any facilities for low-level logging
     from plugins, or even passing any custom CLI flags. While debugging, you may
@@ -83,6 +86,8 @@ if __name__ == '__main__':
     This log file will be created in the folder of your installed plugin. On a Mac, that's:
     ~/Library/Application Support/com.elgato.StreamDeck/Plugins/com.chrisregado.googlemeet.sdPlugin/meetplugin.log
     """
+
+    logging.basicConfig(filename="meetplugin.log", level=logging.DEBUG)
 
     args = parse_cli_args()
     logging.debug(f"Starting with command line args: {args}")
@@ -93,9 +98,11 @@ if __name__ == '__main__':
     register_handlers(stream_deck_client, browser_manager)
 
     browser_manager_loop = browser_manager.start(
-        hostname="127.0.0.1", port=BROWSER_WEBSOCKET_PORT)
+        hostname="127.0.0.1", port=BROWSER_WEBSOCKET_PORT
+    )
     stream_deck_loop = stream_deck_client.start(
-        port=args.port, register_event=args.register_event, plugin_uuid=args.plugin_uuid)
+        port=args.port, register_event=args.register_event, plugin_uuid=args.plugin_uuid
+    )
 
     async def websocket_loop():
         await asyncio.gather(browser_manager_loop, stream_deck_loop)
