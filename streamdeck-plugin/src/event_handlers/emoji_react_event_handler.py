@@ -1,4 +1,5 @@
 import json
+
 from event_handlers.base_event_handler import EventHandler
 
 
@@ -16,16 +17,26 @@ class EmojiReactEventHandler(EventHandler):
         "com.chrisregado.googlemeet.emojireact.facewithopenmouth": "😮",
         "com.chrisregado.googlemeet.emojireact.cryingface": "😢",
         "com.chrisregado.googlemeet.emojireact.thinkingface": "🤔",
-        "com.chrisregado.googlemeet.emojireact.thumbsdown": "👎"
+        "com.chrisregado.googlemeet.emojireact.thumbsdown": "👎",
     }
 
     STREAM_DECK_ACTION_PREFIX = "com.chrisregado.googlemeet.emojireact."
 
     def _get_emoji_char_for_event(self, event: dict) -> str:
-        action = event['action']
-        emoji_char = self.ACTION_TO_EMOJI.get(action)
+        action = event["action"]
+        emoji_char = None
+        if action == f"{self.STREAM_DECK_ACTION_PREFIX}custom":
+            self._logger.info(
+                f"Custom emoji requested: {event.get('payload', {}).get('settings', {}).get('emoji', '')}"
+            )
+            emoji_char = event.get("payload", {}).get("settings", {}).get("emoji", None)
+        else:
+            emoji_char = self.ACTION_TO_EMOJI.get(action)
+
         if not emoji_char:
-            raise NotImplementedError(f"The action '{action}' was requested, but there is no corresponding emoji.")
+            raise NotImplementedError(
+                f"The action '{action}' was requested, but there is no corresponding emoji."
+            )
         return emoji_char
 
     @staticmethod
