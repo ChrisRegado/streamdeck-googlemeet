@@ -54,9 +54,13 @@ function renderFirefoxManifest(chromeManifestPath, firefoxStubPath, outputPath, 
 // Parse a web extension manifest.json file to extract all referenced scripts
 function listFilesInManifest(manifestPath) {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-  return manifest.content_scripts?.flatMap(contentScript => {
+  const contentScriptFiles = manifest.content_scripts?.flatMap(contentScript => {
     return contentScript.js;
-  });
+  }) || [];
+  const backgroundFiles = manifest.background?.service_worker
+    ? [manifest.background.service_worker]
+    : [];
+  return [...contentScriptFiles, ...backgroundFiles];
 }
 
 // Copy source files to both build directories

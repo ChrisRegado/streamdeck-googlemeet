@@ -5,6 +5,7 @@
   "scripts": {
     "build": "node scripts/build.js",
     "clean": "node scripts/clean.js",
+    "test": "node --test tests/*.test.js",
     "package-chrome": "node scripts/package-chrome.js",
     "package-firefox": "web-ext build --source-dir=build/firefox --artifacts-dir=build --filename=firefox-extension.zip --overwrite-dest",
     "sign-firefox": "web-ext sign --channel=unlisted --source-dir=build/firefox --artifacts-dir=build",
