@@ -16,7 +16,9 @@ class MockedToggleEventHandler(BaseToggleEventHandler):
 
 
 def make_mocked_toggle_handler():
-    handler = MockedToggleEventHandler(AsyncMock(), AsyncMock())
+    browser_manager = AsyncMock()
+    browser_manager.num_connected_clients = MagicMock(return_value=0)
+    handler = MockedToggleEventHandler(AsyncMock(), browser_manager)
     handler._toggle_contexts = [TEST_TOGGLE_CONTEXT]
     return handler
 
@@ -66,6 +68,23 @@ class BaseToggleEventHandlerTests(IsolatedAsyncioTestCase):
 
         self._assert_called_with_json(
             handler._stream_deck.send_outbound_message, expected_sd_event)
+
+    async def test_browser_reconnection_requests_state(self):
+        """
+        Tests that when the browser reconnects, we request fresh state so stale
+        "Disconnected" buttons can recover without a manual button press.
+        """
+        handler = make_mocked_toggle_handler()
+        handler._browser_manager.num_connected_clients = MagicMock(
+            return_value=1)
+        expected_browser_event = {
+            "event": handler.BROWSER_STATE_REQUEST_EVENT_TYPE
+        }
+
+        await handler.on_browser_connected()
+
+        self._assert_called_with_json(
+            handler._browser_manager.send_to_clients, expected_browser_event)
 
     async def test_key_up_toggle(self):
         """
@@ -117,6 +136,8 @@ class BaseToggleEventHandlerTests(IsolatedAsyncioTestCase):
         request to the browser to set the initial button state.
         """
         handler = make_mocked_toggle_handler()
+        handler._browser_manager.num_connected_clients = MagicMock(
+            return_value=1)
         expected_browser_event = {
             "event": handler.BROWSER_STATE_REQUEST_EVENT_TYPE
         }
@@ -135,7 +156,9 @@ class BaseToggleEventHandlerTests(IsolatedAsyncioTestCase):
         Tests that contexts are successfully saved and then removed as buttons
         appear and disappear.
         """
-        handler = MockedToggleEventHandler(AsyncMock(), AsyncMock())
+        browser_manager = AsyncMock()
+        browser_manager.num_connected_clients = MagicMock(return_value=0)
+        handler = MockedToggleEventHandler(AsyncMock(), browser_manager)
 
         await handler.on_stream_deck_event({
             "event": "willAppear",

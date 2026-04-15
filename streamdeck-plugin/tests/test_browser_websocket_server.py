@@ -74,6 +74,20 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
 
         event_handler.on_all_browsers_disconnected.assert_called_with()
 
+    async def test_browser_connected_callback_called(self):
+        """
+        Test that our EventHandler's on_browser_connected is called when the
+        first browser client connects.
+        """
+        event_handler = AsyncMock()
+        server = BrowserWebsocketServer()
+        server.register_event_handler(event_handler)
+        mock_websocket = AsyncMock()
+
+        await server._message_receive_loop(mock_websocket)
+
+        event_handler.on_browser_connected.assert_called_with()
+
     async def test_browser_disconnected_callback_not_called(self):
         """
         Test that our EventHandler's on_all_browsers_disconnected is not called when
@@ -89,6 +103,7 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
         await server._message_receive_loop(mock_websocket_2)
 
         event_handler.on_all_browsers_disconnected.assert_not_called()
+        event_handler.on_browser_connected.assert_not_called()
 
     async def test_socket_messages_read(self):
         """

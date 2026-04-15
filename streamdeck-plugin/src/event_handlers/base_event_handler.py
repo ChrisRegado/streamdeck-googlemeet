@@ -40,6 +40,13 @@ class EventHandler:
         """
         pass
 
+    async def on_browser_connected(self) -> None:
+        """
+        Called when the first browser extension client connects after we had no
+        connected browser clients.
+        """
+        pass
+
     async def on_all_browsers_disconnected(self) -> None:
         """
         Called when there are no longer any connections to our browser extension

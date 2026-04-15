@@ -92,7 +92,15 @@ class BrowserWebsocketServer:
         Loop of waiting for and processing inbound websocket messages, until the
         connection dies. Each connection will create one of these coroutines.
         """
+        had_clients = bool(self._ws_clients)
         self._register_client(ws)
+        if not had_clients:
+            for handler in self._handlers:
+                try:
+                    await handler.on_browser_connected()
+                except Exception:
+                    self._logger.exception(
+                        "Connection mananger received an exception from EventHandler!")
         try:
             async for message in ws:
                 self._logger.info(
