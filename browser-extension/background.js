@@ -19,8 +19,8 @@ class StreamDeckBackgroundBridge {
 
   constructor({
     webSocketFactory = (url) => new WebSocket(url),
-    setTimeoutFn = setTimeout,
-    clearTimeoutFn = clearTimeout,
+    setTimeoutFn = (...args) => setTimeout(...args),
+    clearTimeoutFn = (...args) => clearTimeout(...args),
   } = {}) {
     this._webSocketFactory = webSocketFactory;
     this._setTimeout = setTimeoutFn;
