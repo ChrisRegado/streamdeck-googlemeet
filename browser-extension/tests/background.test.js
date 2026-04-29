@@ -54,8 +54,6 @@ test("broadcasts connection-opened and inbound websocket events to content scrip
   const socket = makeSocket();
   const bridge = new StreamDeckBackgroundBridge({
     webSocketFactory: () => socket,
-    setIntervalFn: () => 1,
-    clearIntervalFn: () => {},
     setTimeoutFn: () => 1,
     clearTimeoutFn: () => {},
   });
@@ -81,8 +79,6 @@ test("forwards browser events from content scripts to the websocket", () => {
   const socket = makeSocket();
   const bridge = new StreamDeckBackgroundBridge({
     webSocketFactory: () => socket,
-    setIntervalFn: () => 1,
-    clearIntervalFn: () => {},
     setTimeoutFn: () => 1,
     clearTimeoutFn: () => {},
   });
@@ -105,8 +101,6 @@ test("closes the websocket when the last content script disconnects", () => {
   const socket = makeSocket();
   const bridge = new StreamDeckBackgroundBridge({
     webSocketFactory: () => socket,
-    setIntervalFn: () => 1,
-    clearIntervalFn: () => {},
     setTimeoutFn: () => 1,
     clearTimeoutFn: () => {},
   });
@@ -118,4 +112,49 @@ test("closes the websocket when the last content script disconnects", () => {
   port.disconnect();
 
   assert.equal(socket.closeCalls, 1);
+});
+
+test("schedules a reconnect when the websocket errors", () => {
+  let timeoutsScheduled = 0;
+  const socket = makeSocket();
+  const bridge = new StreamDeckBackgroundBridge({
+    webSocketFactory: () => socket,
+    setTimeoutFn: () => {
+      timeoutsScheduled += 1;
+      return 1;
+    },
+    clearTimeoutFn: () => {},
+  });
+  const port = makePort();
+
+  bridge.addPort(port);
+  socket.readyState = 1;
+
+  // Simulate an error
+  socket.onerror(new Error("socket error"));
+
+  assert.equal(socket.closeCalls, 1);
+  assert.equal(timeoutsScheduled, 1);
+});
+
+test("schedules a reconnect when the websocket closes", () => {
+  let timeoutsScheduled = 0;
+  const socket = makeSocket();
+  const bridge = new StreamDeckBackgroundBridge({
+    webSocketFactory: () => socket,
+    setTimeoutFn: () => {
+      timeoutsScheduled += 1;
+      return 1;
+    },
+    clearTimeoutFn: () => {},
+  });
+  const port = makePort();
+
+  bridge.addPort(port);
+  socket.readyState = 1;
+
+  socket.close();
+
+  assert.equal(socket.closeCalls, 1);
+  assert.equal(timeoutsScheduled, 1);
 });

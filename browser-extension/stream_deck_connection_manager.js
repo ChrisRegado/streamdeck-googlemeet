@@ -1,4 +1,6 @@
 const RECONNECTION_INTERVAL_SECS = 2;
+const HEARTBEAT_INTERVAL_SECS = 20;
+const HEARTBEAT_EVENT_NAME = "keepAlive";
 const EXTENSION_PORT_NAME = "streamdeck-googlemeet";
 const MESSAGE_TYPES = Object.freeze({
   BROWSER_EVENT: "browserEvent",
@@ -15,6 +17,7 @@ class StreamDeckConnectionMananger {
   constructor() {
     this._port = null;
     this._reconnectTimeoutId = null;
+    this._heartbeatIntervalId = null;
 
     // Any SDEventHandlers registered to receive inbound events from the Stream Deck.
     this._eventHandlers = [];
@@ -65,6 +68,12 @@ class StreamDeckConnectionMananger {
 
     this._port = chrome.runtime.connect({ name: EXTENSION_PORT_NAME });
 
+    // Send a message every 20s. Any message over a Port resets the service worker's
+    // 30-second idle timer, keeping the worker alive as long as Meet is open.
+    this._heartbeatIntervalId = setInterval(() => {
+      this.sendMessage({ event: HEARTBEAT_EVENT_NAME });
+    }, HEARTBEAT_INTERVAL_SECS * 1000);
+
     this._port.onMessage.addListener((message) => {
       if (message?.type === MESSAGE_TYPES.STREAM_DECK_CONNECTION_OPENED) {
         this._attemptStateTransmission();
@@ -75,8 +84,13 @@ class StreamDeckConnectionMananger {
 
     this._port.onDisconnect.addListener(() => {
       this._port = null;
+      if (this._heartbeatIntervalId) {
+        clearInterval(this._heartbeatIntervalId);
+        this._heartbeatIntervalId = null;
+      }
       if (this._reconnectTimeoutId) {
         clearTimeout(this._reconnectTimeoutId);
+        this._reconnectTimeoutId = null;
       }
       this._reconnectTimeoutId = setTimeout(() => {
         this._reconnectTimeoutId = null;

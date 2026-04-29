@@ -2,8 +2,6 @@
 const STREAM_DECK_PORT = 2394;
 
 const RECONNECTION_INTERVAL_SECS = 2;
-const HEARTBEAT_INTERVAL_SECS = 20;
-const HEARTBEAT_EVENT_NAME = "keepAlive";
 const WEBSOCKET_OPEN_STATE = 1;
 const PORT_NAME = "streamdeck-googlemeet";
 
@@ -23,18 +21,13 @@ class StreamDeckBackgroundBridge {
     webSocketFactory = (url) => new WebSocket(url),
     setTimeoutFn = setTimeout,
     clearTimeoutFn = clearTimeout,
-    setIntervalFn = setInterval,
-    clearIntervalFn = clearInterval,
   } = {}) {
     this._webSocketFactory = webSocketFactory;
     this._setTimeout = setTimeoutFn;
     this._clearTimeout = clearTimeoutFn;
-    this._setInterval = setIntervalFn;
-    this._clearInterval = clearIntervalFn;
 
     this._ports = new Set();
     this._socket = null;
-    this._heartbeatIntervalId = null;
     this._reconnectTimeoutId = null;
   }
 
@@ -107,24 +100,20 @@ class StreamDeckBackgroundBridge {
         event
       );
       this._closeSocket();
+      if (this._ports.size) {
+        this._scheduleReconnect();
+      }
     };
 
     this._socket.onclose = () => {
       this._socket = null;
-      this._stopHeartbeat();
 
-      if (!this._ports.size) {
-        return;
+      if (this._ports.size) {
+        this._scheduleReconnect();
       }
-
-      this._reconnectTimeoutId = this._setTimeout(() => {
-        this._reconnectTimeoutId = null;
-        this._createWebsocket();
-      }, RECONNECTION_INTERVAL_SECS * 1000);
     };
 
     this._socket.onopen = () => {
-      this._startHeartbeat();
       this._broadcast({
         type: MESSAGE_TYPES.STREAM_DECK_CONNECTION_OPENED,
       });
@@ -162,18 +151,12 @@ class StreamDeckBackgroundBridge {
     });
   }
 
-  _startHeartbeat = () => {
-    this._stopHeartbeat();
-    this._heartbeatIntervalId = this._setInterval(() => {
-      this._sendToSocket({ event: HEARTBEAT_EVENT_NAME });
-    }, HEARTBEAT_INTERVAL_SECS * 1000);
-  }
-
-  _stopHeartbeat = () => {
-    if (this._heartbeatIntervalId) {
-      this._clearInterval(this._heartbeatIntervalId);
-      this._heartbeatIntervalId = null;
-    }
+  _scheduleReconnect = () => {
+    this._stopReconnects();
+    this._reconnectTimeoutId = this._setTimeout(() => {
+      this._reconnectTimeoutId = null;
+      this._createWebsocket();
+    }, RECONNECTION_INTERVAL_SECS * 1000);
   }
 
   _stopReconnects = () => {
@@ -184,7 +167,6 @@ class StreamDeckBackgroundBridge {
   }
 
   _closeSocket = () => {
-    this._stopHeartbeat();
     if (this._socket) {
       const socket = this._socket;
       this._socket = null;
