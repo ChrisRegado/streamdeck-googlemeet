@@ -425,6 +425,7 @@
 	"CodePath": "dist/macos/main/main",
 	"CodePathMac": "dist/macos/main/main",
 	"CodePathWin": "dist/windows/main/main.exe",
+	"CodePathLin": "dist/linux/main/main",
 	"Description": "A Stream Deck plugin to manage your Google Meet calls.",
 	"Name": "Google Meet",
 	"UUID": "com.chrisregado.googlemeet",
@@ -441,6 +442,9 @@
 		{
 			"Platform": "windows",
 			"MinimumVersion": "10"
+		},
+		{
+			"Platform": "linux"
 		}
 	],
 	"Software": {

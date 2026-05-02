@@ -27,6 +27,8 @@ jobs:
             runs_on: macos-latest
           - os: windows
             runs_on: windows-latest
+          - os: linux
+            runs_on: ubuntu-latest
     name: Build ${{ matrix.os }} Stream Deck Plugin
     # Since we run on both branch pushes and PRs, don't do a duplicated run if the PR is for a branch in the local repo:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
@@ -93,6 +95,20 @@ jobs:
           name: windows-plugin-intermediate-build
           path: com.chrisregado.googlemeet.sdPlugin/dist/windows
 
+      - name: Strip Linux-specific manifest entries for Elgato validation
+        run: |
+          cd com.chrisregado.googlemeet.sdPlugin
+          cp manifest.json manifest-full.json
+          python3 -c "
+          import json
+          with open('manifest.json', 'r') as f:
+              m = json.load(f)
+          m.pop('CodePathLin', None)
+          m['OS'] = [o for o in m.get('OS', []) if o.get('Platform') != 'linux']
+          with open('manifest.json', 'w') as f:
+              json.dump(m, f, indent='\t')
+          "
+
       - name: Run Elgato linter
         run: streamdeck validate --no-update-check com.chrisregado.googlemeet.sdPlugin
 
@@ -110,8 +126,42 @@ jobs:
           VERSION_NUMBER="${GIT_TAG#v}"
           streamdeck pack --output ./build/ --no-update-check --force --version "${VERSION_NUMBER}" com.chrisregado.googlemeet.sdPlugin
 
+      - name: Download Linux plugin artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-plugin-intermediate-build
+          path: com.chrisregado.googlemeet.sdPlugin/dist/linux
+
+      - name: Set executable permissions on Linux binary
+        run: chmod +x com.chrisregado.googlemeet.sdPlugin/dist/linux/main/main
+
+      - name: Build Linux-inclusive package for OpenDeck
+        run: |
+          cd com.chrisregado.googlemeet.sdPlugin
+          cp manifest-full.json manifest.json
+          rm manifest-full.json
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            GIT_TAG="${{ github.ref_name }}"
+            VERSION_NUMBER="${GIT_TAG#v}"
+            python3 -c "
+          import json
+          with open('manifest.json', 'r') as f:
+              m = json.load(f)
+          m['Version'] = '${VERSION_NUMBER}'
+          with open('manifest.json', 'w') as f:
+              json.dump(m, f, indent='\t')
+          "
+          fi
+          zip -r ../build/com.chrisregado.googlemeet-linux.streamDeckPlugin . -x ".*"
+
       - name: Upload final plugin binary
         uses: actions/upload-artifact@v4
         with:
           name: com.chrisregado.googlemeet.streamDeckPlugin
           path: ./build/com.chrisregado.googlemeet.streamDeckPlugin
+
+      - name: Upload Linux-inclusive plugin package
+        uses: actions/upload-artifact@v4
+        with:
+          name: com.chrisregado.googlemeet-linux.streamDeckPlugin
+          path: ./build/com.chrisregado.googlemeet-linux.streamDeckPlugin

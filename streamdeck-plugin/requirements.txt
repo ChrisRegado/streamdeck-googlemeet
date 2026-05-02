@@ -1,5 +1,5 @@
-altgraph==0.17.4
-macholib==1.16.3
+altgraph==0.17.4; sys_platform == 'darwin'
+macholib==1.16.3; sys_platform == 'darwin'
 packaging==25.0
 pyinstaller==6.14.2
 pyinstaller-hooks-contrib==2025.8

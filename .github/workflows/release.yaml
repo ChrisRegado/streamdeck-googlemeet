@@ -81,6 +81,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: ./artifacts
 
+      - name: Download Linux-inclusive Stream Deck Plugin
+        uses: actions/download-artifact@v4
+        with:
+          name: com.chrisregado.googlemeet-linux.streamDeckPlugin
+          run-id: ${{ steps.get-workflow-id.outputs.plugin_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./artifacts
+
       - name: Attach artifacts to release
         uses: softprops/action-gh-release@v2
         with:
@@ -89,3 +97,4 @@ jobs:
             ./artifacts/chrome-extension-${{ github.event.release.tag_name }}.zip
             ./artifacts/firefox-extension-${{ github.event.release.tag_name }}.xpi
             ./artifacts/com.chrisregado.googlemeet.streamDeckPlugin
+            ./artifacts/com.chrisregado.googlemeet-linux.streamDeckPlugin

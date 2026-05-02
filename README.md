@@ -6,9 +6,11 @@ This is a plugin that allows the [Elgato Stream Deck](https://www.elgato.com/en/
 
 This plugin works in conjuction with our Google Chrome / Mozilla Firefox browser extension, which is required for this plugin to function.
 
-Developed and tested primarily on macOS 15.0, Python 3.13.0, Chrome 130, and Stream Deck app v6.6. It should work on Windows or in Firefox as well.
+Developed and tested primarily on macOS 15.0, Python 3.13.0, Chrome 130, and Stream Deck app v6.6. It should work on Windows or in Firefox as well. Linux is supported via [OpenDeck](https://github.com/nekename/OpenDeck).
 
 ## Installing
+
+### macOS / Windows
 
 1. If you're running on an Apple Silicon Mac (e.g. an M1 chip), you must have Apple's [Rosetta 2](https://support.apple.com/en-us/HT211861) installed. If you don't (or if you're not sure), open Terminal and run this command:
 
@@ -17,23 +19,33 @@ softwareupdate --install-rosetta --agree-to-license
 ```
 
 2. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the `com.chrisregado.googlemeet.streamDeckPlugin` package and open it. The Stream Deck desktop software will prompt you to install the plugin.
-3. The browser extension is not in the web store, so we'll install it manually:
 
-    **For Google Chrome:**
-    1. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the `chrome-extension` zip file and extract it somewhere you can keep it. (If you move the folder after installing, Chrome will uninstall the extension from your browser and you'll have to reinstall it.)
-    2. From Chrome's extension settings page (`chrome://extensions/`), turn on "Developer mode" using the toggle at the top-right corner of the page.
-    3. Click the "Load unpacked" button at the top-left corner, and select the folder you extracted the zip to earlier.
-    4. You can turn Developer mode back off now if you want.
+### Linux (via OpenDeck)
 
-    **For Mozilla Firefox:**
-    1. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the Firefox extension `.xpi` file.
-    2. From Firefox's extension settings page (`about:addons`), click the Settings cogwheel at the top-right of the page, click "Install Add-on From File...", and select the `.xpi` file that you just downloaded.
-    3. Click "Add" on the Firefox popup to allow the extension to install.
+1. Install [OpenDeck](https://github.com/nekename/OpenDeck), an open-source Stream Deck application that supports Elgato SDK plugins on Linux.
+2. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the `com.chrisregado.googlemeet-linux.streamDeckPlugin` package (the Linux-inclusive build) and install it through OpenDeck.
 
-4. If you use an ad blocker (such as uBlock Origin with the EasyPrivacy filter list), you may have to add meet.google.com as a trusted site in your blocker's settings to allow the browser Extension to work. (Some filters block websockets to 127.0.0.1, which this extension needs to communicate with the Stream Deck.)
-5. Add some buttons to your Stream Deck, and start a Google Meet call to try them out!
+### Browser Extension
 
-It's safe to delete the `com.chrisregado.googlemeet.streamDeckPlugin` file once it's installed. However, on Windows, you may need to quit the Stream Deck desktop software (by right clicking its icon in the Windows task tray and clicking Quit) and re-launch it to avoid "action can't be completed because the file is open" errors.
+The browser extension is not in the web store, so we'll install it manually:
+
+**For Google Chrome:**
+1. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the `chrome-extension` zip file and extract it somewhere you can keep it. (If you move the folder after installing, Chrome will uninstall the extension from your browser and you'll have to reinstall it.)
+2. From Chrome's extension settings page (`chrome://extensions/`), turn on "Developer mode" using the toggle at the top-right corner of the page.
+3. Click the "Load unpacked" button at the top-left corner, and select the folder you extracted the zip to earlier.
+4. You can turn Developer mode back off now if you want.
+
+**For Mozilla Firefox:**
+1. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the Firefox extension `.xpi` file.
+2. From Firefox's extension settings page (`about:addons`), click the Settings cogwheel at the top-right of the page, click "Install Add-on From File...", and select the `.xpi` file that you just downloaded.
+3. Click "Add" on the Firefox popup to allow the extension to install.
+
+### Final Steps
+
+1. If you use an ad blocker (such as uBlock Origin with the EasyPrivacy filter list), you may have to add meet.google.com as a trusted site in your blocker's settings to allow the browser Extension to work. (Some filters block websockets to 127.0.0.1, which this extension needs to communicate with the Stream Deck.)
+2. Add some buttons to your Stream Deck, and start a Google Meet call to try them out!
+
+It's safe to delete the `.streamDeckPlugin` file once it's installed. However, on Windows, you may need to quit the Stream Deck desktop software (by right clicking its icon in the Windows task tray and clicking Quit) and re-launch it to avoid "action can't be completed because the file is open" errors.
 
 ## Updating
 
@@ -67,7 +79,7 @@ The Stream Deck plugin code is in the `streamdeck-plugin` directory. The browser
 
 The plugin is written in Python. Create a venv to hold your package's dependencies, and install those dependencies:
 
-**MacOS:**
+**macOS / Linux:**
 
 ```
 cd streamdeck-plugin
@@ -89,7 +101,7 @@ Remember that virtualenvs are not portable. If you move this folder at all, you'
 
 ### Running Unit Tests
 
-**MacOS:**
+**macOS / Linux:**
 
 ```
 cd streamdeck-plugin
@@ -113,13 +125,23 @@ Our plugin code is written in Python, but the Elgato CLI tool is distributed as 
 
 To build the plugin:
 
-**MacOS:**
+**macOS:**
 
 ```
 cd streamdeck-plugin
 source venv/bin/activate
 rm -rf ../com.chrisregado.googlemeet.sdPlugin/dist/macos
 pyinstaller --clean --dist "../com.chrisregado.googlemeet.sdPlugin/dist/macos" src/main.py
+rm -rf build
+```
+
+**Linux:**
+
+```
+cd streamdeck-plugin
+source venv/bin/activate
+rm -rf ../com.chrisregado.googlemeet.sdPlugin/dist/linux
+pyinstaller --clean --dist "../com.chrisregado.googlemeet.sdPlugin/dist/linux" src/main.py
 rm -rf build
 ```
 
@@ -133,7 +155,7 @@ pyinstaller --clean --dist "..\com.chrisregado.googlemeet.sdPlugin\dist\windows"
 rmdir /q /s build
 ```
 
-Note that the resulting executable is only valid for the OS you built it on. MacOS and Windows bundles must be created separately from a machine/VM of that OS, and then combined into the `com.chrisregado.googlemeet.sdPlugin/dist/` folder with `macos` and `windows` subdirectories for release.
+Note that the resulting executable is only valid for the OS you built it on. macOS, Linux, and Windows bundles must be created separately from a machine/VM of that OS, and then combined into the `com.chrisregado.googlemeet.sdPlugin/dist/` folder with `macos`, `linux`, and `windows` subdirectories for release.
 
 If you're just testing locally (so you only care about one OS), you can place any file in the other OS's executable location (`CodePath`s from `manifest.json`) to appease the Elgato packaging tool. Example:
 
@@ -141,13 +163,25 @@ If you're just testing locally (so you only care about one OS), you can place an
 # If you're running macOS:
 mkdir -p com.chrisregado.googlemeet.sdPlugin/dist/windows/main
 touch com.chrisregado.googlemeet.sdPlugin/dist/windows/main/main.exe
+mkdir -p com.chrisregado.googlemeet.sdPlugin/dist/linux/main
+touch com.chrisregado.googlemeet.sdPlugin/dist/linux/main/main
+
+# If you're running Linux:
+mkdir -p com.chrisregado.googlemeet.sdPlugin/dist/macos/main
+touch com.chrisregado.googlemeet.sdPlugin/dist/macos/main/main
+mkdir -p com.chrisregado.googlemeet.sdPlugin/dist/windows/main
+touch com.chrisregado.googlemeet.sdPlugin/dist/windows/main/main.exe
 
 # If you're running Windows:
 mkdir com.chrisregado.googlemeet.sdPlugin\dist\macos\main
 type nul > com.chrisregado.googlemeet.sdPlugin\dist\macos\main\main
+mkdir com.chrisregado.googlemeet.sdPlugin\dist\linux\main
+type nul > com.chrisregado.googlemeet.sdPlugin\dist\linux\main\main
 ```
 
 Or, if you don't ever plan on publishing your local builds, delete the other OS's CodePath and `OS` entry in manifest.json so you don't have to worry about multi-OS support.
+
+Note that the Elgato `streamdeck` CLI does not recognize `CodePathLin` (it's an OpenDeck extension). If you need to run `streamdeck validate` or `streamdeck pack` locally, temporarily remove the `CodePathLin` entry from manifest.json first.
 
 Finally, use Elgato's `streamdeck` CLI tool to bundle everything into the Stream Deck plugin distributable that you can install or send to users. From the root of this git repo, run:
 
