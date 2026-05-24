@@ -73,6 +73,22 @@ The Stream Deck plugin launches a localhost-only Websocket server on port 2394, 
 
 The Stream Deck plugin code is in the `streamdeck-plugin` directory. The browser extension code is in the `browser-extension` directory. The `com.chrisregado.googlemeet.sdPlugin` directory contains our Stream Deck assets and it becomes our Stream Deck plugin distributable once we bundle our code with the Elgato `streamdeck` CLI.
 
+You can use other Websocket software to interact with the browser extension, for example to debug the extension without a Stream Deck.
+
+Use [wsbroad](https://github.com/vi/wsbroad/) to launch a Websocket server that the extension will also connect to:
+
+```
+wsbroad 127.0.0.1:2394
+```
+
+wsbroad broadcasts all messages received at the Websocket to all connected clients. Then use [websocat](https://github.com/vi/websocat) to send commands to the extension:
+
+```
+websocat --text --oneshot 'literal:{"event":"toggleMic"}' ws://127.0.0.1:2394
+```
+
+The Websocket interface is considered internal and subject to change across different versions of the plugin.
+
 ## Developing the Stream Deck Plugin
 
 ### First Time Setup
