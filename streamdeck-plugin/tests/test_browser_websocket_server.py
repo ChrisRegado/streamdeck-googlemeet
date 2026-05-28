@@ -1,7 +1,27 @@
+import asyncio
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, call
 
 from src.browser_websocket_server import BrowserWebsocketServer
+
+
+class BlockingWebsocket:
+
+    def __init__(self):
+        self.close = AsyncMock()
+        self.remote_address = ("127.0.0.1", 9999)
+        self._disconnect_event = asyncio.Event()
+
+    def disconnect(self):
+        self._disconnect_event.set()
+
+    def __aiter__(self):
+        return self._message_iterator()
+
+    async def _message_iterator(self):
+        await self._disconnect_event.wait()
+        if False:
+            yield "unused"
 
 
 class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
@@ -60,10 +80,28 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
 
         mock_websocket.close.assert_called_once()
 
-    async def test_browser_disconnected_callback_called(self):
+    async def test_browser_disconnected_callback_called_after_delay(self):
         """
         Test that our EventHandler's on_all_browsers_disconnected is called
-        once there are no connected clients.
+        once there are no connected clients for the full debounce window.
+        """
+        event_handler = AsyncMock()
+        server = BrowserWebsocketServer(disconnect_notify_delay_seconds=0.01)
+        server.register_event_handler(event_handler)
+        mock_websocket = AsyncMock()
+
+        await server._message_receive_loop(mock_websocket)
+        event_handler.on_all_browsers_disconnected.assert_not_called()
+
+        await asyncio.sleep(0.02)
+
+        event_handler.on_all_browsers_disconnected.assert_called_with()
+        self.assertIsNone(server._disconnect_notify_task)
+
+    async def test_browser_connected_callback_called(self):
+        """
+        Test that our EventHandler's on_browser_connected is called when the
+        first browser client connects.
         """
         event_handler = AsyncMock()
         server = BrowserWebsocketServer()
@@ -72,7 +110,7 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
 
         await server._message_receive_loop(mock_websocket)
 
-        event_handler.on_all_browsers_disconnected.assert_called_with()
+        event_handler.on_browser_connected.assert_called_with()
 
     async def test_browser_disconnected_callback_not_called(self):
         """
@@ -89,6 +127,55 @@ class BrowserWebsocketServerTests(IsolatedAsyncioTestCase):
         await server._message_receive_loop(mock_websocket_2)
 
         event_handler.on_all_browsers_disconnected.assert_not_called()
+        event_handler.on_browser_connected.assert_not_called()
+
+    async def test_transient_browser_disconnect_suppressed_within_window(self):
+        """
+        Test that transient websocket disconnects do not notify handlers when a
+        browser reconnects before the debounce window expires.
+        """
+        event_handler = AsyncMock()
+        server = BrowserWebsocketServer(disconnect_notify_delay_seconds=0.05)
+        server.register_event_handler(event_handler)
+
+        await server._message_receive_loop(AsyncMock())
+
+        blocking_websocket = BlockingWebsocket()
+        reconnect_task = asyncio.create_task(
+            server._message_receive_loop(blocking_websocket))
+        await asyncio.sleep(0.06)
+
+        event_handler.on_all_browsers_disconnected.assert_not_called()
+
+        blocking_websocket.disconnect()
+        await reconnect_task
+        server._disconnect_notify_task.cancel()
+        await asyncio.sleep(0)
+
+    async def test_disconnect_notification_task_cancelled_on_reconnect(self):
+        """
+        Test that a pending disconnect notification task is cancelled when a
+        new browser websocket reconnects within the debounce window.
+        """
+        server = BrowserWebsocketServer(disconnect_notify_delay_seconds=0.05)
+
+        await server._message_receive_loop(AsyncMock())
+        disconnect_notify_task = server._disconnect_notify_task
+        self.assertIsNotNone(disconnect_notify_task)
+        self.assertFalse(disconnect_notify_task.done())
+
+        blocking_websocket = BlockingWebsocket()
+        reconnect_task = asyncio.create_task(
+            server._message_receive_loop(blocking_websocket))
+        await asyncio.sleep(0.01)
+
+        self.assertTrue(disconnect_notify_task.cancelled())
+        self.assertIsNone(server._disconnect_notify_task)
+
+        blocking_websocket.disconnect()
+        await reconnect_task
+        server._disconnect_notify_task.cancel()
+        await asyncio.sleep(0)
 
     async def test_socket_messages_read(self):
         """

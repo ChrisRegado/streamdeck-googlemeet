@@ -9,6 +9,8 @@ if TYPE_CHECKING:
 
 
 class BrowserWebsocketServer:
+    DISCONNECT_NOTIFY_DELAY_SECONDS = 8.0
+
     """
     The BrowserWebsocketServer manages our connection to our browser extension,
     brokering messages between Google Meet and our plugin's EventHandler.
@@ -22,12 +24,17 @@ class BrowserWebsocketServer:
     websockets hanging around, or if we have multiple Meet tabs.
     """
 
-    def __init__(self):
+    def __init__(self, disconnect_notify_delay_seconds: float | None = None):
         """
         Remember to call start() before attempting to use your new instance!
         """
 
         self._logger = logging.getLogger(__name__)
+        self._disconnect_notify_delay_seconds = (
+            disconnect_notify_delay_seconds
+            if disconnect_notify_delay_seconds is not None
+            else self.DISCONNECT_NOTIFY_DELAY_SECONDS
+        )
 
         """
         Store all of the connected sockets we have open to the browser extension,
@@ -40,6 +47,7 @@ class BrowserWebsocketServer:
         Any EventHandlers registered to receive inbound events from the browser extension.
         """
         self._handlers: List["EventHandler"] = []
+        self._disconnect_notify_task: asyncio.Task | None = None
 
     async def start(self, hostname: str, port: int) -> websockets.Server:
         return await websockets.serve(self._message_receive_loop, hostname, port)
@@ -70,6 +78,7 @@ class BrowserWebsocketServer:
         return len(self._ws_clients)
 
     def _register_client(self, ws: websockets.ServerConnection) -> None:
+        self._cancel_disconnect_notification()
         self._ws_clients.add(ws)
         self._logger.info(
             (f"{ws.remote_address} has connected to our browser websocket."
@@ -92,7 +101,15 @@ class BrowserWebsocketServer:
         Loop of waiting for and processing inbound websocket messages, until the
         connection dies. Each connection will create one of these coroutines.
         """
+        had_clients = bool(self._ws_clients)
         self._register_client(ws)
+        if not had_clients:
+            for handler in self._handlers:
+                try:
+                    await handler.on_browser_connected()
+                except Exception:
+                    self._logger.exception(
+                        "Connection mananger received an exception from EventHandler!")
         try:
             async for message in ws:
                 self._logger.info(
@@ -105,12 +122,51 @@ class BrowserWebsocketServer:
             await self._unregister_client(ws)
 
         if not self._ws_clients:
+            self._schedule_disconnect_notification()
+
+    def _schedule_disconnect_notification(self) -> None:
+        if self._disconnect_notify_task and not self._disconnect_notify_task.done():
+            return
+
+        self._logger.info(
+            ("Scheduling browser disconnect notification in"
+             f" {self._disconnect_notify_delay_seconds} seconds."))
+        self._disconnect_notify_task = asyncio.create_task(
+            self._notify_all_browsers_disconnected_after_delay())
+
+    def _cancel_disconnect_notification(self) -> None:
+        if not self._disconnect_notify_task:
+            return
+
+        if self._disconnect_notify_task.done():
+            self._disconnect_notify_task = None
+            return
+
+        self._logger.info(
+            ("Cancelled pending browser disconnect notification because a"
+             " browser client connected."))
+        self._disconnect_notify_task.cancel()
+        self._disconnect_notify_task = None
+
+    async def _notify_all_browsers_disconnected_after_delay(self) -> None:
+        current_task = asyncio.current_task()
+
+        try:
+            await asyncio.sleep(self._disconnect_notify_delay_seconds)
+            self._logger.info(
+                ("Browser disconnect notification fired after"
+                 f" {self._disconnect_notify_delay_seconds} seconds."))
             for handler in self._handlers:
                 try:
                     await handler.on_all_browsers_disconnected()
                 except Exception:
                     self._logger.exception(
                         "Connection mananger received an exception from EventHandler!")
+        except asyncio.CancelledError:
+            raise
+        finally:
+            if self._disconnect_notify_task is current_task:
+                self._disconnect_notify_task = None
 
     async def _process_inbound_message(self, message: str | bytes) -> None:
         """

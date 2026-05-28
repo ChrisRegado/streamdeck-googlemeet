@@ -6,6 +6,9 @@
   "homepage_url": "https://github.com/ChrisRegado/streamdeck-googlemeet",
   "manifest_version": 3,
   "permissions": [],
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": [
     "https://meet.google.com/*"
   ],

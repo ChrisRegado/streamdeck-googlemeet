@@ -1,15 +1,23 @@
-// The localhost port our Stream Deck plugin is listening on.
-const STREAM_DECK_PORT = 2394;
-
 const RECONNECTION_INTERVAL_SECS = 2;
+const HEARTBEAT_INTERVAL_SECS = 20;
+const HEARTBEAT_EVENT_NAME = "keepAlive";
+const EXTENSION_PORT_NAME = "streamdeck-googlemeet";
+const MESSAGE_TYPES = Object.freeze({
+  BROWSER_EVENT: "browserEvent",
+  STREAM_DECK_CONNECTION_OPENED: "streamDeckConnectionOpened",
+  STREAM_DECK_EVENT: "streamDeckEvent",
+});
 
 /**
- * Manages our websocket that connects this browser extension to the Stream Deck plugin.
+ * Manages our runtime connection to the background extension worker, which in
+ * turn owns the localhost websocket to the Stream Deck plugin.
  */
 class StreamDeckConnectionMananger {
 
   constructor() {
-    this._socket = null;
+    this._port = null;
+    this._reconnectTimeoutId = null;
+    this._heartbeatIntervalId = null;
 
     // Any SDEventHandlers registered to receive inbound events from the Stream Deck.
     this._eventHandlers = [];
@@ -20,12 +28,15 @@ class StreamDeckConnectionMananger {
   }
 
   initialize = () => {
-    this._createWebsocket();
+    this._connectToBackground();
   }
 
   sendMessage = (message) => {
-    if (this._socket && this._socket.readyState === WebSocket.OPEN) {
-      this._socket.send(JSON.stringify(message));
+    if (this._port) {
+      this._port.postMessage({
+        type: MESSAGE_TYPES.BROWSER_EVENT,
+        payload: message,
+      });
     }
   }
 
@@ -50,36 +61,42 @@ class StreamDeckConnectionMananger {
     });
   }
 
-  /**
-   * Connect to our Stream Deck websocket and infinitely attempt to reconnect
-   * if we're unsuccessful or the connection drops.
-   */
-  _createWebsocket = () => {
-    this._socket = new WebSocket("ws://127.0.0.1:" + STREAM_DECK_PORT);
+  _connectToBackground = () => {
+    if (this._port) {
+      return;
+    }
 
-    this._socket.onerror = (event) => {
-      console.error(
-        "WebSocket error. Closing socket and reconnecting. Error: ",
-        event
-      );
-      this._socket.close();
-    };
+    this._port = chrome.runtime.connect({ name: EXTENSION_PORT_NAME });
 
-    this._socket.onclose = () => {
-      // Note: This Event fires on disconnection and failure to connect.
-      setTimeout(() => {
-        this._createWebsocket();
+    // Send a message every 20s. Any message over a Port resets the service worker's
+    // 30-second idle timer, keeping the worker alive as long as Meet is open.
+    this._heartbeatIntervalId = setInterval(() => {
+      this.sendMessage({ event: HEARTBEAT_EVENT_NAME });
+    }, HEARTBEAT_INTERVAL_SECS * 1000);
+
+    this._port.onMessage.addListener((message) => {
+      if (message?.type === MESSAGE_TYPES.STREAM_DECK_CONNECTION_OPENED) {
+        this._attemptStateTransmission();
+      } else if (message?.type === MESSAGE_TYPES.STREAM_DECK_EVENT) {
+        this._eventHandlers.forEach((handler) => handler.handleStreamDeckEvent(message.payload));
+      }
+    });
+
+    this._port.onDisconnect.addListener(() => {
+      this._port = null;
+      if (this._heartbeatIntervalId) {
+        clearInterval(this._heartbeatIntervalId);
+        this._heartbeatIntervalId = null;
+      }
+      if (this._reconnectTimeoutId) {
+        clearTimeout(this._reconnectTimeoutId);
+        this._reconnectTimeoutId = null;
+      }
+      this._reconnectTimeoutId = setTimeout(() => {
+        this._reconnectTimeoutId = null;
+        this._connectToBackground();
       }, RECONNECTION_INTERVAL_SECS * 1000);
-    };
-
-    this._socket.onopen = () => {
-      this._attemptStateTransmission();
-    };
-
-    this._socket.onmessage = (event) => {
-      const jsonMessage = JSON.parse(event.data);
-      this._eventHandlers.forEach((handler) => handler.handleStreamDeckEvent(jsonMessage))
-    };
+    });
   }
 
 }

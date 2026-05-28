@@ -22,6 +22,6 @@ const eventHandlers = [
   new ZenModeEventHandler(connectionManager),
 ];
 
-connectionManager.initialize();
 eventHandlers.forEach((handler) => connectionManager.registerEventHandler(handler));
 eventHandlers.forEach((handler) => handler.initialize());
+connectionManager.initialize();

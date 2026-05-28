@@ -68,6 +68,17 @@ class BaseToggleEventHandler(EventHandler):
     async def on_all_browsers_disconnected(self) -> None:
         await self._set_stream_deck_mute_state(state=SDToggleState.DISCONNECTED)
 
+    async def on_browser_connected(self) -> None:
+        """
+        Re-request current state whenever the browser bridge comes back so we can
+        clear any stale "Disconnected" button state after transient reconnects.
+        """
+        if not self._toggle_contexts or not self._browser_manager.num_connected_clients():
+            return
+
+        await self._browser_manager.send_to_clients(
+            self._make_simple_sd_event(self.BROWSER_STATE_REQUEST_EVENT_TYPE))
+
     async def _key_up_handler(self, event: dict) -> None:
         if self._browser_manager.num_connected_clients():
             """
@@ -99,10 +110,7 @@ class BaseToggleEventHandler(EventHandler):
         # Until we know otherwise, assume there isn't an active Meet call.
         await self._set_stream_deck_mute_state(SDToggleState.DISCONNECTED)
 
-        # Request current mute state from the browser extension.
-        # We'll asynchronously update button states when we get a response.
-        await self._browser_manager.send_to_clients(
-            self._make_simple_sd_event(self.BROWSER_STATE_REQUEST_EVENT_TYPE))
+        await self.on_browser_connected()
 
     async def _will_disappear_handler(self, event: dict) -> None:
         """
