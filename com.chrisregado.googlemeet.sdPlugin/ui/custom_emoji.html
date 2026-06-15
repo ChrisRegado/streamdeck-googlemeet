@@ -45,22 +45,31 @@
                     dbg('Font error: ' + e.message);
                 }
 
+                var renderTimer = null;
+                function debouncedRender(emoji) {
+                    clearTimeout(renderTimer);
+                    renderTimer = setTimeout(function() { renderEmojiAndSetImage(emoji); }, 150);
+                }
+
                 function renderEmojiAndSetImage(emoji) {
-                    if (!emoji) { dbg('Empty emoji, skip'); return; }
-                    dbg('Rendering: ' + emoji);
-
                     ctx.clearRect(0, 0, 144, 144);
-                    ctx.font = '100px NotoColorEmoji';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(emoji, 72, 78);
 
-                    var imgData = ctx.getImageData(0, 0, 144, 144);
-                    var pixels = 0;
-                    for (var i = 3; i < imgData.data.length; i += 4) {
-                        if (imgData.data[i] > 0) pixels++;
+                    if (emoji) {
+                        dbg('Rendering: ' + emoji);
+                        ctx.font = '100px NotoColorEmoji';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(emoji, 72, 78);
+
+                        var imgData = ctx.getImageData(0, 0, 144, 144);
+                        var pixels = 0;
+                        for (var i = 3; i < imgData.data.length; i += 4) {
+                            if (imgData.data[i] > 0) pixels++;
+                        }
+                        dbg('Non-transparent pixels: ' + pixels);
+                    } else {
+                        dbg('Empty emoji, clearing image');
                     }
-                    dbg('Non-transparent pixels: ' + pixels);
 
                     var dataUrl = canvas.toDataURL('image/png');
                     dbg('dataURL len: ' + dataUrl.length);
@@ -71,7 +80,7 @@
                         context: connInfo.propertyInspectorUUID,
                         payload: {
                             event: 'setEmojiImage',
-                            emoji: emoji,
+                            emoji: emoji || '',
                             image: dataUrl
                         }
                     });
@@ -90,7 +99,7 @@
 
                 client.didReceiveSettings.subscribe(function(event) {
                     dbg('didReceiveSettings: ' + JSON.stringify(event.payload?.settings));
-                    renderEmojiAndSetImage(event.payload?.settings?.emoji);
+                    debouncedRender(event.payload?.settings?.emoji);
                 });
 
                 // Listen directly on the text field for live updates as user types
@@ -102,13 +111,13 @@
                         dbg('Found input element, adding listener');
                         input.addEventListener('input', function() {
                             dbg('Input event: ' + input.value);
-                            renderEmojiAndSetImage(input.value);
+                            debouncedRender(input.value);
                         });
                     } else {
                         dbg('No input found inside textfield, using fallback');
                         textField.addEventListener('input', function(e) {
                             dbg('Textfield input event: ' + (e.target.value || e.detail));
-                            renderEmojiAndSetImage(e.target.value);
+                            debouncedRender(e.target.value);
                         });
                     }
                 }

@@ -48,19 +48,19 @@ class EmojiReactEventHandler(EventHandler):
         if payload.get("event") == "setEmojiImage":
             context = event.get("context")
             image = payload.get("image")
-            emoji = payload.get("emoji")
+            emoji = payload.get("emoji", "")
             if context and image:
                 await self._stream_deck.send_outbound_message(json.dumps({
                     "event": "setImage",
                     "context": context,
                     "payload": {"image": image}
                 }))
-                if emoji:
-                    await self._stream_deck.send_outbound_message(json.dumps({
-                        "event": "setSettings",
-                        "context": context,
-                        "payload": {"emoji": emoji, "emojiImage": image}
-                    }))
+                settings = {"emoji": emoji, "emojiImage": image} if emoji else {"emoji": ""}
+                await self._stream_deck.send_outbound_message(json.dumps({
+                    "event": "setSettings",
+                    "context": context,
+                    "payload": settings
+                }))
 
     async def _will_appear_handler(self, event: dict) -> None:
         settings = event.get("payload", {}).get("settings", {})
