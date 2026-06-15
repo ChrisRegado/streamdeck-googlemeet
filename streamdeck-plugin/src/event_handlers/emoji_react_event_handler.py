@@ -48,15 +48,30 @@ class EmojiReactEventHandler(EventHandler):
         if payload.get("event") == "setEmojiImage":
             context = event.get("context")
             image = payload.get("image")
+            emoji = payload.get("emoji")
             if context and image:
-                message = json.dumps({
+                await self._stream_deck.send_outbound_message(json.dumps({
                     "event": "setImage",
                     "context": context,
-                    "payload": {
-                        "image": image
-                    }
-                })
-                await self._stream_deck.send_outbound_message(message)
+                    "payload": {"image": image}
+                }))
+                if emoji:
+                    await self._stream_deck.send_outbound_message(json.dumps({
+                        "event": "setSettings",
+                        "context": context,
+                        "payload": {"emoji": emoji, "emojiImage": image}
+                    }))
+
+    async def _will_appear_handler(self, event: dict) -> None:
+        settings = event.get("payload", {}).get("settings", {})
+        image = settings.get("emojiImage")
+        context = event.get("context")
+        if context and image:
+            await self._stream_deck.send_outbound_message(json.dumps({
+                "event": "setImage",
+                "context": context,
+                "payload": {"image": image}
+            }))
 
     async def _key_up_handler(self, event: dict) -> None:
         # noinspection PyBroadException
