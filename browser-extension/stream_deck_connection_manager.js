@@ -59,14 +59,20 @@ class StreamDeckConnectionMananger {
 
     this._socket.onerror = (event) => {
       console.error(
-        "WebSocket error. Closing socket and reconnecting. Error: ",
+        "WebSocket error. Closing socket and reconnecting.",
         event
       );
       this._socket.close();
     };
 
-    this._socket.onclose = () => {
+    this._socket.onclose = (event) => {
       // Note: This Event fires on disconnection and failure to connect.
+      console.error(
+        "WebSocket closed (code: " + event.code + ", reason: '" + event.reason +
+        "', wasClean: " + event.wasClean + "). Reconnecting in " +
+        RECONNECTION_INTERVAL_SECS + "s.",
+        event
+      );
       setTimeout(() => {
         this._createWebsocket();
       }, RECONNECTION_INTERVAL_SECS * 1000);
