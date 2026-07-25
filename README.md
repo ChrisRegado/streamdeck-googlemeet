@@ -19,19 +19,20 @@ softwareupdate --install-rosetta --agree-to-license
 2. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the `com.chrisregado.googlemeet.streamDeckPlugin` package and open it. The Stream Deck desktop software will prompt you to install the plugin.
 3. The browser extension is not in the web store, so we'll install it manually:
 
-    **For Google Chrome:**
-    1. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the `chrome-extension` zip file and extract it somewhere you can keep it. (If you move the folder after installing, Chrome will uninstall the extension from your browser and you'll have to reinstall it.)
-    2. From Chrome's extension settings page (`chrome://extensions/`), turn on "Developer mode" using the toggle at the top-right corner of the page.
-    3. Click the "Load unpacked" button at the top-left corner, and select the folder you extracted the zip to earlier.
-    4. You can turn Developer mode back off now if you want.
+   **For Google Chrome:**
+   1. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the `chrome-extension` zip file and extract it somewhere you can keep it. (If you move the folder after installing, Chrome will uninstall the extension from your browser and you'll have to reinstall it.)
+   2. From Chrome's extension settings page (`chrome://extensions/`), turn on "Developer mode" using the toggle at the top-right corner of the page.
+   3. Click the "Load unpacked" button at the top-left corner, and select the folder you extracted the zip to earlier.
+   4. You can turn Developer mode back off now if you want.
 
-    **For Mozilla Firefox:**
-    1. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the Firefox extension `.xpi` file.
-    2. From Firefox's extension settings page (`about:addons`), click the Settings cogwheel at the top-right of the page, click "Install Add-on From File...", and select the `.xpi` file that you just downloaded.
-    3. Click "Add" on the Firefox popup to allow the extension to install.
+   **For Mozilla Firefox:**
+   1. From the [Releases page](https://github.com/ChrisRegado/streamdeck-googlemeet/releases), download the Firefox extension `.xpi` file.
+   2. From Firefox's extension settings page (`about:addons`), click the Settings cogwheel at the top-right of the page, click "Install Add-on From File...", and select the `.xpi` file that you just downloaded.
+   3. Click "Add" on the Firefox popup to allow the extension to install.
 
 4. If you use an ad blocker (such as uBlock Origin with the EasyPrivacy filter list), you may have to add meet.google.com as a trusted site in your blocker's settings to allow the browser extension to work. (Some filters block websockets to localhost, which this extension needs to communicate with the Stream Deck.)
 5. Add some buttons to your Stream Deck, and start a Google Meet call to try them out!
+6. The first time you go to meet.google.com after installing the browser extension, you'll get a Chrome permission prompt saying "meet.google.com wants to access other apps and services on this device". You must allow permission for the browser extension to work.
 
 It's safe to delete the `com.chrisregado.googlemeet.streamDeckPlugin` file once it's installed, but the unzipped Chrome extension folder must be kept in the same place as when you installed it.
 
@@ -53,8 +54,11 @@ In the Stream Deck desktop app, right click on one of the Google Meet actions in
 
 ## Troubleshooting
 
-* If Chrome won't let you enable the extension because it was not installed from the web store, you may need to allowlist the extension. On Windows, you can do this by editing the registry. Under both `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist` and `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome\ExtensionInstallAllowlist` add a string value, with the name "1" (or a greater number if "1" already exists). The value should be the extension ID, which you can get from [chrome://extensions/](chrome://extensions/) with Developer Mode on. If this does not work or you're on another operating system, you may find [this post](https://superuser.com/questions/767286/re-enable-extensions-not-coming-from-chrome-web-store-on-chrome-v35-with-enhan#) helpful.
-* On Windows, if deleting the `com.chrisregado.googlemeet.streamDeckPlugin` file after installation results in an "action can't be completed because the file is open" error, quit the Stream Deck desktop software by right clicking its icon in the Windows task tray and clicking Quit Stream Deck, then re-launch the app. Now you should be able to delete the installer.
+- If Chrome won't let you enable the extension because it was not installed from the web store, you may need to allowlist the extension. On Windows, you can do this by editing the registry. Under both `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome\ExtensionInstallWhitelist` and `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome\ExtensionInstallAllowlist` add a string value, with the name "1" (or a greater number if "1" already exists). The value should be the extension ID, which you can get from `chrome://extensions/` with Developer Mode on. If this does not work or you're on another operating system, you may find [this post](https://superuser.com/questions/767286/re-enable-extensions-not-coming-from-chrome-web-store-on-chrome-v35-with-enhan#) helpful.
+- On Windows, if deleting the `com.chrisregado.googlemeet.streamDeckPlugin` file after installation results in an "action can't be completed because the file is open" error, quit the Stream Deck desktop software by right clicking its icon in the Windows task tray and clicking Quit Stream Deck, then re-launch the app. Now you should be able to delete the installer.
+- If the Stream Deck mic/camera buttons always indicate that they're disconnected and the `chrome://extensions/` page shows Websocket connection errors from the browser extension, make sure you've granted meet.google.com permission for "Apps on device" in Chrome. Click the site information icon in the URL bar to see permissions:
+
+  ![Permissions Screenshot](permissions_screenshot.png)
 
 ## Linux Compatibility via OpenDeck
 
@@ -249,15 +253,15 @@ We use NPM scripts defined in `browser-extension/package.json` to help with buil
 
 We have the following commands:
 
-* `npm run build`: Builds the extension for both Chrome and Firefox. Outputs builds to `browser-extension/build/chrome` and `browser-extension/build/firefox` respectively. Runs both locally and in CI jobs. When the commit you're building is tagged with a version number, modifies the version numbers of the extension manifests to match the tag (for building release artifacts in CI).
-* `npm run clean`: Deletes any old builds of the extension in your working copy (`browser-extension/build/`). Intended for use when running locally.
-* `npm run package-chrome`: Zips up your most recent build of the Chrome extension (`browser-extension/build/chrome`). Outputs to `browser-extension/build/chrome-extension.zip`. Intended to be used in CI jobs. If running locally, note that we assume your have the `zip` CLI tool (for macOS/Linux) or PowerShell (for Windows) available on your path.
-* `npm run package-firefox`: Zips up your most recent build of the Firefox extension (`browser-extension/build/firefox`). Outputs to `browser-extension/build/firefox-extension.zip`. Intended to be used in CI jobs.
-* `npm run sign-firefox`: Submits your most recent build of the Firefox extension (`browser-extension/build/firefox`) to the Firefox Add-on Hub for review and signing, but does NOT list it in the public add-on store. Usually takes 1-2 minutes, assuming Mozilla auto-approves it. If successful, a signed XPI file will be saved to the build directory (e.g. `browser-extension/build/streamdeck_googlemeet-0.0.1.xpi`) that can be used to install the extension in Firefox. This should generally only be run from CI. If testing locally, note that you must set the `WEB_EXT_API_KEY` environment variable to be your Add-on Hub API key's "JWT issuer" and `WEB_EXT_API_SECRET` to be your "JWT secret".
-* `npm run package-all`: Convenience command to run `npm run build`, `npm run package-chrome`, and `npm run package-firefox`. Intended for use when running locally.
-* `npm run dev-firefox`: Builds the extension and launches a Firefox window that has the extension temporarily installed, to help with testing during development. Intended for use when running locally.
-* `npm run lint-firefox`: Performs some of the same basic validations that the Firefox Add-on Hub enforces. Used to validate the addon before submitting it to Mozilla for signing. Runs both locally and in CI jobs.
-* `npm run get-version`: Tries to determine the target version number of browser extension builds. If the current git SHA is tagged with our semantic versioning scheme (`v1.2.3`), outputs that number without the `v` prefix (`1.2.3`) as the desired version. Otherwise falls back to using the version defined in `package.json`. Intended to be used in CI jobs.
+- `npm run build`: Builds the extension for both Chrome and Firefox. Outputs builds to `browser-extension/build/chrome` and `browser-extension/build/firefox` respectively. Runs both locally and in CI jobs. When the commit you're building is tagged with a version number, modifies the version numbers of the extension manifests to match the tag (for building release artifacts in CI).
+- `npm run clean`: Deletes any old builds of the extension in your working copy (`browser-extension/build/`). Intended for use when running locally.
+- `npm run package-chrome`: Zips up your most recent build of the Chrome extension (`browser-extension/build/chrome`). Outputs to `browser-extension/build/chrome-extension.zip`. Intended to be used in CI jobs. If running locally, note that we assume your have the `zip` CLI tool (for macOS/Linux) or PowerShell (for Windows) available on your path.
+- `npm run package-firefox`: Zips up your most recent build of the Firefox extension (`browser-extension/build/firefox`). Outputs to `browser-extension/build/firefox-extension.zip`. Intended to be used in CI jobs.
+- `npm run sign-firefox`: Submits your most recent build of the Firefox extension (`browser-extension/build/firefox`) to the Firefox Add-on Hub for review and signing, but does NOT list it in the public add-on store. Usually takes 1-2 minutes, assuming Mozilla auto-approves it. If successful, a signed XPI file will be saved to the build directory (e.g. `browser-extension/build/streamdeck_googlemeet-0.0.1.xpi`) that can be used to install the extension in Firefox. This should generally only be run from CI. If testing locally, note that you must set the `WEB_EXT_API_KEY` environment variable to be your Add-on Hub API key's "JWT issuer" and `WEB_EXT_API_SECRET` to be your "JWT secret".
+- `npm run package-all`: Convenience command to run `npm run build`, `npm run package-chrome`, and `npm run package-firefox`. Intended for use when running locally.
+- `npm run dev-firefox`: Builds the extension and launches a Firefox window that has the extension temporarily installed, to help with testing during development. Intended for use when running locally.
+- `npm run lint-firefox`: Performs some of the same basic validations that the Firefox Add-on Hub enforces. Used to validate the addon before submitting it to Mozilla for signing. Runs both locally and in CI jobs.
+- `npm run get-version`: Tries to determine the target version number of browser extension builds. If the current git SHA is tagged with our semantic versioning scheme (`v1.2.3`), outputs that number without the `v` prefix (`1.2.3`) as the desired version. Otherwise falls back to using the version defined in `package.json`. Intended to be used in CI jobs.
 
 ## Contributing
 

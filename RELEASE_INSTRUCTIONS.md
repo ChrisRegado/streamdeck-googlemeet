@@ -27,15 +27,15 @@ Finally, we'll add auth tokens from the Firefox Add-on portal as GitHub Action s
 3. Save the `JWT issuer` and `JWT secret`.
 4. In your GitHub repo (or fork), click on the Settings tab (e.g. https://github.com/ChrisRegado/streamdeck-googlemeet/settings), and click on "Secrets and variables" --> "Actions" in the sidebar.
 5. Using the "New repository secret" button, create two new repository secrets:
-    * A secret named `FIREFOX_JWT_ISSUER`, whose value must be set to the `JWT issuer` from the Firefox Add-on site.
-    * A secret named `FIREFOX_JWT_SECRET`, whose value must be set to the `JWT secret` from the Firefox Add-on site.
+   - A secret named `FIREFOX_JWT_ISSUER`, whose value must be set to the `JWT issuer` from the Firefox Add-on site.
+   - A secret named `FIREFOX_JWT_SECRET`, whose value must be set to the `JWT secret` from the Firefox Add-on site.
 
 ## Releasing a New Version
 
 Follow these steps each time you want to release a new version of the plugin and/or browser extension:
 
 1. Tag the commit you wish to release and push it to GitHub. We use semantic versioning with a "v" prefix for our releases. For example: `git checkout master && git tag v1.2.3 && git push origin tag v1.2.3`
-    * Our CI jobs will update version numbers automatically to match that tag for both the plugin and browser extensions. You don't need to manually change any version numbers in code/config.
+   - Our CI jobs will update version numbers automatically to match that tag for both the plugin and browser extensions. You don't need to manually change any version numbers in code/config.
 2. CI jobs should automatically launch against that tag to build the [Stream Deck plugin](https://github.com/ChrisRegado/streamdeck-googlemeet/actions/workflows/streamdeck-plugin-build.yml) and [browser extensions](https://github.com/ChrisRegado/streamdeck-googlemeet/actions/workflows/browser-extension-build.yml). (The list of workflow runs should show one copy of each of those two jobs with your `v1.2.3` tag.) Wait for them to complete successfully.
 3. Click into those two build jobs, and on each job's "Summary" tab, download our build artifacts. The browser extension build job should have `chrome-extension` and `firefox-extension-signed` artifacts, and the plugin build job should have `com.chrisregado.googlemeet.streamDeckPlugin`.
 4. Do a final manual validation of those release artifacts. Install the plugin, Firefox extension, and Chrome extension, and verify basic functionality.
