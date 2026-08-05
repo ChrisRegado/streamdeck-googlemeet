@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8" />
+        <style>
+            @font-face {
+                font-family: 'NotoColorEmoji';
+                src: url('fonts/Noto-COLRv1-noflags.ttf') format('truetype');
+            }
+        </style>
+        <script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+    </head>
+    <body>
+        <sdpi-item label="Emoji">
+            <sdpi-textfield setting="emoji" maxlength="8" required>
+            </sdpi-textfield>
+        </sdpi-item>
+        <canvas id="emoji-canvas" width="144" height="144" style="display:none;"></canvas>
+        <script>
+            function dbg(msg) {
+                console.log('[EmojiPI]', msg);
+            }
+
+            (async function() {
+                dbg('Script starting...');
+
+                const canvas = document.getElementById('emoji-canvas');
+                const ctx = canvas.getContext('2d');
+
+                dbg('Getting connection info...');
+                const client = SDPIComponents.streamDeckClient;
+                const connInfo = await client.getConnectionInfo();
+                dbg('Context: ' + connInfo.actionInfo.context);
+
+                const ws = await client._connection.promise;
+                dbg('WS state: ' + ws.readyState);
+
+                const actionContext = connInfo.actionInfo.context;
+
+                dbg('Loading font...');
+                try {
+                    await document.fonts.load('144px NotoColorEmoji');
+                    dbg('Font check: ' + document.fonts.check('144px NotoColorEmoji'));
+                } catch(e) {
+                    dbg('Font error: ' + e.message);
+                }
+
+                var renderTimer = null;
+                function debouncedRender(emoji) {
+                    clearTimeout(renderTimer);
+                    renderTimer = setTimeout(function() { renderEmojiAndSetImage(emoji); }, 150);
+                }
+
+                function renderEmojiAndSetImage(emoji) {
+                    ctx.clearRect(0, 0, 144, 144);
+
+                    if (emoji) {
+                        dbg('Rendering: ' + emoji);
+                        ctx.font = '100px NotoColorEmoji';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(emoji, 72, 78);
+
+                        var imgData = ctx.getImageData(0, 0, 144, 144);
+                        var pixels = 0;
+                        for (var i = 3; i < imgData.data.length; i += 4) {
+                            if (imgData.data[i] > 0) pixels++;
+                        }
+                        dbg('Non-transparent pixels: ' + pixels);
+                    } else {
+                        dbg('Empty emoji, clearing image');
+                    }
+
+                    var dataUrl = canvas.toDataURL('image/png');
+                    dbg('dataURL len: ' + dataUrl.length);
+
+                    var msg = JSON.stringify({
+                        action: connInfo.actionInfo.action,
+                        event: 'sendToPlugin',
+                        context: connInfo.propertyInspectorUUID,
+                        payload: {
+                            event: 'setEmojiImage',
+                            emoji: emoji || '',
+                            image: dataUrl
+                        }
+                    });
+                    dbg('Sending sendToPlugin (' + msg.length + ' bytes)...');
+                    try {
+                        ws.send(msg);
+                        dbg('Sent OK');
+                    } catch(e) {
+                        dbg('Send error: ' + e.message);
+                    }
+                }
+
+                var initialEmoji = connInfo.actionInfo.payload?.settings?.emoji;
+                dbg('Initial settings: ' + JSON.stringify(connInfo.actionInfo.payload?.settings));
+                if (initialEmoji) renderEmojiAndSetImage(initialEmoji);
+
+                client.didReceiveSettings.subscribe(function(event) {
+                    dbg('didReceiveSettings: ' + JSON.stringify(event.payload?.settings));
+                    debouncedRender(event.payload?.settings?.emoji);
+                });
+
+                // Listen directly on the text field for live updates as user types
+                var textField = document.querySelector('sdpi-textfield[setting="emoji"]');
+                if (textField) {
+                    // The web component may render an input inside shadow DOM or as a child
+                    var input = textField.querySelector('input') || textField.shadowRoot?.querySelector('input');
+                    if (input) {
+                        dbg('Found input element, adding listener');
+                        input.addEventListener('input', function() {
+                            dbg('Input event: ' + input.value);
+                            debouncedRender(input.value);
+                        });
+                    } else {
+                        dbg('No input found inside textfield, using fallback');
+                        textField.addEventListener('input', function(e) {
+                            dbg('Textfield input event: ' + (e.target.value || e.detail));
+                            debouncedRender(e.target.value);
+                        });
+                    }
+                }
+
+                dbg('Ready.');
+            })().catch(function(e) {
+                dbg('ERROR: ' + e.message + '\n' + e.stack);
+            });
+        </script>
+    </body>
+</html>

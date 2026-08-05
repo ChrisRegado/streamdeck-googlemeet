@@ -1,4 +1,5 @@
 import json
+
 from event_handlers.base_event_handler import EventHandler
 
 
@@ -16,21 +17,61 @@ class EmojiReactEventHandler(EventHandler):
         "com.chrisregado.googlemeet.emojireact.facewithopenmouth": "😮",
         "com.chrisregado.googlemeet.emojireact.cryingface": "😢",
         "com.chrisregado.googlemeet.emojireact.thinkingface": "🤔",
-        "com.chrisregado.googlemeet.emojireact.thumbsdown": "👎"
+        "com.chrisregado.googlemeet.emojireact.thumbsdown": "👎",
     }
 
     STREAM_DECK_ACTION_PREFIX = "com.chrisregado.googlemeet.emojireact."
 
     def _get_emoji_char_for_event(self, event: dict) -> str:
-        action = event['action']
-        emoji_char = self.ACTION_TO_EMOJI.get(action)
+        action = event["action"]
+        emoji_char = None
+        if action == f"{self.STREAM_DECK_ACTION_PREFIX}custom":
+            self._logger.info(
+                f"Custom emoji requested: {event.get('payload', {}).get('settings', {}).get('emoji', '')}"
+            )
+            emoji_char = event.get("payload", {}).get("settings", {}).get("emoji", None)
+        else:
+            emoji_char = self.ACTION_TO_EMOJI.get(action)
+
         if not emoji_char:
-            raise NotImplementedError(f"The action '{action}' was requested, but there is no corresponding emoji.")
+            raise NotImplementedError(
+                f"The action '{action}' was requested, but there is no corresponding emoji."
+            )
         return emoji_char
 
     @staticmethod
     def _make_emoji_react_browser_plugin_message(emoji_char) -> str:
         return json.dumps({"event": "emojiReact", "emojiChar": emoji_char})
+
+    async def _send_to_plugin_handler(self, event: dict) -> None:
+        payload = event.get("payload", {})
+        if payload.get("event") == "setEmojiImage":
+            context = event.get("context")
+            image = payload.get("image")
+            emoji = payload.get("emoji", "")
+            if context and image:
+                await self._stream_deck.send_outbound_message(json.dumps({
+                    "event": "setImage",
+                    "context": context,
+                    "payload": {"image": image}
+                }))
+                settings = {"emoji": emoji, "emojiImage": image} if emoji else {"emoji": ""}
+                await self._stream_deck.send_outbound_message(json.dumps({
+                    "event": "setSettings",
+                    "context": context,
+                    "payload": settings
+                }))
+
+    async def _will_appear_handler(self, event: dict) -> None:
+        settings = event.get("payload", {}).get("settings", {})
+        image = settings.get("emojiImage")
+        context = event.get("context")
+        if context and image:
+            await self._stream_deck.send_outbound_message(json.dumps({
+                "event": "setImage",
+                "context": context,
+                "payload": {"image": image}
+            }))
 
     async def _key_up_handler(self, event: dict) -> None:
         # noinspection PyBroadException
